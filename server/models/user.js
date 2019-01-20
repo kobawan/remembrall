@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
-const ProjectSchema =  require('./project').ProjectSchema;
-const CategorySchema = require('./category').CategorySchema;
-const ResourceSchema = require('./resource').ResourceSchema;
+const { ProjectSchema } =  require('./project');
+const { CategorySchema } = require('./category');
+const { MaterialSchema } = require('./material');
 
 const UserSchema = new mongoose.Schema({
     user: {
         projects: [ProjectSchema],
         categories: [CategorySchema],
-        materials: [ResourceSchema],
+        materials: [MaterialSchema],
     },
 });
 

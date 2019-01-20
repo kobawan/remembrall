@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
-const ResourceSchema = require('./resource').ResourceSchema;
+const { ToolSchema } = require('./tool');
 
 const CategorySchema = new mongoose.Schema({
     name: String,
-    tools: [ResourceSchema],
+    tools: [ToolSchema],
 });
 
 const CategoryModel = mongoose.model("Category", CategorySchema);
