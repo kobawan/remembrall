@@ -9,7 +9,6 @@ html {
 }
 
 body {
-    background-image: linear-gradient(to right top, @colourMain, #f9aa99, #fbb9ab, #fbc7bd, @colourMinor);
     background-size: 100%;
 	background-repeat: no-repeat;
     height: 100%;
@@ -45,6 +44,12 @@ button, input, textarea {
     }
 }
 
+div {
+    &:focus {
+        outline: none;
+    }
+}
+
 a {
     color: @colourBlack;
     text-decoration: none;
@@ -60,6 +65,6 @@ a {
 hr {
     border: 0;
     height: 0;
-    border-top: 1px solid fade(@colourBorder, 80%);
+    border-top: 1px solid gainsboro;
     margin-bottom: 2rem;
 }
