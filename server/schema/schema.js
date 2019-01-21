@@ -15,6 +15,7 @@ const { CategoryModel } = require("../models/category")
 const MaterialType = new GraphQLObjectType({
 	name: "Material",
 	fields: () => ({
+		id: { type: GraphQLID },
 		name: { type: GraphQLString },
 		amount: { type: GraphQLInt },
 	}),
@@ -23,15 +24,17 @@ const MaterialType = new GraphQLObjectType({
 const ToolType = new GraphQLObjectType({
 	name: "Tool",
 	fields: () => ({
+		id: { type: GraphQLID },
 		name: { type: GraphQLString },
 		amount: { type: GraphQLInt },
-		categories: { type: GraphQLList(GraphQLString) }
+		categories: { type: GraphQLList(GraphQLString) },
 	}),
 });
 
 const CategoryType = new GraphQLObjectType({
 	name: "Category",
 	fields: () => ({
+		id: { type: GraphQLID },
 		name: { type: GraphQLString },
 		tools: { type: GraphQLList(ToolType) },
 	}),
@@ -40,6 +43,7 @@ const CategoryType = new GraphQLObjectType({
 const ProjectType = new GraphQLObjectType({
 	name: "Project",
 	fields: () => ({
+		id: { type: GraphQLID },
 		name: { type: GraphQLString },
 		instructions: { type: GraphQLString },
 		notes: { type: GraphQLString },
@@ -52,9 +56,10 @@ const UserType = new GraphQLObjectType({
 	name: "User",
 	fields: () => ({
 		id: { type: GraphQLID },
-		projects: { type: ProjectType },
-		categories: { type: CategoryType },
-		materials: { type: MaterialType },
+		projects: { type: GraphQLList(ProjectType) },
+		categories: { type: GraphQLList(CategoryType) },
+		materials: { type: GraphQLList(MaterialType) },
+		tools: { type: GraphQLList(ToolType) },
 	}),
 });
 
@@ -76,14 +81,8 @@ const Mutation = new GraphQLObjectType({
 	fields: {
 		addUser: {
 			type: UserType,
-			args: {
-				id: { type: GraphQLID },
-				projects: { type: ProjectType },
-				categories: { type: CategoryType },
-				materials: { type: MaterialType },
-			},
-			resolve(parent, args) {
-				const user = new UserModel(args);
+			resolve() {
+				const user = new UserModel();
 				return user.save();
 			}
 		},
@@ -106,10 +105,18 @@ const Mutation = new GraphQLObjectType({
 			args: {
 				name: { type: GraphQLString },
 				amount: { type: GraphQLInt },
+				userId: { type: GraphQLID },
 			},
-			resolve(parent, args) {
-				const material = new MaterialModel(args);
-				return material.save();
+			async resolve(parent, { name, amount, userId }) {
+				const material = new MaterialModel({
+					name,
+					amount,
+				});
+				await UserModel.update(
+					{ _id: userId },
+					{ $push: { materials: material } },
+				);
+				return material;
 			}
 		},
 		addTool: {
@@ -117,24 +124,29 @@ const Mutation = new GraphQLObjectType({
 			args: {
 				name: { type: GraphQLString },
 				amount: { type: GraphQLInt },
-				categories: { type: GraphQLList(GraphQLString) }
+				categories: { type: GraphQLList(GraphQLString) },
+				userId: { type: GraphQLID },
 			},
-			resolve(parent, args) {
-				const tool = new ToolModel(args);
-				return tool.save();
+			async resolve(parent, { name, amount, categories, userId }) {
+				const tool = new ToolModel({ name, amount, categories });
+				await UserModel.update(
+					{ _id: userId },
+					{ $push: { tools: tool } },
+				);
+				return tool;
 			}
 		},
-		addCategory: {
-			type: CategoryType,
-			args: {
-				name: { type: GraphQLString },
-				tools: { type: GraphQLList(ToolType) },
-			},
-			resolve(parent, args) {
-				const category = new CategoryModel(args);
-				return category.save();
-			}
-		}
+		// addCategory: {
+		// 	type: CategoryType,
+		// 	args: {
+		// 		name: { type: GraphQLString },
+		// 		tools: { type: GraphQLList(ToolType) },
+		// 	},
+		// 	resolve(parent, args) {
+		// 		const category = new CategoryModel(args);
+		// 		return category.save();
+		// 	}
+		// }
 	}
 })
 
