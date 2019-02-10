@@ -1,11 +1,12 @@
 import * as React from "react";
 import "./column.less";
 import { Ticket, TicketProps } from "../Ticket/Ticket";
-import { ColumnType } from "../../types";
+import { ColumnType, AllColumnFields } from "../../types";
 import { plusSvg } from "../Svg/Svg";
 
 interface ColumnProps {
     type: ColumnType;
+    ticketData: AllColumnFields[];
 }
 
 interface ColumnState {

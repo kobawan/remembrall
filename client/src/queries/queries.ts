@@ -2,6 +2,7 @@ import { gql } from "apollo-boost";
 
 const UserFragment = gql`
     fragment UserFragment on User {
+        id
         categories {
             name
             id
@@ -59,7 +60,6 @@ export const GET_USER = gql`
 export const ADD_USER = gql`
 	mutation AddUser {
 		addUser {
-            id
 			...UserFragment
 		}
 	}

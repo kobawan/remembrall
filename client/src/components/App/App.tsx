@@ -13,11 +13,17 @@ interface AddUserData {
     addUser: UserFields;
 }
 
+interface GetUserData {
+    user?: UserFields;
+}
+
+type ChildrenProps = (props: { loading: boolean, error?: ApolloError, data?: UserFields }) => JSX.Element;
+
 interface AddUserProps {
     addUserMutation: MutationFn<AddUserData>;
     response: MutationResult<AddUserData>;
     userId: string;
-    renderContent: (props: { loading: boolean, error?: ApolloError, data?: UserFields }) => JSX.Element;
+    renderContent: ChildrenProps;
 }
 
 class AddUser extends React.Component<AddUserProps> {
@@ -52,7 +58,13 @@ export class App extends React.Component {
                             />
                         ) : (
                             <Query query={GET_USER} variables={{ id: this.userId }}>
-                                {this.renderContent}
+                                {({ loading, error, data }: {
+                                    loading: boolean,
+                                    error?: ApolloError,
+                                    data?: GetUserData,
+                                }) => {
+                                    return this.renderContent({ loading, error, data: data ? data.user : undefined });
+                                }}
                             </Query>
                         );
                 }}
@@ -60,39 +72,40 @@ export class App extends React.Component {
         );
     }
 
-    private renderContent = (
-        { loading, error, data }: { loading: boolean, error?: ApolloError, data?: UserFields }
-    ) => (
-        <div className="app">
-            <div className="title">Remembrall</div>
-            <hr />
-            <div className="grid">
-                {/* <Column
-                    type={ColumnType.Projects}
-                    ticketData={data && data.user && data.user.projects || []}
-                    isLoading={isLoading}
-                />
-                <Column
-                    type={ColumnType.Categories}
-                    ticketData={data && data.user && data.user.categories || []}
-                    isLoading={isLoading}
-                />
-                <Column
-                    type={ColumnType.Tools}
-                    ticketData={data && data.user && data.user.tools || []}
-                    isLoading={isLoading}
-                />
-                <Column
-                    type={ColumnType.Materials}
-                    ticketData={data && data.user && data.user.materials || []}
-                    isLoading={isLoading}
-                /> */}
-                {loading &&
-                    <div className="loading">
-                        {spinnerSvg}
-                    </div>
-                }
+    private renderContent: ChildrenProps = ({
+        loading,
+        data = { projects: [], categories: [], tools: [], materials: []}
+    }) => {
+        return (
+            <div className="app">
+                <div className="title">Remembrall</div>
+                <hr />
+                <div className="grid">
+                    {!loading && data && <>
+                        <Column
+                            type={ColumnType.Projects}
+                            ticketData={data.projects}
+                        />
+                        <Column
+                            type={ColumnType.Categories}
+                            ticketData={data.categories}
+                        />
+                        <Column
+                            type={ColumnType.Tools}
+                            ticketData={data.tools}
+                        />
+                        <Column
+                            type={ColumnType.Materials}
+                            ticketData={data.materials}
+                        />
+                    </>}
+                    {loading &&
+                        <div className="loading">
+                            {spinnerSvg}
+                        </div>
+                    }
+                </div>
             </div>
-        </div>
-    )
+        );
+    }
 }
