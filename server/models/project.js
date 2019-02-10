@@ -1,13 +1,12 @@
 const mongoose = require('mongoose');
-const { CategorySchema } = require('./category');
-const { MaterialSchema } = require('./material');
 
 const ProjectSchema = new mongoose.Schema({
     name: String,
     instructions: String,
     notes: String,
-    categories: [CategorySchema],
-    materials: [MaterialSchema],
+    categories: [String],
+    materials: [String],
+    tools: [String],
 });
 
 const ProjectModel = mongoose.model("Project", ProjectSchema);

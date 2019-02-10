@@ -13,7 +13,7 @@ mongoose.connect(
     { useNewUrlParser: true },
 )
 mongoose.connection.once("open", () => {
-    console.log("Connected to Database...")
+    console.log("Connected to Database 🚦")
 });
 
 app.use(cors());
@@ -30,5 +30,5 @@ app.get('*', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log('Listening on port ', PORT);
+    console.log('Listening on port', PORT);
 });

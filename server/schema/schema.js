@@ -27,7 +27,6 @@ const ToolType = new GraphQLObjectType({
 		id: { type: GraphQLID },
 		name: { type: GraphQLString },
 		amount: { type: GraphQLInt },
-		categories: { type: GraphQLList(GraphQLString) },
 	}),
 });
 
@@ -36,7 +35,16 @@ const CategoryType = new GraphQLObjectType({
 	fields: () => ({
 		id: { type: GraphQLID },
 		name: { type: GraphQLString },
-		tools: { type: GraphQLList(ToolType) },
+		tools: {
+			type: GraphQLList(ToolType),
+			async resolve(parent) {
+				/**
+				 * @todo get user from context
+				 */
+				const user = await UserModel.findById("5c6032e808e8b426c1bc7958");
+				return user.tools.filter(({ _id }) => parent.tools.includes(`${_id}`));
+			}
+		},
 	}),
 });
 
@@ -47,8 +55,36 @@ const ProjectType = new GraphQLObjectType({
 		name: { type: GraphQLString },
 		instructions: { type: GraphQLString },
 		notes: { type: GraphQLString },
-		categories: { type: GraphQLList(CategoryType) },
-		materials: { type: GraphQLList(MaterialType) },
+		categories: {
+			type: GraphQLList(CategoryType),
+			async resolve(parent) {
+				/**
+				 * @todo get user from context
+				 */
+				const user = await UserModel.findById("5c6032e808e8b426c1bc7958");
+				return user.categories.filter(({ _id }) => parent.categories.includes(`${_id}`));
+			}
+		},
+		materials: {
+			type: GraphQLList(MaterialType),
+			async resolve(parent) {
+				/**
+				 * @todo get user from context
+				 */
+				const user = await UserModel.findById("5c6032e808e8b426c1bc7958");
+				return user.materials.filter(({ _id }) => parent.materials.includes(`${_id}`));
+			}
+		},
+		tools: {
+			type: GraphQLList(ToolType),
+			async resolve(parent) {
+				/**
+				 * @todo get user from context
+				 */
+				const user = await UserModel.findById("5c6032e808e8b426c1bc7958");
+				return user.tools.filter(({ _id }) => parent.tools.includes(`${_id}`));
+			}
+		},
 	}),
 });
 
@@ -63,15 +99,15 @@ const UserType = new GraphQLObjectType({
 	}),
 });
 
-const RootQuery = new GraphQLObjectType({
-	name: "RootQuery",
+const Query = new GraphQLObjectType({
+	name: "Query",
 	fields: {
 		user: {
 			type: UserType,
-			args: {
-				id: { type: GraphQLID },
+			args: { id: { type: GraphQLID } },
+			resolve: (parent, { id }) => {
+				return UserModel.findById(id)
 			},
-			resolve: (parent, args) => UserModel.findById(args.id),
 		},
 	},
 });
@@ -86,20 +122,26 @@ const Mutation = new GraphQLObjectType({
 				return user.save();
 			}
 		},
-		// addProject: {
-		// 	type: ProjectType,
-		// 	args: {
-		// 	name: { type: GraphQLString },
-		// 	instructions: { type: GraphQLString },
-		// 	notes: { type: GraphQLString },
-		// 	categories: { type: GraphQLList(CategoryType) },
-		// 	materials: { type: GraphQLList(MaterialType) },
-		// },
-		// 	resolve(parent, args) {
-		// 		const project = new ProjectModel(args);
-		// 		return project.save();
-		// 	}
-		// }
+		addProject: {
+			type: ProjectType,
+			args: {
+				name: { type: GraphQLString },
+				instructions: { type: GraphQLString },
+				notes: { type: GraphQLString },
+				categories: { type: GraphQLList(GraphQLID) },
+				materials: { type: GraphQLList(GraphQLID) },
+				tools: { type: GraphQLList(GraphQLID) },
+				userId: { type: GraphQLID },
+			},
+			async resolve(parent, { name, instructions, notes, categories, materials, tools, userId }) {
+				const project = new ProjectModel({ name, instructions, notes, categories, materials, tools });
+				await UserModel.update(
+					{ _id: userId },
+					{ $push: { projects: project } },
+				);
+				return project;
+			}
+		},
 		addMaterial: {
 			type: MaterialType,
 			args: {
@@ -108,10 +150,7 @@ const Mutation = new GraphQLObjectType({
 				userId: { type: GraphQLID },
 			},
 			async resolve(parent, { name, amount, userId }) {
-				const material = new MaterialModel({
-					name,
-					amount,
-				});
+				const material = new MaterialModel({ name, amount });
 				await UserModel.update(
 					{ _id: userId },
 					{ $push: { materials: material } },
@@ -124,11 +163,10 @@ const Mutation = new GraphQLObjectType({
 			args: {
 				name: { type: GraphQLString },
 				amount: { type: GraphQLInt },
-				categories: { type: GraphQLList(GraphQLString) },
 				userId: { type: GraphQLID },
 			},
-			async resolve(parent, { name, amount, categories, userId }) {
-				const tool = new ToolModel({ name, amount, categories });
+			async resolve(parent, { name, amount, userId }) {
+				const tool = new ToolModel({ name, amount });
 				await UserModel.update(
 					{ _id: userId },
 					{ $push: { tools: tool } },
@@ -136,21 +174,41 @@ const Mutation = new GraphQLObjectType({
 				return tool;
 			}
 		},
-		// addCategory: {
-		// 	type: CategoryType,
-		// 	args: {
-		// 		name: { type: GraphQLString },
-		// 		tools: { type: GraphQLList(ToolType) },
-		// 	},
-		// 	resolve(parent, args) {
-		// 		const category = new CategoryModel(args);
-		// 		return category.save();
-		// 	}
-		// }
+		addCategory: {
+			type: CategoryType,
+			args: {
+				name: { type: GraphQLString },
+				tools: { type: GraphQLList(GraphQLID) },
+				userId: { type: GraphQLID },
+			},
+			async resolve(parent, { name, tools, userId }) {
+				const category = new CategoryModel({ name, tools });
+				await UserModel.update(
+					{ _id: userId },
+					{ $push: { categories: category } },
+				);
+				return category;
+			}
+		},
+		addToolToCategory: {
+			type: CategoryType,
+			args: {
+				toolId: { type: GraphQLID },
+				categoryId: { type: GraphQLID },
+				userId: { type: GraphQLID },
+			},
+			async resolve(parent, { toolId, categoryId, userId }) {
+				const user = await UserModel.findById(userId);
+				const category = user.categories.id(categoryId);
+				category.tools.push(toolId);
+				await user.save();
+				return category;
+			}
+		}
 	}
 })
 
 module.exports = new GraphQLSchema({
-	query: RootQuery,
+	query: Query,
 	mutation: Mutation,
 });
