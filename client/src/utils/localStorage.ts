@@ -23,5 +23,7 @@ export const getStorageKey = (key: StorageKeys): StorageKeysType => {
 export const setStorageKey = (key: StorageKeys, value: StorageKeysType) => {
     try {
         window.localStorage.setItem(key, JSON.stringify(value));
-    } catch {}
+    } catch {
+        console.error("Not possible to set item", key, "in local storage");
+    }
 };

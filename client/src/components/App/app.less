@@ -1,3 +1,14 @@
+@import "../../styles/mixin.less";
+
+@keyframes rotating {
+    from{
+        transform: rotate(0deg);
+    }
+    to{
+        transform: rotate(360deg);
+    }
+}
+
 .app {
     padding: 2rem;
     width: 100%;
@@ -18,5 +29,22 @@
         grid-template-rows: auto;
         grid-gap: 2%;
         place-items: stretch;
+
+        .loading {
+            grid-row: 2;
+            grid-column: 1 / span 4;
+            height: calc(100vh - 19.3rem);
+            .boxMixin();
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .spinner {
+                width: 4em;
+                height: 4em;
+                fill: #c1a8a4;
+                animation: rotating 2s ease-out infinite;
+            }
+        }
     }
 }
