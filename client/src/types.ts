@@ -5,36 +5,25 @@ export enum ColumnType {
     Materials = "Materials",
 }
 
-export interface UserFields {
-    id: string;
-    projects: ProjectFields[];
-    categories: CategoryFields[];
-    tools: ToolFields[];
-    materials: MaterialFields[];
-}
-
-export interface MaterialFields {
+export interface CommonFields {
     id: string;
     name: string;
+}
+
+export interface MaterialFields extends CommonFields {
 	amount?: number;
 }
 
-export interface ToolFields {
-    id: string;
-    name: string;
+export interface ToolFields extends CommonFields {
     amount?: number;
     categories?: string[];
 }
 
-export interface CategoryFields {
-    id: string;
-    name: string;
+export interface CategoryFields extends CommonFields {
 	tools?: ToolFields[];
 }
 
-export interface ProjectFields {
-    id: string;
-    name: string;
+export interface ProjectFields extends CommonFields {
 	instructions?: string;
 	notes?: string;
 	categories?: CategoryFields[];

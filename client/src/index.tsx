@@ -1,16 +1,25 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { ApolloClient, HttpLink, InMemoryCache } from "apollo-boost";
+import { InMemoryCache, ApolloClient } from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
+import { createHttpLink } from "apollo-link-http";
+import { setContext } from "apollo-link-context";
 import { App } from "./components/App/App";
+import { getStorageKey, StorageKeys } from "./utils/localStorage";
 
 import "./styles/common.less";
 
+const httpLink = createHttpLink({ uri: "/graphql" });
+
+const authLink = setContext((_, { headers }) => ({
+    headers: {
+        ...headers,
+        authorization: getStorageKey(StorageKeys.UserId),
+    }
+}));
+
 const client = new ApolloClient({
-    /**
-     * @todo remove fixed PORT for prod
-     */
-	link: new HttpLink({ uri: "http://localhost:4000/graphql" }),
+	link: authLink.concat(httpLink),
 	cache: new InMemoryCache(),
 });
 
