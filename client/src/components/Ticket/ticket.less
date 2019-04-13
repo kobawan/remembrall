@@ -2,69 +2,69 @@
 @import "../../styles/mixin.less";
 
 .contentMixin() {
-    width: 100%;
-    height: 100%;
-    padding: 0.625em;
-    font-size: 1.6em;
-    box-sizing: border-box;
-    position: relative;
+	width: 100%;
+	height: 100%;
+	padding: 0.625em;
+	font-size: 1.6em;
+	box-sizing: border-box;
+	position: relative;
 }
 
 .ticket {
-    .boxMixin();
-    min-height: 6em;
-    margin: 1em;
-    overflow: hidden;
-    position: relative;
-    display: inherit;
+	.boxMixin();
+	min-height: 6em;
+	margin: 1em;
+	overflow: hidden;
+	position: relative;
+	display: inherit;
 
-    @media (hover: hover) {
-        &:hover {
-            .boxMixinHover();
+	@media (hover: hover) {
+		&:hover {
+			.boxMixinHover();
 
-            > .editWrapper {
-                display: block;
-                position: absolute;
-                right: 0;
-                top: 0;
-                padding: 0.5em 0.5em;
-                box-sizing: border-box;
-                cursor: pointer;
-                background-color: #dcdcdc80;
+			> .editWrapper {
+				display: block;
+				position: absolute;
+				right: 0;
+				top: 0;
+				padding: 0.5em 0.5em;
+				box-sizing: border-box;
+				cursor: pointer;
+				background-color: #dcdcdc80;
 
-                &:hover {
-                    background-color: #dcdcdc;
-                }
+				&:hover {
+					background-color: #dcdcdc;
+				}
 
-                .edit {
-                    display: block;
-                    width: 2em;
-                    height: 2em;
-                    fill: @colourSvg;
+				.edit {
+					display: block;
+					width: 2em;
+					height: 2em;
+					fill: @colourSvg;
 
-                    > path {
-                        stroke: @colourSvg;
-                    }
-                }
-        
-            }
-        }
-    }
+					> path {
+						stroke: @colourSvg;
+					}
+				}
+		
+			}
+		}
+	}
 
-    .edit {
-        display: none;
-    }
+	.edit {
+		display: none;
+	}
 
-    textarea {
-        .contentMixin();
-        border: none;
-        resize: none;
-    }
+	textarea {
+		.contentMixin();
+		border: none;
+		resize: none;
+	}
 
-    span {
-        .contentMixin();
-        min-height: 3.75em;
-        word-break: break-word;
-        cursor: pointer;
-    }
+	span {
+		.contentMixin();
+		min-height: 3.75em;
+		word-break: break-word;
+		cursor: pointer;
+	}
 }

@@ -12,10 +12,10 @@ import "./styles/common.less";
 const httpLink = createHttpLink({ uri: "/graphql" });
 
 const authLink = setContext((_, { headers }) => ({
-    headers: {
-        ...headers,
-        authorization: getStorageKey(StorageKeys.UserId),
-    }
+	headers: {
+		...headers,
+		authorization: getStorageKey(StorageKeys.UserId),
+	}
 }));
 
 const client = new ApolloClient({
@@ -24,13 +24,13 @@ const client = new ApolloClient({
 });
 
 export class Wrapper extends React.Component {
-    public render() {
-        return (
-            <ApolloProvider client={client}>
-                <App />
-            </ApolloProvider>
-        );
-    }
+	public render() {
+		return (
+			<ApolloProvider client={client}>
+				<App />
+			</ApolloProvider>
+		);
+	}
 }
 
 ReactDOM.render(<Wrapper />, document.getElementById("root"));
