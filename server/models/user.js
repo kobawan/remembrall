@@ -5,10 +5,10 @@ const { MaterialSchema } = require('./material');
 const { ToolSchema } = require('./tool');
 
 const UserSchema = new mongoose.Schema({
-    projects: [ProjectSchema],
-    categories: [CategorySchema],
-    materials: [MaterialSchema],
-    tools: [ToolSchema],
+	projects: [ProjectSchema],
+	categories: [CategorySchema],
+	materials: [MaterialSchema],
+	tools: [ToolSchema],
 });
 
 const UserModel = mongoose.model("User", UserSchema);
