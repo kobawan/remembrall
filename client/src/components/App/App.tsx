@@ -4,7 +4,7 @@ import "./app.less";
 
 import { getStorageKey, StorageKeys, setStorageKey } from "../../utils/localStorage";
 import { GET_USER } from "../../queries/queries";
-// import { ProjectColumn } from "../Column/ProjectColumn";
+import { ProjectColumn } from "../Column/ProjectColumn";
 import { CommonFields } from "../../types";
 import { Loading } from "../Loading/Loading";
 
@@ -20,7 +20,7 @@ interface GetUserData {
 	user?: UserQueryRes;
 }
 
-export class App extends React.Component {
+export class App extends React.PureComponent {
 	private userIdHasBeenUpdated = false;
 
 	public render() {
@@ -39,7 +39,7 @@ export class App extends React.Component {
 							<div className="grid">
 								{!loading && data && data.user
 									? <>
-										{/* <ProjectColumn /> */}
+										<ProjectColumn />
 									</> : (
 										<div className="loadingContainer">
 											<Loading />

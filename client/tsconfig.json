@@ -11,7 +11,7 @@
         "noUnusedParameters": true,
         "pretty": true,
         "strict": true,
-        "allowSyntheticDefaultImports": false,
+        "allowSyntheticDefaultImports": true,
         "forceConsistentCasingInFileNames": true,
         "newLine": "lf",
         "lib": [
@@ -26,5 +26,8 @@
     "include": [
         "src/**/*.tsx",
         "src/**/*.ts"
+    ],
+    "exclude": [
+        "node_modules"
     ]
 }

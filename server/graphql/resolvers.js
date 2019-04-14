@@ -83,7 +83,7 @@ const resolverMap = {
 			return currentCategory;
 		},
 		deleteProject: async function(parent, { id }, { currentUser }) {
-			const entry = currentUser.project.id(id);
+			const entry = currentUser.projects.id(id);
 			if(entry) {
 				entry.remove();
 				await currentUser.save();
