@@ -1,3 +1,12 @@
+import { MutationFn, MutationResult, OperationVariables } from "react-apollo";
+
+// GRAPHQL TYPES
+export interface MutationRenderProps<TData = any, TVariables = OperationVariables> {
+  mutation: MutationFn<TData, TVariables>;
+  res: MutationResult<TData>;
+}
+
+// PROJECT TYPES
 export enum ColumnType {
 	Projects = "Projects",
 	Categories = "Categories",

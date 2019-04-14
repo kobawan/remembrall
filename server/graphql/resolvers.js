@@ -114,6 +114,19 @@ const resolverMap = {
 				return entry
 			}
 		},
+		updateProject: async function(parent, { id, params }, { currentUser }) {
+			const project = currentUser.projects.id(id);
+			if(project) {
+				Object.entries(params).forEach(([key, value]) => {
+					if (value !== undefined && value !== null) {
+						project[key] = value;
+					}
+				});
+
+				await currentUser.save();
+				return project;
+			}
+		},
 	},
 };
 

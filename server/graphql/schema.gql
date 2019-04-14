@@ -1,6 +1,3 @@
-# TODO Investigate whether using type defs are better than GraphQLObjectType
-# https://www.apollographql.com/docs/graphql-tools/generate-schema
-
 type Material {
 	id: ID!
 	name: String!
@@ -86,4 +83,5 @@ type Mutation {
 	deleteCategory(id: ID!): Category
 	deleteTool(id: ID!): Tool
 	deleteMaterial(id: ID!): Material
+	updateProject(id: ID!, params: ProjectInput): Project!
 }

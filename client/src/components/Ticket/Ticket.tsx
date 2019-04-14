@@ -2,38 +2,28 @@ import * as React from "react";
 import { MutationFn } from "react-apollo";
 import "./ticket.less";
 import { editSvg } from "../Svg/Svg";
-import { FormOverlay } from "../FormOverlay/FormOverlay";
 import { ColumnType, AllColumnFields } from "../../types";
 
 export interface TicketProps {
-	inEditMode: boolean;
 	type: ColumnType;
-	deleteTicket: MutationFn;
-	createTicket: (name: string) => void;
+	toggleForm: () => void;
+	updateTicket: MutationFn;
 }
 
 interface TicketState {
 	name: string;
 	focused: boolean;
-	formOpened: boolean;
 }
 
 export class Ticket extends React.PureComponent<TicketProps & Partial<AllColumnFields>, TicketState> {
 	public state: TicketState = {
 		name: this.props.name || "",
-		focused: this.props.inEditMode,
-		formOpened: false,
+		focused: false,
 	};
 	private textAreaRef = React.createRef<HTMLTextAreaElement>();
 
-	public componentDidMount() {
-		if (this.props.inEditMode && this.textAreaRef.current) {
-			this.textAreaRef.current.focus();
-		}
-	}
-
 	public render() {
-		const { name, focused, formOpened } = this.state;
+		const { name, focused } = this.state;
 
 		return (<>
 			<div className="ticket">
@@ -45,7 +35,7 @@ export class Ticket extends React.PureComponent<TicketProps & Partial<AllColumnF
 						value={name}
 						placeholder="Name"
 					/> : <>
-						<span onClick={this.toggleForm}>
+						<span onClick={this.openForm}>
 							{name}
 						</span>
 						<div className="editWrapper" onClick={this.handleFocus} >
@@ -54,18 +44,23 @@ export class Ticket extends React.PureComponent<TicketProps & Partial<AllColumnF
 					</>
 				}
 			</div>
-			{formOpened && <FormOverlay closeForm={this.toggleForm}/>}
 		</>);
 	}
 
-	private toggleForm = () => {
-		this.setState({ formOpened: !this.state.formOpened });
+	private openForm = () => {
+		this.props.toggleForm();
 	}
 
+	/**
+	 * Updates textarea input
+	 */
 	private handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		this.setState({ name: e.target.value });
 	}
 
+	/**
+	 * Sets focus on the textarea element for editing
+	 */
 	private handleFocus = () => {
 		this.setState({ focused: true }, () => {
 			if (this.textAreaRef.current) {
@@ -74,21 +69,17 @@ export class Ticket extends React.PureComponent<TicketProps & Partial<AllColumnF
 		});
 	}
 
+	/**
+	 * Updates the ticket's name
+	 */
 	private handleBlur = () => {
-		if(!this.state.name) {
-			/**
-			 * @todo only delete ticket if it doesn't have any props
-			 */
-			this.props.deleteTicket({ variables: { id: this.props.id } });
-		}
-		if (this.props.name !== this.state.name) {
-			if (!this.props.name) {
-				this.props.createTicket(this.state.name);
-			} else {
-				/**
-				 * @todo update ticket mutation
-				 */
-			}
+		if(this.props.name !== this.state.name && this.state.name) {
+			this.props.updateTicket({
+				variables: {
+					id: this.props.id,
+					params: { name: this.state.name },
+				}
+			});
 		}
 		this.setState({ focused: false });
 	}

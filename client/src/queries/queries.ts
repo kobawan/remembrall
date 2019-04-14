@@ -56,6 +56,15 @@ export const ADD_PROJECT = gql`
 	${ProjectsFragment}
 `;
 
+export const UPDATE_PROJECT = gql`
+	mutation UpdateProject($id: ID!, $params: ProjectInput) {
+		updateProject(id: $id, params: $params) {
+			...ProjectsFragment
+		}
+	}
+	${ProjectsFragment}
+`;
+
 export const DELETE_PROJECT = gql`
 	mutation DeleteProject($id: ID!) {
 		deleteProject(id: $id) {

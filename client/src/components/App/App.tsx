@@ -25,6 +25,9 @@ export class App extends React.PureComponent {
 
 	public render() {
 		return (
+			/**
+			 * @todo GET_USER should only return user ID
+			 */
 			<Query query={GET_USER}>
 				{({ loading, error, data }: QueryResult<GetUserData>) => {
 					this.updateUserIdStorage(data);
@@ -54,6 +57,9 @@ export class App extends React.PureComponent {
 		);
 	}
 
+	/**
+	 * Gets user id from server and sets it to local storage
+	 */
 	private updateUserIdStorage = (data?: GetUserData) => {
 		if (this.userIdHasBeenUpdated || !data || !data.user) {
 			return;

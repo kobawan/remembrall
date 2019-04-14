@@ -4,73 +4,63 @@ import "./column.less";
 import { Ticket } from "../Ticket/Ticket";
 import { ColumnType, CommonFields } from "../../types";
 import { plusSvg } from "../Svg/Svg";
+import { FormOverlay } from "../FormOverlay/FormOverlay";
 
 interface ColumnProps {
 	type: ColumnType;
 	tickets: CommonFields[];
 	createTicket: MutationFn;
 	deleteTicket: MutationFn;
+	updateTicket: MutationFn;
 }
 
 interface ColumnState {
-	newTicket: boolean;
+	formOpened: boolean;
 }
 
 export class Column extends React.Component<ColumnProps, ColumnState> {
 	public state: ColumnState = {
-		newTicket: false,
+		formOpened: false
 	};
 
 	public render() {
-		const { type } = this.props;
-		const { newTicket } = this.state;
+		const { type, createTicket, deleteTicket } = this.props;
+		const { formOpened } = this.state;
 
-		return (
+		return (<>
 			<div className="column">
-				<div className="header" onClick={this.openNewTicket}>
+				<div className="header" onClick={this.toggleForm}>
 					<span>{type}</span>
 					{plusSvg}
 				</div>
 				<div className="content">
 					{this.renderTickets()}
-					{newTicket && this.renderNewTicket()}
 				</div>
 			</div>
-		);
+			{formOpened && (
+				<FormOverlay
+					closeForm={this.toggleForm}
+					createTicket={createTicket}
+					deleteTicket={deleteTicket}
+				/>
+			)}
+		</>);
 	}
 
-	private openNewTicket = () => {
-		this.setState({ newTicket: true });
-	}
-
-	private createTicket = (name: string) => {
-		this.setState({ newTicket: false });
-		this.props.createTicket({ variables: { params: { name } } });
-	}
-
-	private renderNewTicket = () => {
-		return (
-			<Ticket
-				type={this.props.type}
-				inEditMode={true}
-				deleteTicket={this.props.deleteTicket}
-				createTicket={this.createTicket}
-			/>
-		);
+	private toggleForm = () => {
+		this.setState({ formOpened: !this.state.formOpened });
 	}
 
 	private renderTickets = () => {
-		return this.props.tickets.map((data, index) => {
-			return (
-				<Ticket
-					{...data}
-					key={index}
-					type={this.props.type}
-					inEditMode={false}
-					deleteTicket={this.props.deleteTicket}
-					createTicket={this.createTicket}
-				/>
-			);
-		});
+		const { tickets, type, updateTicket } = this.props;
+		return tickets.map((data, index) => (
+			<Ticket
+				{...data}
+				key={index}
+				type={type}
+				toggleForm={this.toggleForm}
+				updateTicket={updateTicket}
+			/>
+		));
 	}
 }
