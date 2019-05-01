@@ -21,6 +21,7 @@ export interface CommonFields {
 
 export interface MaterialFields extends CommonFields {
 	amount?: number;
+	color?: string;
 }
 
 export interface ToolFields extends CommonFields {

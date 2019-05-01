@@ -20,7 +20,8 @@
             "es6",
             "es7",
 			"dom.iterable",
-			"esnext.asynciterable"
+            "esnext.asynciterable",
+            "es2017",
         ]
     },
     "include": [

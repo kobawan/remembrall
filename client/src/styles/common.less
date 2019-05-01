@@ -24,12 +24,19 @@ body {
 
 button {
 	border: solid 1px @colourBorder;
-	border-radius: 1rem;
+	border-radius: 1em;
 	box-shadow: 1px 1px 5px 0px @colourShadow;
 	cursor: pointer;
-	padding: 0.2rem 1rem;
+	padding: 0.2em 1em;
 	-webkit-tap-highlight-color: transparent;
+
+	@media (hover: hover) {
+		&:hover {
+			box-shadow: 0 0 9px 2px @colourShadow;
+		}
+	}
 }
+
 button, input, textarea {
 	font: 1rem "Quicksand", sans-serif;
 

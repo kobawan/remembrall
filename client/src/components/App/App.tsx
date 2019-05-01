@@ -4,7 +4,7 @@ import "./app.less";
 
 import { getStorageKey, StorageKeys, setStorageKey } from "../../utils/localStorage";
 import { GET_USER_ID } from "../../queries/queries";
-import { ProjectColumn } from "../Column/ProjectColumn";
+import { ProjectColumn } from "../ProjectColumn/ProjectColumn";
 import { Loading } from "../Loading/Loading";
 
 interface GetUserData {

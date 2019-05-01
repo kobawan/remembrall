@@ -4,32 +4,21 @@ import "./column.less";
 import { Ticket } from "../Ticket/Ticket";
 import { ColumnType, CommonFields } from "../../types";
 import { plusSvg } from "../Svg/Svg";
-import { FormOverlay } from "../FormOverlay/FormOverlay";
 
 interface ColumnProps {
 	type: ColumnType;
 	tickets: CommonFields[];
-	createTicket: MutationFn;
-	deleteTicket: MutationFn;
-	updateTicket: MutationFn;
+	openForm: (props?: CommonFields) => void;
+	updateTicket: MutationFn<any, any>;
 }
 
-interface ColumnState {
-	formOpened: boolean;
-}
-
-export class Column extends React.Component<ColumnProps, ColumnState> {
-	public state: ColumnState = {
-		formOpened: false
-	};
-
+export class Column extends React.Component<ColumnProps> {
 	public render() {
-		const { type, createTicket, deleteTicket } = this.props;
-		const { formOpened } = this.state;
+		const { type } = this.props;
 
-		return (<>
+		return (
 			<div className="column">
-				<div className="header" onClick={this.toggleForm}>
+				<div className="header" onClick={this.openNewForm}>
 					<span>{type}</span>
 					{plusSvg}
 				</div>
@@ -37,28 +26,21 @@ export class Column extends React.Component<ColumnProps, ColumnState> {
 					{this.renderTickets()}
 				</div>
 			</div>
-			{formOpened && (
-				<FormOverlay
-					closeForm={this.toggleForm}
-					createTicket={createTicket}
-					deleteTicket={deleteTicket}
-				/>
-			)}
-		</>);
+		);
 	}
 
-	private toggleForm = () => {
-		this.setState({ formOpened: !this.state.formOpened });
+	private openNewForm = () => {
+		this.props.openForm();
 	}
 
 	private renderTickets = () => {
-		const { tickets, type, updateTicket } = this.props;
+		const { tickets, type, updateTicket, openForm } = this.props;
 		return tickets.map((data, index) => (
 			<Ticket
-				{...data}
+				data={data}
 				key={index}
 				type={type}
-				toggleForm={this.toggleForm}
+				openForm={openForm}
 				updateTicket={updateTicket}
 			/>
 		));

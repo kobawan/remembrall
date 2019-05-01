@@ -1,26 +1,19 @@
 import * as React from "react";
-import { Mutation, MutationFn, MutationUpdaterFn, Query, QueryResult } from "react-apollo";
+import { Mutation, MutationUpdaterFn, Query, QueryResult } from "react-apollo";
 import { adopt } from "react-adopt";
-import { Column } from "./Column";
-import { ColumnType, CommonFields, MutationRenderProps } from "../../types";
+import { MutationRenderProps, ProjectFields } from "../../types";
 import { ADD_PROJECT, GET_PROJECT, DELETE_PROJECT, UPDATE_PROJECT } from "../../queries/queries";
-import { logMutationErrors } from "../../utils/errorHandling";
 
 interface GetProjectData {
-	projects: CommonFields[];
+	projects: ProjectFields[];
 }
 
 interface AddProjectData {
-	addProject: CommonFields;
+	addProject: ProjectFields;
 }
 
 interface ProjectInput {
-	params: {
-		name: string;
-		categories: string[];
-		materials: string[];
-		tools: string[];
-	};
+	params: Pick<ProjectFields, Exclude<keyof ProjectFields, "id">>;
 }
 
 interface DeleteProjectData {
@@ -28,10 +21,10 @@ interface DeleteProjectData {
 }
 
 interface UpdateProjectData {
-	updateProject: CommonFields;
+	updateProject: ProjectFields;
 }
 
-interface AdoptRenderProps {
+export interface ProjectRenderProps {
 	addProject: MutationRenderProps<AddProjectData, ProjectInput>;
 	deleteProject: MutationRenderProps<DeleteProjectData, { id: string }>;
 	updateProject: MutationRenderProps<UpdateProjectData, ProjectInput & { id: string }>;
@@ -111,7 +104,7 @@ const updateCache: MutationUpdaterFn<UpdateProjectData> = (cache, { data }) => {
 	}
 };
 
-const ProjectContainer = adopt<AdoptRenderProps>({
+export const ProjectWrapper = adopt<ProjectRenderProps>({
 	projects: ({ render }) => (
 		<Query query={GET_PROJECT} children={render} />
 	),
@@ -131,31 +124,3 @@ const ProjectContainer = adopt<AdoptRenderProps>({
 		</Mutation>
 	)
 });
-
-export class ProjectColumn extends React.PureComponent {
-	public render() {
-		return (
-			<ProjectContainer>
-				{({ addProject, deleteProject, updateProject, projects: { data, error }}: AdoptRenderProps) => {
-					/**
-					 * @todo handle loading?
-					 */
-					if(error) {
-						console.error(error);
-					}
-					logMutationErrors(addProject, deleteProject, updateProject);
-
-					return (
-						<Column
-							tickets={data && data.projects ? data.projects : []}
-							type={ColumnType.Projects}
-							createTicket={addProject.mutation as MutationFn}
-							deleteTicket={deleteProject.mutation as MutationFn}
-							updateTicket={updateProject.mutation as MutationFn}
-						/>
-					);
-				}}
-			</ProjectContainer>
-		);
-	}
-}

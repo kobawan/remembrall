@@ -1,0 +1,52 @@
+@import "../../styles/colours.less";
+
+.formRow {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	padding-top: 1rem;
+
+	label {
+		margin-right: 0.5rem;
+		flex: 2;
+		text-transform: capitalize;
+		font-size: 1.6rem;
+	}
+
+	.wrapper {
+		flex: 6;
+
+		.errorMsg {
+			height: 1.3rem;
+			padding-left: 0.5rem;
+		}
+
+		input {
+			border: solid 1px transparent;
+			border-bottom-color: @colourBorder;
+			width: 100%;
+			box-sizing: border-box;
+			font-size: 2rem;
+			padding: 0.3rem 0.5rem;
+	
+			&.error {
+				border: solid 1px @colourError;
+			}
+		}
+	}
+
+	textarea {
+		border: solid 1px @colourBorder;
+		flex: 6;
+		font-size: 2rem;
+		padding: 0.3rem 0.5rem;
+	}
+}
+
+.formTitle {
+	font-size: 2rem;
+	padding: 0.3rem 0.5rem;
+	border: none;
+	border-bottom: solid 1px @colourBorder;
+	text-align: center;
+}

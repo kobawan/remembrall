@@ -2,12 +2,13 @@ import * as React from "react";
 import { MutationFn } from "react-apollo";
 import "./ticket.less";
 import { editSvg } from "../Svg/Svg";
-import { ColumnType, AllColumnFields } from "../../types";
+import { ColumnType, CommonFields } from "../../types";
 
 export interface TicketProps {
 	type: ColumnType;
-	toggleForm: () => void;
+	openForm: (props?: CommonFields) => void;
 	updateTicket: MutationFn;
+	data: CommonFields;
 }
 
 interface TicketState {
@@ -15,9 +16,9 @@ interface TicketState {
 	focused: boolean;
 }
 
-export class Ticket extends React.PureComponent<TicketProps & Partial<AllColumnFields>, TicketState> {
+export class Ticket extends React.Component<TicketProps, TicketState> {
 	public state: TicketState = {
-		name: this.props.name || "",
+		name: this.props.data.name,
 		focused: false,
 	};
 	private textAreaRef = React.createRef<HTMLTextAreaElement>();
@@ -35,7 +36,7 @@ export class Ticket extends React.PureComponent<TicketProps & Partial<AllColumnF
 						value={name}
 						placeholder="Name"
 					/> : <>
-						<span onClick={this.openForm}>
+						<span onClick={this.openFormWithInfo}>
 							{name}
 						</span>
 						<div className="editWrapper" onClick={this.handleFocus} >
@@ -45,10 +46,6 @@ export class Ticket extends React.PureComponent<TicketProps & Partial<AllColumnF
 				}
 			</div>
 		</>);
-	}
-
-	private openForm = () => {
-		this.props.toggleForm();
 	}
 
 	/**
@@ -73,14 +70,21 @@ export class Ticket extends React.PureComponent<TicketProps & Partial<AllColumnF
 	 * Updates the ticket's name
 	 */
 	private handleBlur = () => {
-		if(this.props.name !== this.state.name && this.state.name) {
+		if(this.props.data.name !== this.state.name && this.state.name) {
 			this.props.updateTicket({
 				variables: {
-					id: this.props.id,
+					id: this.props.data.id,
 					params: { name: this.state.name },
 				}
 			});
 		}
 		this.setState({ focused: false });
+	}
+
+	/**
+	 * Opens form with existing ticket data
+	 */
+	private openFormWithInfo = () => {
+		this.props.openForm(this.props.data);
 	}
 }
