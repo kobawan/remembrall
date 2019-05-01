@@ -44,9 +44,20 @@
 }
 
 .formTitle {
-	font-size: 2rem;
-	padding: 0.3rem 0.5rem;
-	border: none;
-	border-bottom: solid 1px @colourBorder;
-	text-align: center;
+	input {
+		font-size: 2rem;
+		padding: 0.3rem 0.5rem;
+		border: solid 1px transparent;
+		border-bottom-color: @colourBorder;
+		text-align: center;
+
+		&.error {
+			border: solid 1px @colourError;
+		}
+	}
+
+	.errorMsg {
+		height: 1.3rem;
+		text-align: center;
+	}
 }

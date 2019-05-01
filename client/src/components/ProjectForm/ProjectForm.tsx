@@ -66,18 +66,21 @@ export class ProjectForm extends React.Component<FormProps, FormState> {
 						tags={categories}
 						options={[]}
 						addOption={() => {}}
+						isRequired={true}
 					/>
 					<TextInputRowWithList
 						name={Fields.tools}
 						tags={tools}
 						options={[]}
 						addOption={() => {}}
+						isRequired={true}
 					/>
 					<TextInputRowWithList
 						name={Fields.materials}
 						tags={materials}
 						options={[]}
 						addOption={() => {}}
+						isRequired={true}
 					/>
 					<TextAreaRow
 						name={Fields.instructions}

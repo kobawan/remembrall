@@ -16,6 +16,7 @@ interface TextInputRowWithListProps {
 	options: CommonFields[];
 	tags: CommonFields[];
 	addOption: MutationFn<any, any>;
+	isRequired?: boolean;
 }
 
 interface TextInputRowWithListState {
@@ -25,20 +26,30 @@ interface TextInputRowWithListState {
 }
 
 const ADD_TEXT = "+ Add ";
-const ERROR_MSG = "Invalid input. Please select a value from the list or add a new value.";
+const DROPDOWN_ERROR_MSG = "Invalid input. Please select a value from the list or add a new value.";
+const TITLE_ERROR_MSG = "Invalid input. Title field is required";
 
-export const TextInputTitle = ({ name, value, onChange }: RowProps) => {
-	return (
-		<input
-			type="text"
-			name={name}
-			onChange={onChange}
-			placeholder="Project name"
-			value={value}
-			className="formTitle"
-		/>
-	);
-};
+export class TextInputTitle extends React.PureComponent<RowProps> {
+	public render() {
+		const { name, value, onChange } = this.props;
+		const showError = value.length === 0;
+		return (
+			<div className="formTitle">
+				<input
+					type="text"
+					name={name}
+					onChange={onChange}
+					placeholder="Project name"
+					value={value}
+					className={showError ? "error" : ""}
+				/>
+				<div className="errorMsg">
+					{showError && TITLE_ERROR_MSG}
+				</div>
+			</div>
+		);
+	}
+}
 
 export const TextAreaRow = ({ name, value, onChange }: RowProps) => {
 	return (
@@ -53,21 +64,6 @@ export const TextAreaRow = ({ name, value, onChange }: RowProps) => {
 	);
 };
 
-export const TextInputRow = ({ name, value, onChange}: RowProps) => {
-	return (
-		<div className="formRow">
-			<label>{name}</label>
-			<input
-				type="text"
-				name={name}
-				onChange={onChange}
-				value={value}
-				className="withoutDropdown"
-			/>
-		</div>
-	);
-};
-
 export class TextInputRowWithList extends React.Component<TextInputRowWithListProps, TextInputRowWithListState> {
 	public state: TextInputRowWithListState = {
 		value: "",
@@ -76,17 +72,17 @@ export class TextInputRowWithList extends React.Component<TextInputRowWithListPr
 	};
 
 	public render() {
-		const { name, options, tags } = this.props;
+		const { name, options, isRequired, tags } = this.props;
 		const { value, showError } = this.state;
 		/**
 		 * @todo add tags below input
 		 */
 		return (
 			<div className="formRow">
-				<label>{name}</label>
+				<label>{`${name}${isRequired ? " *" : ""}`}</label>
 				<div className="wrapper">
 					<div className="errorMsg">
-						{showError && ERROR_MSG}
+						{showError && DROPDOWN_ERROR_MSG}
 					</div>
 					<input
 						type="text"
