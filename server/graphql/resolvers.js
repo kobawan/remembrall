@@ -13,6 +13,15 @@ const resolverMap = {
 		projects(parent, args, { currentUser }) {
 			return currentUser.projects;
 		},
+		categories(parent, args, { currentUser }) {
+			return currentUser.categories;
+		},
+		tools(parent, args, { currentUser }) {
+			return currentUser.tools;
+		},
+		materials(parent, args, { currentUser }) {
+			return currentUser.materials;
+		},
 	},
 	// QUERY HELPERS
 	Category: {

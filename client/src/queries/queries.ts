@@ -1,7 +1,32 @@
 import { gql } from "apollo-boost";
 
+/**
+ * FRAGMENTS
+ */
+
 const ProjectsFragment = gql`
 	fragment ProjectsFragment on Project {
+		name
+		id
+	}
+`;
+
+const CategoriesFragment = gql`
+	fragment CategoriesFragment on Category {
+		name
+		id
+	}
+`;
+
+const ToolsFragment = gql`
+	fragment ToolsFragment on Tool {
+		name
+		id
+	}
+`;
+
+const MaterialsFragment = gql`
+	fragment MaterialsFragment on Material {
 		name
 		id
 	}
@@ -11,23 +36,27 @@ const UserFragment = gql`
 	fragment UserFragment on User {
 		id
 		categories {
-			name
-			id
+			...CategoriesFragment
 		}
 		tools {
-			name
-			id
+			...ToolsFragment
 		}
 		materials {
-			name
-			id
+			...MaterialsFragment
 		}
 		projects {
 			...ProjectsFragment
 		}
 	}
 	${ProjectsFragment}
+	${CategoriesFragment}
+	${ToolsFragment}
+	${MaterialsFragment}
 `;
+
+/**
+ * USER
+ */
 
 export const GET_USER = gql`
 	query User {
@@ -46,7 +75,11 @@ export const GET_USER_ID = gql`
 	}
 `;
 
-export const GET_PROJECT = gql`
+/**
+ * PROJECTS
+ */
+
+export const GET_PROJECTS = gql`
 	query Project {
 		projects {
 			...ProjectsFragment
@@ -81,44 +114,68 @@ export const DELETE_PROJECT = gql`
 	}
 `;
 
+/**
+ * CATEGORIES
+ */
+
 export const ADD_CATEGORY = gql`
-	mutation AddCategory(
-		$name: String!,
-		$tools: [ID],
-	) {
-		addCategory(
-			name: $name,
-			tools: $tools,
-		) {
-			name
+	mutation AddCategory($params: CategoryInput) {
+		addCategory(params: $params) {
+			...CategoriesFragment
 		}
 	}
+	${CategoriesFragment}
 `;
+
+export const GET_CATEGORIES = gql`
+	query Category {
+		categories {
+			...CategoriesFragment
+		}
+	}
+	${CategoriesFragment}
+`;
+
+/**
+ * TOOLS
+ */
 
 export const ADD_TOOL = gql`
-	mutation AddTool(
-		$name: String!,
-		$amount: Int,
-	) {
-		addTool(
-			name: $name,
-			amount: $amount,
-		) {
-			name
+	mutation AddTool($params: ToolInput) {
+		addTool(params: $params) {
+			...ToolsFragment
 		}
 	}
+	${ToolsFragment}
 `;
 
-export const ADD_MATERIAL = gql`
-	mutation AddMaterial(
-		$name: String!,
-		$amount: Int,
-	) {
-		addMaterial(
-			name: $name,
-			amount: $amount,
-		) {
-			name
+export const GET_TOOLS = gql`
+	query Tool {
+		tools {
+			...ToolsFragment
 		}
 	}
+	${ToolsFragment}
+`;
+
+/**
+ * MATERIALS
+ */
+
+export const ADD_MATERIAL = gql`
+	mutation AddMaterial($params: MaterialInput) {
+		addMaterial(params: $params) {
+			...MaterialsFragment
+		}
+	}
+	${MaterialsFragment}
+`;
+
+export const GET_MATERIALS = gql`
+	query Material {
+		materials {
+			...MaterialsFragment
+		}
+	}
+	${MaterialsFragment}
 `;

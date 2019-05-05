@@ -25,14 +25,22 @@ interface TextInputRowWithListState {
 	showError: boolean;
 }
 
+interface TextInputTitleState {
+	showError: boolean;
+}
+
 const ADD_TEXT = "+ Add ";
-const DROPDOWN_ERROR_MSG = "Invalid input. Please select a value from the list or add a new value.";
+const DROPDOWN_ERROR_MSG = "Invalid input. Please select an existing value or add a new value.";
 const TITLE_ERROR_MSG = "Invalid input. Title field is required";
 
-export class TextInputTitle extends React.PureComponent<RowProps> {
+export class TextInputTitle extends React.PureComponent<RowProps, TextInputTitleState> {
+	public state: TextInputTitleState = {
+		showError: false,
+	};
+
 	public render() {
 		const { name, value, onChange } = this.props;
-		const showError = value.length === 0;
+		const { showError } = this.state;
 		return (
 			<div className="formTitle">
 				<input
@@ -42,12 +50,34 @@ export class TextInputTitle extends React.PureComponent<RowProps> {
 					placeholder="Project name"
 					value={value}
 					className={showError ? "error" : ""}
+					onBlur={this.onBlur}
+					onFocus={this.onFocus}
 				/>
 				<div className="errorMsg">
 					{showError && TITLE_ERROR_MSG}
 				</div>
 			</div>
 		);
+	}
+
+	/**
+	 * Shows input error on blur
+	 */
+	private onBlur = () => {
+		const { showError } = this.state;
+		const { value } = this.props;
+		if(value.length === 0 && !showError) {
+			this.setState({ showError: true });
+		}
+	}
+
+	/**
+	 * Hides input error on focus
+	 */
+	private onFocus = () => {
+		if(this.state.showError) {
+			this.setState({ showError: false });
+		}
 	}
 }
 
@@ -124,11 +154,11 @@ export class TextInputRowWithList extends React.Component<TextInputRowWithListPr
 		 * @todo if option was added, send it to db
 		 */
 		const wasAddedOption = val.includes(ADD_TEXT);
+		const result = !wasAddedOption ? val : val.slice(ADD_TEXT.length);
 		if(wasAddedOption) {
-			this.props.addOption();
+			this.props.addOption({ variables: { params: { name: result } } });
 		}
 		const wasSelectedOption = !!this.props.options.find(option => option.name === val);
-		const result = !wasAddedOption ? val : val.slice(ADD_TEXT.length);
 
 		this.setState({
 			value: result,

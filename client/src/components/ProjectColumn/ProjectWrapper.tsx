@@ -2,10 +2,11 @@ import * as React from "react";
 import { Mutation, MutationUpdaterFn, Query, QueryResult } from "react-apollo";
 import { adopt } from "react-adopt";
 import { MutationRenderProps, ProjectFields } from "../../types";
-import { ADD_PROJECT, GET_PROJECT, DELETE_PROJECT, UPDATE_PROJECT } from "../../queries/queries";
+import { ADD_PROJECT, GET_PROJECTS, DELETE_PROJECT, UPDATE_PROJECT } from "../../queries/queries";
+import { initHandleCache } from "../../utils/cacheHandling";
 
 interface GetProjectData {
-	projects: ProjectFields[];
+	projects?: ProjectFields[];
 }
 
 interface AddProjectData {
@@ -31,37 +32,21 @@ export interface ProjectRenderProps {
 	projects: QueryResult<GetProjectData>;
 }
 
-const addToCache: MutationUpdaterFn<AddProjectData> = (cache, { data }) => {
-	try {
-		if (!data) {
-			throw new Error("No data available");
-		}
-		const res = cache.readQuery<GetProjectData>({ query: GET_PROJECT });
-		if(!res) {
-			throw new Error("Cannot read cache!");
+const addToCache: MutationUpdaterFn<AddProjectData> =
+	initHandleCache<AddProjectData, GetProjectData>(GET_PROJECTS, (res, data) => {
+		if(!res.projects) {
+			res.projects = [];
 		}
 		res.projects.push(data.addProject);
-		cache.writeData({ data: res });
-	} catch(e) {
-		// If not all of the data needed to fulfill this read is in Apollo Client’s cache
-		// then an error will be thrown instead, so make sure to only read data that you know you have!
-		console.error(e);
-	}
-};
+		return res;
+	});
 
-const removeFromCache: MutationUpdaterFn<DeleteProjectData> = (cache, { data }) => {
-	try {
-		if (!data) {
-			throw new Error("No data available");
-		}
-		if (!data.deleteProject) {
-			throw new Error("Entry already deleted");
-		}
-		const res = cache.readQuery<GetProjectData>({ query: GET_PROJECT });
-		if(!res) {
-			throw new Error("Cannot read cache!");
-		}
+const removeFromCache: MutationUpdaterFn<DeleteProjectData> =
+	initHandleCache<DeleteProjectData, GetProjectData>(GET_PROJECTS, (res, data) => {
 		let index: number | undefined = undefined;
+		if(!res.projects) {
+			res.projects = [];
+		}
 		res.projects.forEach((project, i) => {
 			if (project.id === data.deleteProject!.id) {
 				index = i;
@@ -71,42 +56,28 @@ const removeFromCache: MutationUpdaterFn<DeleteProjectData> = (cache, { data }) 
 			throw new Error("Entry not found");
 		}
 		res.projects.splice(index, 1);
-		cache.writeData({ data: res });
-	} catch(e) {
-		// If not all of the data needed to fulfill this read is in Apollo Client’s cache
-		// then an error will be thrown instead, so make sure to only read data that you know you have!
-		console.error(e);
-	}
-};
+		return res;
+	});
 
 /**
  * Updates project name to cache
  */
-const updateCache: MutationUpdaterFn<UpdateProjectData> = (cache, { data }) => {
-	try {
-		if (!data) {
-			throw new Error("No data available");
-		}
-		const res = cache.readQuery<GetProjectData>({ query: GET_PROJECT });
-		if(!res) {
-			throw new Error("Cannot read cache!");
-		}
-		res.projects.forEach(project => {
-			if(project.id === data.updateProject.id) {
-				project.name = data.updateProject.name;
-			}
-		});
-		cache.writeData({ data: res });
-	} catch(e) {
-		// If not all of the data needed to fulfill this read is in Apollo Client’s cache
-		// then an error will be thrown instead, so make sure to only read data that you know you have!
-		console.error(e);
+const updateCache: MutationUpdaterFn<UpdateProjectData> =
+initHandleCache<UpdateProjectData, GetProjectData>(GET_PROJECTS, (res, data) => {
+	if(!res.projects) {
+		res.projects = [];
 	}
-};
+	res.projects.forEach(project => {
+		if(project.id === data.updateProject.id) {
+			project.name = data.updateProject.name;
+		}
+	});
+	return res;
+});
 
 export const ProjectWrapper = adopt<ProjectRenderProps>({
 	projects: ({ render }) => (
-		<Query query={GET_PROJECT} children={render} />
+		<Query query={GET_PROJECTS} children={render} />
 	),
 	addProject: ({ render }) => (
 		<Mutation mutation={ADD_PROJECT} update={addToCache}>

@@ -4,6 +4,10 @@ import "./projectForm.less";
 import { ProjectFields } from "../../types";
 import { getInitialState } from "../../utils/getInitialState";
 import { TextAreaRow, OnChangeFn, TextInputRowWithList, TextInputTitle } from "../Form/FormComponents";
+import { logMutationErrors } from "../../utils/errorHandling";
+import { CategoryWrapper, CategoryRenderProps } from "./CategoryWrapper";
+import { ToolWrapper, ToolRenderProps } from "./ToolWrapper";
+import { MaterialWrapper, MaterialRenderProps } from "./MaterialWrapper";
 
 interface FormProps {
 	ticket?: ProjectFields;
@@ -61,27 +65,57 @@ export class ProjectForm extends React.Component<FormProps, FormState> {
 					onChange={this.handleInput}
 				/>
 				<div className="content">
-					<TextInputRowWithList
-						name={Fields.categories}
-						tags={categories}
-						options={[]}
-						addOption={() => {}}
-						isRequired={true}
-					/>
-					<TextInputRowWithList
-						name={Fields.tools}
-						tags={tools}
-						options={[]}
-						addOption={() => {}}
-						isRequired={true}
-					/>
-					<TextInputRowWithList
-						name={Fields.materials}
-						tags={materials}
-						options={[]}
-						addOption={() => {}}
-						isRequired={true}
-					/>
+					<CategoryWrapper>
+						{({ addCategory, categories: { data, error }}: CategoryRenderProps) => {
+							if(error) {
+								console.error(error);
+							}
+							logMutationErrors(addCategory);
+							return (
+								<TextInputRowWithList
+									name={Fields.categories}
+									tags={categories}
+									options={data && data.categories ? data.categories : []}
+									addOption={addCategory.mutation}
+									isRequired={true}
+								/>
+							);
+						}}
+					</CategoryWrapper>
+					<ToolWrapper>
+						{({ addTool, tools: { data, error }}: ToolRenderProps) => {
+							if(error) {
+								console.error(error);
+							}
+							logMutationErrors(addTool);
+							return (
+								<TextInputRowWithList
+									name={Fields.tools}
+									tags={tools}
+									options={data && data.tools ? data.tools : []}
+									addOption={addTool.mutation}
+									isRequired={true}
+								/>
+							);
+						}}
+					</ToolWrapper>
+					<MaterialWrapper>
+						{({ addMaterial, materials: { data, error }}: MaterialRenderProps) => {
+							if(error) {
+								console.error(error);
+							}
+							logMutationErrors(addMaterial);
+							return (
+								<TextInputRowWithList
+									name={Fields.materials}
+									tags={materials}
+									options={data && data.materials ? data.materials : []}
+									addOption={addMaterial.mutation}
+									isRequired={true}
+								/>
+							);
+						}}
+					</MaterialWrapper>
 					<TextAreaRow
 						name={Fields.instructions}
 						value={instructions}
@@ -101,12 +135,18 @@ export class ProjectForm extends React.Component<FormProps, FormState> {
 		);
 	}
 
+	/**
+	 * Handles simple inputs
+	 */
 	private handleInput: OnChangeFn = (e) => {
 		const { name, value } = e.target;
 
 		this.setState({ [name]: value } as any);
 	}
 
+	/**
+	 * Updates or creates project to db
+	 */
 	private submitProject = () => {
 		/**
 		 * @todo add or update project to graphql
@@ -116,6 +156,9 @@ export class ProjectForm extends React.Component<FormProps, FormState> {
 			: this.props.createTicket();
 	}
 
+	/**
+	 * Checks if form contains changes
+	 */
 	private formHasChanges = () => {
 		/**
 		 * @todo implement logic
