@@ -14,6 +14,7 @@
         "allowSyntheticDefaultImports": true,
         "forceConsistentCasingInFileNames": true,
         "newLine": "lf",
+        "esModuleInterop": true,
         "lib": [
             "dom",
             "es5",

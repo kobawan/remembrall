@@ -1,6 +1,6 @@
 import * as React from "react";
 import { MutationFn } from "react-apollo";
-import { isEqual } from "lodash";
+import isEqual from "lodash.isequal";
 import "./projectForm.less";
 import { ProjectFields, CommonFields } from "../../types";
 import { getInitialState } from "../../utils/getInitialState";
