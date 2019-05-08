@@ -1,7 +1,7 @@
 import * as React from "react";
 import { MutationFn } from "react-apollo";
 import "./projectForm.less";
-import { ProjectFields } from "../../types";
+import { ProjectFields, CommonFields } from "../../types";
 import { getInitialState } from "../../utils/getInitialState";
 import { TextAreaRow, OnChangeFn, TextInputRowWithList, TextInputTitle } from "../Form/FormComponents";
 import { logMutationErrors } from "../../utils/errorHandling";
@@ -78,6 +78,7 @@ export class ProjectForm extends React.Component<FormProps, FormState> {
 									options={data && data.categories ? data.categories : []}
 									addOption={addCategory.mutation}
 									isRequired={true}
+									updateTags={this.updateCategoryTags}
 								/>
 							);
 						}}
@@ -95,6 +96,7 @@ export class ProjectForm extends React.Component<FormProps, FormState> {
 									options={data && data.tools ? data.tools : []}
 									addOption={addTool.mutation}
 									isRequired={true}
+									updateTags={this.updateToolTags}
 								/>
 							);
 						}}
@@ -112,6 +114,7 @@ export class ProjectForm extends React.Component<FormProps, FormState> {
 									options={data && data.materials ? data.materials : []}
 									addOption={addMaterial.mutation}
 									isRequired={true}
+									updateTags={this.updateMaterialTags}
 								/>
 							);
 						}}
@@ -139,9 +142,21 @@ export class ProjectForm extends React.Component<FormProps, FormState> {
 	 * Handles simple inputs
 	 */
 	private handleInput: OnChangeFn = (e) => {
-		const { name, value } = e.target;
+		const { name, value } = e.currentTarget;
 
 		this.setState({ [name]: value } as any);
+	}
+
+	private updateCategoryTags = (tags: CommonFields[]) => {
+		this.setState({ categories: tags });
+	}
+
+	private updateToolTags = (tags: CommonFields[]) => {
+		this.setState({ tools: tags });
+	}
+
+	private updateMaterialTags = (tags: CommonFields[]) => {
+		this.setState({ materials: tags });
 	}
 
 	/**

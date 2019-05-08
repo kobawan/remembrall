@@ -1,3 +1,5 @@
+@import "../../styles/colours.less";
+
 @keyframes rotating {
 	from{
 		transform: rotate(0deg);
@@ -17,7 +19,7 @@
 	.spinner {
 		width: 4em;
 		height: 4em;
-		fill: #c1a8a4;
+		fill: @colourSvg;
 		animation: rotating 2s ease-out infinite;
 	}
 }

@@ -52,7 +52,7 @@ export class Ticket extends React.Component<TicketProps, TicketState> {
 	 * Updates textarea input
 	 */
 	private handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-		this.setState({ name: e.target.value });
+		this.setState({ name: e.currentTarget.value });
 	}
 
 	/**
