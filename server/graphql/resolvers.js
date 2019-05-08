@@ -24,6 +24,23 @@ const resolverMap = {
 		},
 	},
 	// QUERY HELPERS
+	Project: {
+		categories: async function(parent, args, { currentUser }) {
+			return parent.categories.map(id => {
+				return currentUser.categories.id(id)
+			})
+		},
+		tools: async function(parent, args, { currentUser }) {
+			return parent.tools.map(id => {
+				return currentUser.tools.id(id)
+			})
+		},
+		materials: async function(parent, args, { currentUser }) {
+			return parent.materials.map(id => {
+				return currentUser.materials.id(id)
+			})
+		},
+	},
 	Category: {
 		tools: async function(parent, args, { currentUser }) {
 			return parent.tools.map(toolID => {

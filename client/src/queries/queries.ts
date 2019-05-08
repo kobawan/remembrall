@@ -8,6 +8,20 @@ const ProjectsFragment = gql`
 	fragment ProjectsFragment on Project {
 		name
 		id
+		instructions
+		notes
+		categories {
+			id
+			name
+		}
+		materials {
+			id
+			name
+		}
+		tools {
+			id
+			name
+		}
 	}
 `;
 
@@ -32,40 +46,9 @@ const MaterialsFragment = gql`
 	}
 `;
 
-const UserFragment = gql`
-	fragment UserFragment on User {
-		id
-		categories {
-			...CategoriesFragment
-		}
-		tools {
-			...ToolsFragment
-		}
-		materials {
-			...MaterialsFragment
-		}
-		projects {
-			...ProjectsFragment
-		}
-	}
-	${ProjectsFragment}
-	${CategoriesFragment}
-	${ToolsFragment}
-	${MaterialsFragment}
-`;
-
 /**
  * USER
  */
-
-export const GET_USER = gql`
-	query User {
-		user {
-			...UserFragment
-		}
-	}
-	${UserFragment}
-`;
 
 export const GET_USER_ID = gql`
 	query User {

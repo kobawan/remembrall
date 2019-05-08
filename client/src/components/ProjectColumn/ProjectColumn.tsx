@@ -40,10 +40,11 @@ export class ProjectColumn extends React.PureComponent<{}, ColumnState> {
 							openForm={this.openForm}
 						/>
 						{formOpened && <>
-							<FormOverlay closeForm={this.closeForm} />
+							<FormOverlay closeForm={this.safeCloseForm} />
 							<ProjectForm
 								ticket={this.state.formProps}
 								closeForm={this.closeForm}
+								safeCloseForm={this.safeCloseForm}
 								setFormHasChangesFn={this.setFormHasChangesFn}
 								createTicket={addProject.mutation}
 								deleteTicket={deleteProject.mutation}
@@ -74,14 +75,24 @@ export class ProjectColumn extends React.PureComponent<{}, ColumnState> {
 	}
 
 	/**
-	 * Checks if form has changes, so it can close it.
+	 * Closes the form
 	 */
 	private closeForm = () => {
+		this.setState({
+			formOpened: false,
+			formProps: undefined,
+		});
+	}
+
+	/**
+	 * Checks if form has changes, so it can close it.
+	 */
+	private safeCloseForm = () => {
+		/**
+		 * @todo handle showing message if there are changes
+		 */
 		if(!this.state.formHasChanges()) {
-			this.setState({
-				formOpened: false,
-				formProps: undefined,
-			});
+			this.closeForm();
 		}
 	}
 }

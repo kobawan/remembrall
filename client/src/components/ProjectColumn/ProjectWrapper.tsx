@@ -60,7 +60,7 @@ const removeFromCache: MutationUpdaterFn<DeleteProjectData> =
 	});
 
 /**
- * Updates project name to cache
+ * Updates project to cache
  */
 const updateCache: MutationUpdaterFn<UpdateProjectData> =
 initHandleCache<UpdateProjectData, GetProjectData>(GET_PROJECTS, (res, data) => {
@@ -69,7 +69,7 @@ initHandleCache<UpdateProjectData, GetProjectData>(GET_PROJECTS, (res, data) => 
 	}
 	res.projects.forEach(project => {
 		if(project.id === data.updateProject.id) {
-			project.name = data.updateProject.name;
+			project = data.updateProject;
 		}
 	});
 	return res;

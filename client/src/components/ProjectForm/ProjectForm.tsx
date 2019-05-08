@@ -1,5 +1,6 @@
 import * as React from "react";
 import { MutationFn } from "react-apollo";
+import { isEqual } from "lodash";
 import "./projectForm.less";
 import { ProjectFields, CommonFields } from "../../types";
 import { getInitialState } from "../../utils/getInitialState";
@@ -12,6 +13,7 @@ import { MaterialWrapper, MaterialRenderProps } from "./MaterialWrapper";
 interface FormProps {
 	ticket?: ProjectFields;
 	closeForm: () => void;
+	safeCloseForm: () => void;
 	setFormHasChangesFn: (fn: () => boolean) => void;
 	createTicket: MutationFn<any, any>;
 	deleteTicket: MutationFn<any, any>;
@@ -47,7 +49,7 @@ export class ProjectForm extends React.Component<FormProps, FormState> {
 	}
 
 	public render() {
-		const { closeForm } = this.props;
+		const { safeCloseForm } = this.props;
 		const {
 			name,
 			categories,
@@ -131,7 +133,7 @@ export class ProjectForm extends React.Component<FormProps, FormState> {
 					/>
 				</div>
 				<div className="footer">
-					<button onClick={closeForm}>Cancel</button>
+					<button onClick={safeCloseForm}>Cancel</button>
 					<button onClick={this.submitProject}>Save</button>
 				</div>
 			</div>
@@ -160,24 +162,89 @@ export class ProjectForm extends React.Component<FormProps, FormState> {
 	}
 
 	/**
-	 * Updates or creates project to db
+	 * Checks if inputs are valid and then updates or creates project to db
 	 */
 	private submitProject = () => {
+		const {
+			categories,
+			materials,
+			tools,
+			name,
+			instructions,
+			notes,
+		} = this.state;
+
+		const requiredFieldsNotEmpty = (
+			categories.length > 0
+			&& materials.length > 0
+			&& tools.length > 0
+			&& name.length > 0
+		);
+
 		/**
-		 * @todo add or update project to graphql
+		 * @todo show message if results aren't valid
 		 */
-		this.formHasChanges
-			? this.props.updateTicket()
-			: this.props.createTicket();
+		if(!requiredFieldsNotEmpty) {
+			return;
+		}
+
+		if(this.formHasChanges()) {
+			const params = {
+				name,
+				instructions,
+				notes,
+				categories: categories.map(tag => tag.id),
+				materials: materials.map(tag => tag.id),
+				tools: tools.map(tag => tag.id),
+			};
+
+			if(this.props.ticket) {
+				this.props.updateTicket({
+					variables: {
+						params,
+						id: this.props.ticket.id,
+					},
+				});
+			} else {
+				this.props.createTicket({ variables: { params } });
+			}
+		}
+
+		this.props.closeForm();
 	}
 
 	/**
 	 * Checks if form contains changes
 	 */
 	private formHasChanges = () => {
-		/**
-		 * @todo implement logic
-		 */
-		return false;
+		const {
+			instructions,
+			notes,
+			categories,
+			materials,
+			tools,
+			name,
+		} = this.state;
+		const ticket = this.props.ticket;
+
+		if(ticket) {
+			return (
+				instructions !== ticket.instructions
+				|| notes !== ticket.notes
+				|| name !== ticket.name
+				|| !isEqual(categories, ticket.categories)
+				|| !isEqual(tools, ticket.tools)
+				|| !isEqual(materials, ticket.materials)
+			);
+		}
+
+		return (
+			!!instructions.length
+			|| !!notes.length
+			|| !!name.length
+			|| !!categories.length
+			|| !!materials.length
+			|| !!tools.length
+		);
 	}
 }
