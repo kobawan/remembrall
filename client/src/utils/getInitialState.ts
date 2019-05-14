@@ -3,15 +3,16 @@
  * exist in the first object, then it is not added.
  */
 export const getInitialState = <DS = {}, P = undefined>(defaultState: DS, props?: P): DS => {
+	const state = { ...defaultState };
 	if (!props) {
-		return defaultState;
+		return state;
 	}
 	const entries = Object.entries(props) as Array<[keyof DS, DS[keyof DS]]>;
 
 	entries.forEach(([key, value]) => {
-		if (value !== undefined && value !== null && defaultState.hasOwnProperty(key)) {
-			defaultState[key] = value;
+		if (value !== undefined && value !== null && state.hasOwnProperty(key)) {
+			state[key] = value;
 		}
 	});
-	return defaultState;
+	return state;
 };
