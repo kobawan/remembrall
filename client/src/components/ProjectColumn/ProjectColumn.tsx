@@ -1,15 +1,17 @@
 import * as React from "react";
 import { Column } from "../Column/Column";
 import { ColumnType, ProjectFields } from "../../types";
-import { logMutationErrors } from "../../utils/errorHandling";
-import { FormOverlay } from "../FormOverlay/FormOverlay";
+import { logErrors } from "../../utils/errorHandling";
+import { Overlay } from "../Overlay/Overlay";
 import { ProjectForm } from "../ProjectForm/ProjectForm";
 import { ProjectWrapper, ProjectRenderProps } from "./ProjectWrapper";
+import { Popup, PopupMessage } from "../Modal/Popup";
 
 interface ColumnState {
 	formOpened: boolean;
 	formHasChanges: () => boolean;
 	formProps?: ProjectFields;
+	popupText?: string;
 }
 
 export class ProjectColumn extends React.PureComponent<{}, ColumnState> {
@@ -19,7 +21,7 @@ export class ProjectColumn extends React.PureComponent<{}, ColumnState> {
 	};
 
 	public render() {
-		const { formOpened } = this.state;
+		const { formOpened, popupText } = this.state;
 
 		return (
 			<ProjectWrapper>
@@ -27,10 +29,7 @@ export class ProjectColumn extends React.PureComponent<{}, ColumnState> {
 					/**
 					 * @todo handle loading?
 					 */
-					if(error) {
-						console.error(error);
-					}
-					logMutationErrors(addProject, deleteProject, updateProject);
+					logErrors(error, addProject, deleteProject, updateProject);
 
 					return (<>
 						<Column
@@ -40,17 +39,25 @@ export class ProjectColumn extends React.PureComponent<{}, ColumnState> {
 							openForm={this.openForm}
 						/>
 						{formOpened && <>
-							<FormOverlay closeForm={this.safeCloseForm} />
+							<Overlay onClick={this.safeCloseForm} />
 							<ProjectForm
 								ticket={this.state.formProps}
 								closeForm={this.closeForm}
 								safeCloseForm={this.safeCloseForm}
+								openPopup={this.openPopup}
 								setFormHasChangesFn={this.setFormHasChangesFn}
 								createTicket={addProject.mutation}
 								deleteTicket={deleteProject.mutation}
 								updateTicket={updateProject.mutation}
 							/>
 						</>}
+						{popupText && (
+							<Popup
+								text={popupText}
+								close={this.closePopup}
+								cancel={this.cancelFormChanges}
+							/>
+						)}
 					</>);
 				}}
 			</ProjectWrapper>
@@ -88,11 +95,26 @@ export class ProjectColumn extends React.PureComponent<{}, ColumnState> {
 	 * Checks if form has changes, so it can close it.
 	 */
 	private safeCloseForm = () => {
-		/**
-		 * @todo handle showing message if there are changes
-		 */
-		if(!this.state.formHasChanges()) {
+		if(this.state.formHasChanges()) {
+			this.openPopup(PopupMessage.changes);
+		} else {
 			this.closeForm();
 		}
+	}
+
+	private openPopup = (popupText: PopupMessage) => {
+		this.setState({ popupText });
+	}
+
+	private closePopup = () => {
+		this.setState({ popupText: undefined });
+	}
+
+	/**
+	 * Closes both the popup and the form even if it has changes
+	 */
+	private cancelFormChanges = () => {
+		this.closePopup();
+		this.closeForm();
 	}
 }

@@ -1,11 +1,34 @@
 @import "./colours.less";
 
-.boxMixin() {
-	border: solid 1px gainsboro;
-	box-shadow: 2px 2px 5px 0px @colourShadow;
-	border-radius: 1em;
+.boxMixin(@colour: gainsboro;) {
+	border: solid 1px @colour;
+	box-shadow: 2px 2px 0.5rem @colourShadow;
+	border-radius: 1rem;
+	transition: box-shadow 0.2s;
+}
+
+.boxMixin(@colour: gainsboro; @fullShadow) {
+	border: solid 1px @colour;
+	box-shadow: 0 0 1.25rem @colourShadow;
+	border-radius: 1rem;
+	transition: box-shadow 0.2s;
 }
 
 .boxMixinHover() {
-	box-shadow: 0 0 9px 4px @colourShadow;
+	box-shadow: 0 0 9px 2px @colourShadow;
+}
+
+.containerCenter() {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-between;
+	background: white;
+	padding: 1.5rem;
+	pointer-events: all;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+  transform: translate(-50%, -50%);
+	.boxMixin(@colourBorder, "full");
 }
