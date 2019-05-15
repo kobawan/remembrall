@@ -9,7 +9,7 @@ import { logErrors } from "../../utils/errorHandling";
 import { CategoryWrapper, CategoryRenderProps } from "./CategoryWrapper";
 import { ToolWrapper, ToolRenderProps } from "./ToolWrapper";
 import { MaterialWrapper, MaterialRenderProps } from "./MaterialWrapper";
-import { PopupMessage } from "../Modal/Popup";
+import { PopupMessage } from "../Popup/Popup";
 
 interface FormProps {
 	ticket?: ProjectFields;

@@ -5,7 +5,7 @@ import { logErrors } from "../../utils/errorHandling";
 import { Overlay } from "../Overlay/Overlay";
 import { ProjectForm } from "../ProjectForm/ProjectForm";
 import { ProjectWrapper, ProjectRenderProps } from "./ProjectWrapper";
-import { Popup, PopupMessage } from "../Modal/Popup";
+import { Popup, PopupMessage } from "../Popup/Popup";
 
 interface ColumnState {
 	formOpened: boolean;
