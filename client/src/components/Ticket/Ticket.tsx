@@ -5,52 +5,40 @@ import "./ticket.less";
 import { editSvg } from "../Svg/Svg";
 import { ColumnType, TicketData } from "../../types";
 
-export interface TicketProps {
-	type: ColumnType;
-	openForm: (props?: TicketData) => void;
+interface TicketTextAreaProps {
+	name: string;
+	id: string;
 	updateTicket: MutationFn;
-	data: TicketData;
+	close: () => void;
 }
 
-interface TicketState {
+interface TicketTextAreaState {
 	value: string;
-	focused: boolean;
 }
 
-export class Ticket extends React.Component<TicketProps, TicketState> {
-	public state: TicketState = {
-		value: this.props.data.name,
-		focused: false,
+class TicketTextArea extends React.PureComponent<TicketTextAreaProps, TicketTextAreaState> {
+	public state: TicketTextAreaState = {
+		value: this.props.name,
 	};
 	private textAreaRef = React.createRef<HTMLTextAreaElement>();
 
-	public shouldComponentUpdate(nextProps: TicketProps, nextState: TicketState) {
-		return !isEqual(this.props.data, nextProps.data) || !isEqual(this.state, nextState);
+	public componentDidMount() {
+		if (this.textAreaRef.current) {
+			this.textAreaRef.current.focus();
+		}
 	}
 
 	public render() {
-		const { value, focused } = this.state;
-
-		return (<>
-			<div className="ticket">
-				{focused
-					? <textarea
-						ref={this.textAreaRef}
-						onChange={this.handleInput}
-						onBlur={this.handleBlur}
-						value={value}
-						placeholder="Name"
-					/> : <>
-						<span onClick={this.openFormWithInfo}>
-							{value}
-						</span>
-						<div className="editWrapper" onClick={this.handleFocus} >
-							{editSvg}
-						</div>
-					</>
-				}
-			</div>
-		</>);
+		const { value } = this.state;
+		return (
+			<textarea
+				ref={this.textAreaRef}
+				onChange={this.handleInput}
+				onBlur={this.handleBlur}
+				value={value}
+				placeholder="Name"
+			/>
+		);
 	}
 
 	/**
@@ -61,31 +49,76 @@ export class Ticket extends React.Component<TicketProps, TicketState> {
 	}
 
 	/**
-	 * Sets focus on the textarea element for editing
-	 */
-	private handleFocus = () => {
-		this.setState({ focused: true }, () => {
-			if (this.textAreaRef.current) {
-				this.textAreaRef.current.focus();
-			}
-		});
-	}
-
-	/**
 	 * Updates the ticket's name
 	 */
 	private handleBlur = () => {
-		const { data } = this.props;
+		const { name, id, close } = this.props;
 		const { value } = this.state;
-		if(data.name !== value && value) {
+		if(name !== value && value) {
 			this.props.updateTicket({
 				variables: {
-					id: data.id,
+					id,
 					params: { name: value },
 				},
 			});
 		}
-		this.setState({ focused: false });
+		close();
+	}
+}
+
+export interface TicketProps {
+	type: ColumnType;
+	openForm: (props?: TicketData) => void;
+	updateTicket: MutationFn;
+	data: TicketData;
+}
+
+interface TicketState {
+	focused: boolean;
+}
+
+export class Ticket extends React.Component<TicketProps, TicketState> {
+	public state: TicketState = {
+		focused: false,
+	};
+
+	public shouldComponentUpdate(nextProps: TicketProps, nextState: TicketState) {
+		return !isEqual(this.props.data, nextProps.data) || this.state.focused !== nextState.focused;
+	}
+
+	public render() {
+		const { focused } = this.state;
+		const { name, id } = this.props.data;
+
+		return (<>
+			<div className="ticket">
+				{focused
+					? (
+						<TicketTextArea
+							name={name}
+							id={id}
+							key={name}
+							updateTicket={this.props.updateTicket}
+							close={this.toggleTextArea}
+						/>
+					) : <>
+						<span onClick={this.openFormWithInfo}>
+							{name}
+						</span>
+						<div className="editWrapper" onClick={this.toggleTextArea} >
+							{editSvg}
+						</div>
+					</>
+				}
+			</div>
+		</>);
+	}
+
+	/**
+	 * Toggles the textarea element for editing
+	 */
+	private toggleTextArea = () => {
+		this.setState({ focused: !this.state.focused });
 	}
 
 	/**
