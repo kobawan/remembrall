@@ -1,36 +1,34 @@
 import * as React from "react";
 import { MutationFn } from "react-apollo";
+import isEqual from "lodash.isequal";
 import "./column.less";
 import { Ticket } from "../Ticket/Ticket";
-import { ColumnType, CommonFields } from "../../types";
-import { plusSvg } from "../Svg/Svg";
+import { ColumnType, TicketData } from "../../types";
+import { ColumnHeader } from "../ColumnHeader/ColumnHeader";
 
 interface ColumnProps {
 	type: ColumnType;
-	tickets: CommonFields[];
-	openForm: (props?: CommonFields) => void;
+	tickets: TicketData[];
+	openForm: (props?: TicketData) => void;
 	updateTicket: MutationFn<any, any>;
 }
 
 export class Column extends React.Component<ColumnProps> {
+	public shouldComponentUpdate(nextProps: ColumnProps) {
+		return !isEqual(this.props.tickets, nextProps.tickets);
+	}
+
 	public render() {
-		const { type } = this.props;
+		const { type, openForm } = this.props;
 
 		return (
 			<div className="column">
-				<div className="header" onClick={this.openNewForm}>
-					<span>{type}</span>
-					{plusSvg}
-				</div>
+				<ColumnHeader type={type} openForm={openForm} />
 				<div className="content">
 					{this.renderTickets()}
 				</div>
 			</div>
 		);
-	}
-
-	private openNewForm = () => {
-		this.props.openForm();
 	}
 
 	private renderTickets = () => {

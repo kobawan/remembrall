@@ -46,6 +46,10 @@ enum Fields {
 export class ProjectForm extends React.Component<FormProps, FormState> {
 	public state: FormState = getInitialState(defaultState, this.props.ticket);
 
+	public shouldComponentUpdate(nextProps: FormProps, nextState: FormState) {
+		return !isEqual(this.props.ticket, nextProps.ticket) || !isEqual(this.state, nextState);
+	}
+
 	public componentDidMount() {
 		this.props.setFormHasChangesFn(this.formHasChanges);
 	}

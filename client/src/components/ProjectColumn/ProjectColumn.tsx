@@ -14,7 +14,7 @@ interface ColumnState {
 	popupText?: string;
 }
 
-export class ProjectColumn extends React.PureComponent<{}, ColumnState> {
+export class ProjectColumn extends React.Component<{}, ColumnState> {
 	public state: ColumnState = {
 		formOpened: false,
 		formHasChanges: () => false,

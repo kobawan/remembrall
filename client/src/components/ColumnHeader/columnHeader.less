@@ -1,0 +1,39 @@
+@import "../../styles/colours.less";
+@import "../../styles/mixin.less";
+
+.columnHeader {
+	.boxMixin();
+	padding: 1em 2em;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	cursor: pointer;
+	text-align: center;
+
+	span {
+		font-size: 2.2em;
+	}
+
+	@media (hover: hover) {
+		&:hover {
+			.boxMixinHover();
+
+			> .plus {
+				transform: scale(1.2);
+			}
+		}
+	}
+
+	.plus {
+		width: 3em;
+		height: 3em;
+		fill: @colourSvg;
+		transition: transform 0.3s ease;
+
+		> path {
+			stroke-width: 0.4px;
+			stroke-linejoin: round;
+			stroke: @colourSvg;
+		}
+	}
+}

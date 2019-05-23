@@ -1,30 +1,35 @@
 import * as React from "react";
 import { MutationFn } from "react-apollo";
+import isEqual from "lodash.isequal";
 import "./ticket.less";
 import { editSvg } from "../Svg/Svg";
-import { ColumnType, CommonFields } from "../../types";
+import { ColumnType, TicketData } from "../../types";
 
 export interface TicketProps {
 	type: ColumnType;
-	openForm: (props?: CommonFields) => void;
+	openForm: (props?: TicketData) => void;
 	updateTicket: MutationFn;
-	data: CommonFields;
+	data: TicketData;
 }
 
 interface TicketState {
-	name: string;
+	value: string;
 	focused: boolean;
 }
 
 export class Ticket extends React.Component<TicketProps, TicketState> {
 	public state: TicketState = {
-		name: this.props.data.name,
+		value: this.props.data.name,
 		focused: false,
 	};
 	private textAreaRef = React.createRef<HTMLTextAreaElement>();
 
+	public shouldComponentUpdate(nextProps: TicketProps, nextState: TicketState) {
+		return !isEqual(this.props.data, nextProps.data) || !isEqual(this.state, nextState);
+	}
+
 	public render() {
-		const { name, focused } = this.state;
+		const { value, focused } = this.state;
 
 		return (<>
 			<div className="ticket">
@@ -33,11 +38,11 @@ export class Ticket extends React.Component<TicketProps, TicketState> {
 						ref={this.textAreaRef}
 						onChange={this.handleInput}
 						onBlur={this.handleBlur}
-						value={name}
+						value={value}
 						placeholder="Name"
 					/> : <>
 						<span onClick={this.openFormWithInfo}>
-							{name}
+							{value}
 						</span>
 						<div className="editWrapper" onClick={this.handleFocus} >
 							{editSvg}
@@ -52,7 +57,7 @@ export class Ticket extends React.Component<TicketProps, TicketState> {
 	 * Updates textarea input
 	 */
 	private handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-		this.setState({ name: e.currentTarget.value });
+		this.setState({ value: e.currentTarget.value });
 	}
 
 	/**
@@ -70,12 +75,14 @@ export class Ticket extends React.Component<TicketProps, TicketState> {
 	 * Updates the ticket's name
 	 */
 	private handleBlur = () => {
-		if(this.props.data.name !== this.state.name && this.state.name) {
+		const { data } = this.props;
+		const { value } = this.state;
+		if(data.name !== value && value) {
 			this.props.updateTicket({
 				variables: {
-					id: this.props.data.id,
-					params: { name: this.state.name },
-				}
+					id: data.id,
+					params: { name: value },
+				},
 			});
 		}
 		this.setState({ focused: false });
