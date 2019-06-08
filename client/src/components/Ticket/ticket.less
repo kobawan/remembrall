@@ -18,6 +18,22 @@
 	position: relative;
 	display: inherit;
 
+	&.ticketError {
+		border: solid 2px @colourError;
+	}
+
+	.ticketEditer {
+		.contentMixin();
+		border: none;
+		resize: none;
+	}
+
+	span {
+		.contentMixin();
+		word-break: break-word;
+		cursor: pointer;
+	}
+
 	.ticketOptions {
 		display: none;
 	}
@@ -55,16 +71,4 @@
 			}
 		}
 	}
-
-	span {
-		.contentMixin();
-		word-break: break-word;
-		cursor: pointer;
-	}
-}
-
-.ticketEditer {
-	.contentMixin();
-	border: none;
-	resize: none;
 }

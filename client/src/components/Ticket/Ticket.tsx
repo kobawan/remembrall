@@ -10,6 +10,7 @@ interface TicketTextAreaProps {
 	id: string;
 	updateTicket: MutationFn;
 	close: () => void;
+	toggleError: (toggleError: boolean) => void;
 }
 
 interface TicketTextAreaState {
@@ -34,7 +35,8 @@ class TicketTextArea extends React.PureComponent<TicketTextAreaProps, TicketText
 			<textarea
 				ref={this.textAreaRef}
 				onChange={this.handleInput}
-				onBlur={this.handleBlur}
+				onKeyDown={this.handleKeyDown}
+				onBlur={this.updateName}
 				value={value}
 				placeholder="Name"
 				className="ticketEditer"
@@ -46,17 +48,34 @@ class TicketTextArea extends React.PureComponent<TicketTextAreaProps, TicketText
 	 * Updates textarea input
 	 */
 	private handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+		this.props.toggleError(false);
 		this.setState({ value: e.currentTarget.value });
+	}
+
+	/**
+	 * Updates ticket name on enter
+	 */
+	private handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+		// enter
+		if(e.keyCode === 13) {
+			e.preventDefault();
+			this.updateName();
+		}
 	}
 
 	/**
 	 * Updates the ticket's name
 	 */
-	private handleBlur = () => {
-		const { name, id, close } = this.props;
+	private updateName = async () => {
+		const { name, id, close, toggleError } = this.props;
 		const { value } = this.state;
-		if(name !== value && value) {
-			this.props.updateTicket({
+		if(!value) {
+			toggleError(true);
+			return;
+		}
+
+		if(name !== value) {
+			await this.props.updateTicket({
 				variables: {
 					id,
 					params: { name: value },
@@ -77,23 +96,25 @@ export interface TicketProps {
 
 interface TicketState {
 	focused: boolean;
+	withError: boolean;
 }
 
 export class Ticket extends React.Component<TicketProps, TicketState> {
 	public state: TicketState = {
 		focused: false,
+		withError: false,
 	};
 
 	public shouldComponentUpdate(nextProps: TicketProps, nextState: TicketState) {
-		return !isEqual(this.props.data, nextProps.data) || this.state.focused !== nextState.focused;
+		return !isEqual(this.props.data, nextProps.data) || !isEqual(this.state, nextState);
 	}
 
 	public render() {
-		const { focused } = this.state;
+		const { focused, withError } = this.state;
 		const { name, id } = this.props.data;
 
 		return (<>
-			<div className="ticket">
+			<div className={`ticket ${withError ? "ticketError" : "" }`}>
 				{focused
 					? (
 						<TicketTextArea
@@ -102,6 +123,7 @@ export class Ticket extends React.Component<TicketProps, TicketState> {
 							key={name}
 							updateTicket={this.props.updateTicket}
 							close={this.toggleTextArea}
+							toggleError={this.toggleError}
 						/>
 					) : <>
 						<span onClick={this.openFormWithInfo}>
@@ -119,6 +141,13 @@ export class Ticket extends React.Component<TicketProps, TicketState> {
 				}
 			</div>
 		</>);
+	}
+
+	/**
+	 * Show ticket with red border error
+	 */
+	private toggleError = (withError: boolean) => {
+		this.setState({ withError });
 	}
 
 	/**
