@@ -18,7 +18,7 @@ interface FormProps {
 	openPopup: (popupText: PopupMessage) => void;
 	setFormHasChangesFn: (fn: () => boolean) => void;
 	createTicket: MutationFn<any, any>;
-	deleteTicket: MutationFn<any, any>;
+	deleteTicket: (data: CommonFields) => void;
 	updateTicket: MutationFn<any, any>;
 }
 

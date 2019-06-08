@@ -2,8 +2,8 @@ import * as React from "react";
 import { MutationFn } from "react-apollo";
 import isEqual from "lodash.isequal";
 import "./ticket.less";
-import { editSvg } from "../Svg/Svg";
-import { ColumnType, TicketData } from "../../types";
+import { editSvg, trashSvg } from "../Svg/Svg";
+import { ColumnType, TicketData, CommonFields } from "../../types";
 
 interface TicketTextAreaProps {
 	name: string;
@@ -37,6 +37,7 @@ class TicketTextArea extends React.PureComponent<TicketTextAreaProps, TicketText
 				onBlur={this.handleBlur}
 				value={value}
 				placeholder="Name"
+				className="ticketEditer"
 			/>
 		);
 	}
@@ -70,6 +71,7 @@ export interface TicketProps {
 	type: ColumnType;
 	openForm: (props?: TicketData) => void;
 	updateTicket: MutationFn;
+	deleteTicket: (data: CommonFields) => void;
 	data: TicketData;
 }
 
@@ -105,8 +107,13 @@ export class Ticket extends React.Component<TicketProps, TicketState> {
 						<span onClick={this.openFormWithInfo}>
 							{name}
 						</span>
-						<div className="editWrapper" onClick={this.toggleTextArea} >
-							{editSvg}
+						<div className="ticketOptions">
+							<div className="ticketIcon" onClick={this.toggleTextArea}>
+								{editSvg}
+							</div>
+							<div className="ticketIcon" onClick={this.deleteTicket}>
+								{trashSvg}
+							</div>
 						</div>
 					</>
 				}
@@ -125,6 +132,15 @@ export class Ticket extends React.Component<TicketProps, TicketState> {
 	 * Opens form with existing ticket data
 	 */
 	private openFormWithInfo = () => {
-		this.props.openForm(this.props.data);
+		const { openForm, data } = this.props;
+		openForm(data);
+	}
+
+	/**
+	 * Deletes the ticket from db
+	 */
+	private deleteTicket = () => {
+		const { deleteTicket, data: { id, name } } = this.props;
+		deleteTicket({ id, name });
 	}
 }

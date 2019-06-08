@@ -1,6 +1,7 @@
 import * as React from "react";
+import { MutationFn } from "react-apollo";
 import { Column } from "../Column/Column";
-import { ColumnType, ProjectFields } from "../../types";
+import { ColumnType, ProjectFields, CommonFields } from "../../types";
 import { logErrors } from "../../utils/errorHandling";
 import { Overlay } from "../Overlay/Overlay";
 import { ProjectForm } from "../ProjectForm/ProjectForm";
@@ -12,6 +13,7 @@ interface ColumnState {
 	formHasChanges: () => boolean;
 	formProps?: ProjectFields;
 	popupText?: string;
+	ticketToDelete?: CommonFields;
 }
 
 export class ProjectColumn extends React.Component<{}, ColumnState> {
@@ -36,6 +38,7 @@ export class ProjectColumn extends React.Component<{}, ColumnState> {
 							tickets={data && data.projects ? data.projects : []}
 							type={ColumnType.Projects}
 							updateTicket={updateProject.mutation}
+							deleteTicket={this.safeDeleteTicket}
 							openForm={this.openForm}
 						/>
 						{formOpened && <>
@@ -47,7 +50,7 @@ export class ProjectColumn extends React.Component<{}, ColumnState> {
 								openPopup={this.openPopup}
 								setFormHasChangesFn={this.setFormHasChangesFn}
 								createTicket={addProject.mutation}
-								deleteTicket={deleteProject.mutation}
+								deleteTicket={this.safeDeleteTicket}
 								updateTicket={updateProject.mutation}
 							/>
 						</>}
@@ -55,7 +58,10 @@ export class ProjectColumn extends React.Component<{}, ColumnState> {
 							<Popup
 								text={popupText}
 								close={this.closePopup}
-								cancel={this.cancelFormChanges}
+								action={popupText === PopupMessage.changes
+									? this.closeAll
+									: () => this.deleteTicket(deleteProject.mutation)
+								}
 							/>
 						)}
 					</>);
@@ -102,19 +108,38 @@ export class ProjectColumn extends React.Component<{}, ColumnState> {
 		}
 	}
 
-	private openPopup = (popupText: PopupMessage) => {
+	private openPopup = (popupText: string) => {
 		this.setState({ popupText });
 	}
 
 	private closePopup = () => {
-		this.setState({ popupText: undefined });
+		this.setState({ popupText: undefined, ticketToDelete: undefined });
 	}
 
 	/**
 	 * Closes both the popup and the form even if it has changes
 	 */
-	private cancelFormChanges = () => {
+	private closeAll = () => {
 		this.closePopup();
 		this.closeForm();
+	}
+
+	/**
+	 * Opens popup to confirm before deleting ticket
+	 */
+	private safeDeleteTicket = (data: CommonFields) => {
+		this.setState({ ticketToDelete: data });
+		this.openPopup(`${PopupMessage.delete} "${data.name}?"`);
+	}
+
+	/**
+	 * Closes popups and forms and deletes ticket
+	 */
+	private deleteTicket = (deleteFn: MutationFn<any, any>) => {
+		const { ticketToDelete } = this.state;
+		this.closeAll();
+		if(ticketToDelete) {
+			deleteFn({ variables: ticketToDelete });
+		}
 	}
 }

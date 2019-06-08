@@ -5,12 +5,13 @@ import { Overlay } from "../Overlay/Overlay";
 export enum PopupMessage {
   changes = "Are you sure you want to cancel?",
   invalid = "Please fill in all required form inputs.",
+  delete = "Are you sure you want to delete",
 }
 
 export interface PopupProps {
   text: string;
   close: () => void;
-  cancel: () => void;
+  action: () => void;
 }
 
 export class Popup extends React.PureComponent<PopupProps> {
@@ -31,17 +32,15 @@ export class Popup extends React.PureComponent<PopupProps> {
   }
 
   private renderButtons = () => {
-    const { text, close, cancel } = this.props;
-    switch(text) {
-      case PopupMessage.changes: {
-        return <>
-          <button className="popupButton" onClick={close}>No</button>
-          <button className="popupButton" onClick={cancel}>Yes</button>
-        </>;
-      }
-      default: {
-        return <button className="popupButton" onClick={close}>Ok</button>;
-      }
+    const { text, close, action } = this.props;
+
+    if(text === PopupMessage.changes || text.includes(PopupMessage.delete)) {
+      return <>
+        <button className="popupButton" onClick={close}>No</button>
+        <button className="popupButton" onClick={action}>Yes</button>
+      </>;
     }
+
+    return <button className="popupButton" onClick={close}>Ok</button>;
   }
 }

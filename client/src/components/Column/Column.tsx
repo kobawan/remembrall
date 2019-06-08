@@ -1,9 +1,8 @@
 import * as React from "react";
 import { MutationFn } from "react-apollo";
-import isEqual from "lodash.isequal";
 import "./column.less";
 import { Ticket } from "../Ticket/Ticket";
-import { ColumnType, TicketData } from "../../types";
+import { ColumnType, TicketData, CommonFields } from "../../types";
 import { ColumnHeader } from "../ColumnHeader/ColumnHeader";
 
 interface ColumnProps {
@@ -11,13 +10,10 @@ interface ColumnProps {
 	tickets: TicketData[];
 	openForm: (props?: TicketData) => void;
 	updateTicket: MutationFn<any, any>;
+	deleteTicket: (data: CommonFields) => void;
 }
 
 export class Column extends React.Component<ColumnProps> {
-	public shouldComponentUpdate(nextProps: ColumnProps) {
-		return !isEqual(this.props.tickets, nextProps.tickets);
-	}
-
 	public render() {
 		const { type, openForm } = this.props;
 
@@ -32,7 +28,7 @@ export class Column extends React.Component<ColumnProps> {
 	}
 
 	private renderTickets = () => {
-		const { tickets, type, updateTicket, openForm } = this.props;
+		const { tickets, type, updateTicket, openForm, deleteTicket } = this.props;
 		return tickets.map((data, index) => (
 			<Ticket
 				data={data}
@@ -40,6 +36,7 @@ export class Column extends React.Component<ColumnProps> {
 				type={type}
 				openForm={openForm}
 				updateTicket={updateTicket}
+				deleteTicket={deleteTicket}
 			/>
 		));
 	}

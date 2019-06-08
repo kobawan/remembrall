@@ -18,53 +18,53 @@
 	position: relative;
 	display: inherit;
 
+	.ticketOptions {
+		display: none;
+	}
+
 	@media (hover: hover) {
 		&:hover {
 			.boxMixinHover();
 
-			> .editWrapper {
+			.ticketOptions {
 				display: block;
 				position: absolute;
 				right: 0;
 				top: 0;
-				padding: 0.5em 0.5em;
-				box-sizing: border-box;
 				cursor: pointer;
-				background-color: #dcdcdc80;
 
-				&:hover {
-					background-color: #dcdcdc;
-				}
+				.ticketIcon {
+					background-color: #dcdcdc80;
+					padding: 0.5em 0.5em;
 
-				.edit {
-					display: block;
-					width: 2em;
-					height: 2em;
-					fill: @colourSvg;
-
-					> path {
-						stroke: @colourSvg;
+					&:hover {
+						background-color: #dcdcdc;
+					}
+	
+					.edit, .trash {
+						display: block;
+						width: 2em;
+						height: 2em;
+						fill: @colourSvg;
+	
+						> path {
+							stroke: @colourSvg;
+						}
 					}
 				}
-		
 			}
 		}
 	}
 
-	.edit {
-		display: none;
-	}
-
-	textarea {
-		.contentMixin();
-		border: none;
-		resize: none;
-	}
-
 	span {
 		.contentMixin();
-		min-height: 3.75em;
 		word-break: break-word;
 		cursor: pointer;
 	}
+}
+
+.ticketEditer {
+	.contentMixin();
+	border: none;
+	resize: none;
 }
