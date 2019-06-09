@@ -86,4 +86,5 @@ type Mutation {
 	updateProject(id: ID!, params: ProjectInput): Project!
 	updateCategory(id: ID!, params: CategoryInput): Category!
 	updateTool(id: ID!, params: ToolInput): Tool!
+	updateMaterial(id: ID!, params: MaterialInput): Material!
 }

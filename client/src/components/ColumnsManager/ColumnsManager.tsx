@@ -5,6 +5,7 @@ import { Popup, PopupMessage } from "../Popup/Popup";
 import { MutationFn } from "react-apollo";
 import { CommonFields, TicketData } from "../../types";
 import { ToolColumn } from "../ToolColumn/ToolColumn";
+import { MaterialColumn } from "../MaterialColumn/MaterialColumn";
 
 interface ColumnsState {
 	popupText?: string;
@@ -43,6 +44,7 @@ export class ColumnsManager extends React.Component<{}, ColumnsState> {
 				/>
 				<CategoryColumn safeDeleteTicket={this.safeDeleteTicket} />
 				<ToolColumn safeDeleteTicket={this.safeDeleteTicket} />
+				<MaterialColumn safeDeleteTicket={this.safeDeleteTicket} />
 				{popupText && (
 					<Popup
 						text={popupText}

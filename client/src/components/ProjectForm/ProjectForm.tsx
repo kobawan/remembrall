@@ -8,7 +8,7 @@ import { TextAreaRow, OnChangeFn, TextInputRowWithList, TextInputTitle } from ".
 import { logErrors } from "../../utils/errorHandling";
 import { CategoryWrapper, CategoryRenderProps } from "../CategoryColumn/CategoryWrapper";
 import { ToolWrapper, ToolRenderProps } from "../ToolColumn/ToolWrapper";
-import { MaterialWrapper, MaterialRenderProps } from "./MaterialWrapper";
+import { MaterialWrapper, MaterialRenderProps } from "../MaterialColumn/MaterialWrapper";
 import { Overlay } from "../Overlay/Overlay";
 
 interface FormProps {

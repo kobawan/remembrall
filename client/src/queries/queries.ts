@@ -196,3 +196,20 @@ export const GET_MATERIALS = gql`
 	}
 	${MaterialsFragment}
 `;
+
+export const DELETE_MATERIAL = gql`
+	mutation DeleteMaterial($id: ID!) {
+		deleteMaterial(id: $id) {
+			id
+		}
+	}
+`;
+
+export const UPDATE_MATERIAL = gql`
+	mutation UpdateMaterial($id: ID!, $params: MaterialInput) {
+		updateMaterial(id: $id, params: $params) {
+			...MaterialsFragment
+		}
+	}
+	${MaterialsFragment}
+`;

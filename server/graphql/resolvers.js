@@ -179,6 +179,19 @@ const resolverMap = {
 				return tool;
 			}
 		},
+		updateMaterial: async function(parent, { id, params }, { currentUser }) {
+			const material = currentUser.materials.id(id);
+			if(material) {
+				Object.entries(params).forEach(([key, value]) => {
+					if (value !== undefined && value !== null) {
+						material[key] = value;
+					}
+				});
+
+				await currentUser.save();
+				return material;
+			}
+		},
 	},
 };
 
