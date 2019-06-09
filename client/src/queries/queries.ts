@@ -119,6 +119,23 @@ export const GET_CATEGORIES = gql`
 	${CategoriesFragment}
 `;
 
+export const DELETE_CATEGORY = gql`
+	mutation DeleteCategory($id: ID!) {
+		deleteCategory(id: $id) {
+			id
+		}
+	}
+`;
+
+export const UPDATE_CATEGORY = gql`
+	mutation UpdateCategory($id: ID!, $params: CategoryInput) {
+		updateCategory(id: $id, params: $params) {
+			...CategoriesFragment
+		}
+	}
+	${CategoriesFragment}
+`;
+
 /**
  * TOOLS
  */

@@ -2,7 +2,7 @@ import * as React from "react";
 import { adopt } from "react-adopt";
 import { QueryResult, Mutation, Query } from "react-apollo";
 import { MutationUpdaterFn } from "apollo-boost";
-import { ProjectFields, CommonFields, MutationRenderProps } from "../../types";
+import { ProjectFields, CommonFields, MutationRenderProps, AdoptInputProps } from "../../types";
 import { initHandleCache } from "../../utils/cacheHandling";
 import { GET_MATERIALS, ADD_MATERIAL } from "../../queries/queries";
 
@@ -26,7 +26,7 @@ const addToCache: MutationUpdaterFn<AddMaterialData> =
 		return res;
 	});
 
-export const MaterialWrapper = adopt<MaterialRenderProps>({
+const components: AdoptInputProps<MaterialRenderProps> = {
 	materials: ({ render }) => (
 		<Query query={GET_MATERIALS} children={render} />
 	),
@@ -35,4 +35,6 @@ export const MaterialWrapper = adopt<MaterialRenderProps>({
 			{(mutation, res) => render({ mutation, res })}
 		</Mutation>
 	),
-});
+};
+
+export const MaterialWrapper = adopt<MaterialRenderProps>(components);

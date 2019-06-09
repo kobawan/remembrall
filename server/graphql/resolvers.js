@@ -153,6 +153,19 @@ const resolverMap = {
 				return project;
 			}
 		},
+		updateCategory: async function(parent, { id, params }, { currentUser }) {
+			const category = currentUser.categories.id(id);
+			if(category) {
+				Object.entries(params).forEach(([key, value]) => {
+					if (value !== undefined && value !== null) {
+						category[key] = value;
+					}
+				});
+
+				await currentUser.save();
+				return category;
+			}
+		},
 	},
 };
 

@@ -8,35 +8,77 @@ import { ColumnHeader } from "../ColumnHeader/ColumnHeader";
 interface ColumnProps {
 	type: ColumnType;
 	tickets: TicketData[];
-	openForm: (props?: TicketData) => void;
+	openForm?: (props?: TicketData) => void;
 	updateTicket: MutationFn<any, any>;
+	createTicket: MutationFn<any, any>;
 	deleteTicket: (data: CommonFields) => void;
 }
 
-export class Column extends React.Component<ColumnProps> {
+interface ColumnState {
+	showNewTicket: boolean;
+}
+
+export class Column extends React.Component<ColumnProps, ColumnState> {
+	public state: ColumnState = {
+		showNewTicket: false,
+	};
+
 	public render() {
 		const { type, openForm } = this.props;
+		const { showNewTicket } = this.state;
 
 		return (
 			<div className="column">
-				<ColumnHeader type={type} openForm={openForm} />
+				<ColumnHeader type={type} openEditor={openForm || this.toggleNewTicket} />
 				<div className="content">
 					{this.renderTickets()}
+					{showNewTicket && this.renderNewTicket()}
 				</div>
 			</div>
 		);
 	}
 
+	/**
+	 * Opens a new ticket that doesn't need a form
+	 */
+	private toggleNewTicket = () => {
+		this.setState({ showNewTicket: !this.state.showNewTicket });
+	}
+
+	/**
+	 * Shows a ticket in edit mode
+	 */
+	private renderNewTicket = () => {
+		const { type, updateTicket, deleteTicket, createTicket } = this.props;
+
+		return (
+			<Ticket
+				type={type}
+				focused={true}
+				updateTicket={updateTicket}
+				deleteTicket={deleteTicket}
+				createTicket={createTicket}
+				closeNewTicket={this.toggleNewTicket}
+			/>
+		);
+	}
+
+	/**
+	 * Shows all tickets from db
+	 */
 	private renderTickets = () => {
-		const { tickets, type, updateTicket, openForm, deleteTicket } = this.props;
+		const { tickets, type, updateTicket, openForm, deleteTicket, createTicket } = this.props;
 		return tickets.map((data, index) => (
 			<Ticket
 				data={data}
 				key={index}
 				type={type}
+				focused={false}
 				openForm={openForm}
 				updateTicket={updateTicket}
 				deleteTicket={deleteTicket}
+				createTicket={createTicket}
+				closeNewTicket={this.toggleNewTicket}
 			/>
 		));
 	}

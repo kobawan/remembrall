@@ -3,10 +3,12 @@ import "./overlay.less";
 
 interface OverlayProps {
 	onClick?: () => void;
+	zIndex: number;
 }
 
 export class Overlay extends React.PureComponent<OverlayProps> {
 	public render() {
-		return <div className="overlay" onClick={this.props.onClick} />;
+		const { onClick, zIndex } = this.props;
+		return <div className="overlay" style={{ zIndex }} onClick={onClick} />;
 	}
 }

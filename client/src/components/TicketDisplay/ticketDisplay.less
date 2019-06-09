@@ -1,0 +1,51 @@
+@import "../../styles/mixin.less";
+@import "../../styles/colours.less";
+
+.ticketDisplay {
+	width: 100%;
+	height: 100%;
+	position: relative;
+
+	span {
+		.ticketMixin();
+		word-break: break-word;
+		cursor: pointer;
+		position: absolute;
+	}
+
+	.ticketOptions {
+		display: none;
+
+		.ticketIcon {
+			background-color: #dcdcdc80;
+			padding: 0.5em 0.5em;
+
+			&:hover {
+				background-color: #dcdcdc;
+			}
+
+			.edit, .trash {
+				display: block;
+				width: 2em;
+				height: 2em;
+				fill: @colourSvg;
+
+				> path {
+					stroke: @colourSvg;
+				}
+			}
+		}
+	}
+
+	@media (hover: hover) {
+		&:hover {
+			.ticketOptions {
+				display: block;
+				position: absolute;
+				right: 0;
+				top: 0;
+				cursor: pointer;
+			}
+		}
+	}
+}

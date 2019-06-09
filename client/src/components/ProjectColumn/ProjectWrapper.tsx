@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Mutation, MutationUpdaterFn, Query, QueryResult } from "react-apollo";
 import { adopt } from "react-adopt";
-import { MutationRenderProps, ProjectFields } from "../../types";
+import { MutationRenderProps, ProjectFields, AdoptInputProps } from "../../types";
 import { ADD_PROJECT, GET_PROJECTS, DELETE_PROJECT, UPDATE_PROJECT } from "../../queries/queries";
 import { initHandleCache } from "../../utils/cacheHandling";
 
@@ -75,7 +75,7 @@ initHandleCache<UpdateProjectData, GetProjectData>(GET_PROJECTS, (res, data) => 
 	return res;
 });
 
-export const ProjectWrapper = adopt<ProjectRenderProps>({
+const components: AdoptInputProps<ProjectRenderProps> = {
 	projects: ({ render }) => (
 		<Query query={GET_PROJECTS} children={render} />
 	),
@@ -94,4 +94,6 @@ export const ProjectWrapper = adopt<ProjectRenderProps>({
 			{(mutation, res) => render({ mutation, res })}
 		</Mutation>
 	)
-});
+};
+
+export const ProjectWrapper = adopt<ProjectRenderProps>(components);

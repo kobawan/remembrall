@@ -5,7 +5,7 @@ import { plusSvg } from "../Svg/Svg";
 
 interface ColumnHeaderProps {
 	type: ColumnType;
-	openForm: (props?: TicketData) => void;
+	openEditor: (props?: TicketData) => void;
 }
 
 export class ColumnHeader extends React.PureComponent<ColumnHeaderProps> {
@@ -13,14 +13,14 @@ export class ColumnHeader extends React.PureComponent<ColumnHeaderProps> {
 		const { type } = this.props;
 
 		return (
-			<div className="columnHeader" onClick={this.openNewForm}>
+			<div className="columnHeader" onClick={this.openNewTicket}>
 				<span>{type}</span>
 				{plusSvg}
 			</div>
 		);
 	}
 
-	private openNewForm = () => {
-		this.props.openForm();
+	private openNewTicket = () => {
+		this.props.openEditor();
 	}
 }

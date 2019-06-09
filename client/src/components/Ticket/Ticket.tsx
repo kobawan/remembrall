@@ -2,96 +2,19 @@ import * as React from "react";
 import { MutationFn } from "react-apollo";
 import isEqual from "lodash.isequal";
 import "./ticket.less";
-import { editSvg, trashSvg } from "../Svg/Svg";
 import { ColumnType, TicketData, CommonFields } from "../../types";
-
-interface TicketTextAreaProps {
-	name: string;
-	id: string;
-	updateTicket: MutationFn;
-	close: () => void;
-	toggleError: (toggleError: boolean) => void;
-}
-
-interface TicketTextAreaState {
-	value: string;
-}
-
-class TicketTextArea extends React.PureComponent<TicketTextAreaProps, TicketTextAreaState> {
-	public state: TicketTextAreaState = {
-		value: this.props.name,
-	};
-	private textAreaRef = React.createRef<HTMLTextAreaElement>();
-
-	public componentDidMount() {
-		if (this.textAreaRef.current) {
-			this.textAreaRef.current.focus();
-		}
-	}
-
-	public render() {
-		const { value } = this.state;
-		return (
-			<textarea
-				ref={this.textAreaRef}
-				onChange={this.handleInput}
-				onKeyDown={this.handleKeyDown}
-				onBlur={this.updateName}
-				value={value}
-				placeholder="Name"
-				className="ticketEditer"
-			/>
-		);
-	}
-
-	/**
-	 * Updates textarea input
-	 */
-	private handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-		this.props.toggleError(false);
-		this.setState({ value: e.currentTarget.value });
-	}
-
-	/**
-	 * Updates ticket name on enter
-	 */
-	private handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-		// enter
-		if(e.keyCode === 13) {
-			e.preventDefault();
-			this.updateName();
-		}
-	}
-
-	/**
-	 * Updates the ticket's name
-	 */
-	private updateName = async () => {
-		const { name, id, close, toggleError } = this.props;
-		const { value } = this.state;
-		if(!value) {
-			toggleError(true);
-			return;
-		}
-
-		if(name !== value) {
-			await this.props.updateTicket({
-				variables: {
-					id,
-					params: { name: value },
-				},
-			});
-		}
-		close();
-	}
-}
+import { TicketTextArea } from "../TicketTextArea/TicketTextArea";
+import { TicketDisplay } from "../TicketDisplay/TicketDisplay";
 
 export interface TicketProps {
 	type: ColumnType;
-	openForm: (props?: TicketData) => void;
+	openForm?: (props?: TicketData) => void;
+	data?: TicketData;
+	focused: boolean;
+	closeNewTicket: () => void;
 	updateTicket: MutationFn;
+	createTicket: MutationFn;
 	deleteTicket: (data: CommonFields) => void;
-	data: TicketData;
 }
 
 interface TicketState {
@@ -101,7 +24,7 @@ interface TicketState {
 
 export class Ticket extends React.Component<TicketProps, TicketState> {
 	public state: TicketState = {
-		focused: false,
+		focused: this.props.focused,
 		withError: false,
 	};
 
@@ -111,33 +34,38 @@ export class Ticket extends React.Component<TicketProps, TicketState> {
 
 	public render() {
 		const { focused, withError } = this.state;
-		const { name, id } = this.props.data;
+		const {
+			data,
+			openForm,
+			deleteTicket,
+			createTicket,
+			updateTicket,
+			closeNewTicket,
+			type,
+		} = this.props;
 
 		return (<>
 			<div className={`ticket ${withError ? "ticketError" : "" }`}>
-				{focused
+				{!focused && data
 					? (
+						<TicketDisplay
+							data={data}
+							openEditor={openForm || this.toggleTextArea}
+							deleteTicket={deleteTicket}
+							openTextArea={this.toggleTextArea}
+						/>
+					) : (
 						<TicketTextArea
-							name={name}
-							id={id}
+							data={data}
 							key={name}
-							updateTicket={this.props.updateTicket}
+							type={type}
+							updateTicket={updateTicket}
+							createTicket={createTicket}
 							close={this.toggleTextArea}
 							toggleError={this.toggleError}
+							closeNewTicket={closeNewTicket}
 						/>
-					) : <>
-						<span onClick={this.openFormWithInfo}>
-							{name}
-						</span>
-						<div className="ticketOptions">
-							<div className="ticketIcon" onClick={this.toggleTextArea}>
-								{editSvg}
-							</div>
-							<div className="ticketIcon" onClick={this.deleteTicket}>
-								{trashSvg}
-							</div>
-						</div>
-					</>
+					)
 				}
 			</div>
 		</>);
@@ -155,21 +83,5 @@ export class Ticket extends React.Component<TicketProps, TicketState> {
 	 */
 	private toggleTextArea = () => {
 		this.setState({ focused: !this.state.focused });
-	}
-
-	/**
-	 * Opens form with existing ticket data
-	 */
-	private openFormWithInfo = () => {
-		const { openForm, data } = this.props;
-		openForm(data);
-	}
-
-	/**
-	 * Deletes the ticket from db
-	 */
-	private deleteTicket = () => {
-		const { deleteTicket, data: { id, name } } = this.props;
-		deleteTicket({ id, name });
 	}
 }

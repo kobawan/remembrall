@@ -1,19 +1,14 @@
 @import "../../styles/colours.less";
 @import "../../styles/mixin.less";
 
-.contentMixin() {
-	width: 100%;
-	height: 100%;
-	padding: 0.625em;
-	font-size: 1.6em;
-	box-sizing: border-box;
-	position: relative;
-}
-
 .ticket {
-	.boxMixin();
+	border: solid 1px gainsboro;
+	box-shadow: 2px 2px 0.5rem @colourShadow;
+	border-radius: 0.5rem;
+	transition: box-shadow 0.2s;
+	background-color: white;
 	min-height: 6em;
-	margin: 1em;
+	margin: 0.5em;
 	overflow: hidden;
 	position: relative;
 	display: inherit;
@@ -22,53 +17,9 @@
 		border: solid 2px @colourError;
 	}
 
-	.ticketEditer {
-		.contentMixin();
-		border: none;
-		resize: none;
-	}
-
-	span {
-		.contentMixin();
-		word-break: break-word;
-		cursor: pointer;
-	}
-
-	.ticketOptions {
-		display: none;
-	}
-
 	@media (hover: hover) {
 		&:hover {
 			.boxMixinHover();
-
-			.ticketOptions {
-				display: block;
-				position: absolute;
-				right: 0;
-				top: 0;
-				cursor: pointer;
-
-				.ticketIcon {
-					background-color: #dcdcdc80;
-					padding: 0.5em 0.5em;
-
-					&:hover {
-						background-color: #dcdcdc;
-					}
-	
-					.edit, .trash {
-						display: block;
-						width: 2em;
-						height: 2em;
-						fill: @colourSvg;
-	
-						> path {
-							stroke: @colourSvg;
-						}
-					}
-				}
-			}
 		}
 	}
 }

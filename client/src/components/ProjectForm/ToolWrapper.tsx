@@ -2,7 +2,7 @@ import * as React from "react";
 import { adopt } from "react-adopt";
 import { QueryResult, Mutation, Query } from "react-apollo";
 import { MutationUpdaterFn } from "apollo-boost";
-import { ProjectFields, CommonFields, MutationRenderProps } from "../../types";
+import { ProjectFields, CommonFields, MutationRenderProps, AdoptInputProps } from "../../types";
 import { initHandleCache } from "../../utils/cacheHandling";
 import { GET_TOOLS, ADD_TOOL } from "../../queries/queries";
 
@@ -26,7 +26,7 @@ const addToCache: MutationUpdaterFn<AddToolData> =
 		return res;
 	});
 
-export const ToolWrapper = adopt<ToolRenderProps>({
+const components: AdoptInputProps<ToolRenderProps> = {
 	tools: ({ render }) => (
 		<Query query={GET_TOOLS} children={render} />
 	),
@@ -35,4 +35,6 @@ export const ToolWrapper = adopt<ToolRenderProps>({
 			{(mutation, res) => render({ mutation, res })}
 		</Mutation>
 	),
-});
+};
+
+export const ToolWrapper = adopt<ToolRenderProps>(components);

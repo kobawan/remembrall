@@ -11,14 +11,14 @@ export enum PopupMessage {
 export interface PopupProps {
   text: string;
   close: () => void;
-  action: () => void;
+  action?: () => void;
 }
 
 export class Popup extends React.PureComponent<PopupProps> {
   public render () {
     return (
       <div>
-        <Overlay />
+        <Overlay zIndex={98}/>
         <div className="popup">
           <div className="message">
             {this.props.text}

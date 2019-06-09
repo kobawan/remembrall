@@ -6,16 +6,16 @@ import { ProjectFields, CommonFields } from "../../types";
 import { getInitialState } from "../../utils/getInitialState";
 import { TextAreaRow, OnChangeFn, TextInputRowWithList, TextInputTitle } from "../Form/FormComponents";
 import { logErrors } from "../../utils/errorHandling";
-import { CategoryWrapper, CategoryRenderProps } from "./CategoryWrapper";
+import { CategoryWrapper, CategoryRenderProps } from "../CategoryColumn/CategoryWrapper";
 import { ToolWrapper, ToolRenderProps } from "./ToolWrapper";
 import { MaterialWrapper, MaterialRenderProps } from "./MaterialWrapper";
-import { PopupMessage } from "../Popup/Popup";
+import { Overlay } from "../Overlay/Overlay";
 
 interface FormProps {
 	ticket?: ProjectFields;
 	closeForm: () => void;
 	safeCloseForm: () => void;
-	openPopup: (popupText: PopupMessage) => void;
+	openInvalidPopup: () => void;
 	setFormHasChangesFn: (fn: () => boolean) => void;
 	createTicket: MutationFn<any, any>;
 	deleteTicket: (data: CommonFields) => void;
@@ -65,7 +65,8 @@ export class ProjectForm extends React.Component<FormProps, FormState> {
 			instructions,
 		} = this.state;
 
-		return (
+		return (<>
+			<Overlay onClick={safeCloseForm} zIndex={96} />
 			<div className="form">
 				<TextInputTitle
 					name={Fields.name}
@@ -134,7 +135,7 @@ export class ProjectForm extends React.Component<FormProps, FormState> {
 					<button onClick={this.submitProject}>Save</button>
 				</div>
 			</div>
-		);
+		</>);
 	}
 
 	/**
@@ -172,7 +173,7 @@ export class ProjectForm extends React.Component<FormProps, FormState> {
 		} = this.state;
 
 		if(!this.formIsValid()) {
-			this.props.openPopup(PopupMessage.invalid);
+			this.props.openInvalidPopup();
 			return;
 		}
 

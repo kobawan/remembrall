@@ -4,8 +4,8 @@ import "./app.less";
 
 import { getStorageKey, StorageKeys, setStorageKey } from "../../utils/localStorage";
 import { GET_USER_ID } from "../../queries/queries";
-import { ProjectColumn } from "../ProjectColumn/ProjectColumn";
 import { Loading } from "../Loading/Loading";
+import { ColumnsManager } from "../ColumnsManager/ColumnsManager";
 
 interface GetUserData {
 	user: { id: string };
@@ -30,9 +30,8 @@ export class App extends React.PureComponent {
 							<hr />
 							<div className="grid">
 								{!loading && data && data.user
-									? <>
-										<ProjectColumn />
-									</> : (
+									? <ColumnsManager />
+									: (
 										<div className="loadingContainer">
 											<Loading />
 										</div>
