@@ -25,6 +25,7 @@ interface TextInputRowWithListState {
 	value: string;
 	valueFromDb?: CommonFields;
 	hideOptions: boolean;
+	editTags: boolean;
 }
 
 interface TextInputTitleState {
@@ -99,11 +100,13 @@ export class TextInputRowWithList extends React.Component<TextInputRowWithListPr
 	public state: TextInputRowWithListState = {
 		value: "",
 		hideOptions: false,
+		editTags: false,
 	};
+	private textAreaRef = React.createRef<HTMLInputElement>();
 
 	public render() {
 		const { name, options, isRequired, tags } = this.props;
-		const { value, hideOptions } = this.state;
+		const { value, hideOptions, editTags } = this.state;
 		/**
 		 * @todo add tags below input
 		 */
@@ -111,15 +114,24 @@ export class TextInputRowWithList extends React.Component<TextInputRowWithListPr
 			<div className="formRow">
 				<label>{`${name}${isRequired ? " *" : ""}`}</label>
 				<div className="wrapper">
-					<input
-						type="text"
-						name={name}
-						list={name}
-						onChange={this.onChange}
-						value={value}
-						onKeyUp={this.addTagOnEnter}
-					/>
+					{editTags && (
+						<input
+							type="text"
+							ref={this.textAreaRef}
+							name={name}
+							list={name}
+							onChange={this.onChange}
+							value={value}
+							onKeyUp={this.addTagOnEnter}
+							onBlur={this.addTagOnEnterOrBlur}
+						/>
+					)}
 					<div className="tags">
+						{!editTags && (
+							<div className="open" onClick={this.toggleEditing}>
+								{plusSvg}
+							</div>
+						)}
 						{this.renderTags(tags)}
 					</div>
 					{!hideOptions && (
@@ -131,6 +143,16 @@ export class TextInputRowWithList extends React.Component<TextInputRowWithListPr
 				</div>
 			</div>
 		);
+	}
+
+	/**
+	 * Disables/enables with focus on the input
+	 */
+	private toggleEditing = async () => {
+		await this.setState({ editTags: !this.state.editTags });
+		if(this.textAreaRef.current) {
+			this.textAreaRef.current.focus();
+		}
 	}
 
 	/**
@@ -212,15 +234,21 @@ export class TextInputRowWithList extends React.Component<TextInputRowWithListPr
 	 */
 	private addTagOnEnter = async (e: React.KeyboardEvent<HTMLInputElement>) => {
 		if(e.keyCode === 13) {
-			if(this.state.valueFromDb) {
-				this.addTag(this.state.valueFromDb);
-				return;
-			}
+			await this.addTagOnEnterOrBlur();
+		}
+	}
+
+	private addTagOnEnterOrBlur = async () => {
+		if(this.state.valueFromDb) {
+			// value is already in db
+			this.addTag(this.state.valueFromDb);
+		} else {
+			// value needs to be added to db and then to the tag
 			if(this.state.value.length > 0) {
 				await this.addNewValueToDb(this.state.value);
-				return;
 			}
 		}
+		this.toggleEditing();
 	}
 
 	/**
