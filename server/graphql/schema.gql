@@ -85,4 +85,5 @@ type Mutation {
 	deleteMaterial(id: ID!): Material
 	updateProject(id: ID!, params: ProjectInput): Project!
 	updateCategory(id: ID!, params: CategoryInput): Category!
+	updateTool(id: ID!, params: ToolInput): Tool!
 }

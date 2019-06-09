@@ -166,6 +166,19 @@ const resolverMap = {
 				return category;
 			}
 		},
+		updateTool: async function(parent, { id, params }, { currentUser }) {
+			const tool = currentUser.tools.id(id);
+			if(tool) {
+				Object.entries(params).forEach(([key, value]) => {
+					if (value !== undefined && value !== null) {
+						tool[key] = value;
+					}
+				});
+
+				await currentUser.save();
+				return tool;
+			}
+		},
 	},
 };
 

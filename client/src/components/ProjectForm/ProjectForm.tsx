@@ -7,7 +7,7 @@ import { getInitialState } from "../../utils/getInitialState";
 import { TextAreaRow, OnChangeFn, TextInputRowWithList, TextInputTitle } from "../Form/FormComponents";
 import { logErrors } from "../../utils/errorHandling";
 import { CategoryWrapper, CategoryRenderProps } from "../CategoryColumn/CategoryWrapper";
-import { ToolWrapper, ToolRenderProps } from "./ToolWrapper";
+import { ToolWrapper, ToolRenderProps } from "../ToolColumn/ToolWrapper";
 import { MaterialWrapper, MaterialRenderProps } from "./MaterialWrapper";
 import { Overlay } from "../Overlay/Overlay";
 
