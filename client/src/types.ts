@@ -6,8 +6,6 @@ export interface MutationRenderProps<TData = any, TVariables = OperationVariable
   res: MutationResult<TData>;
 }
 
-export type AdoptInputProps<P> = { [key in keyof P]: ({ render }: any) => JSX.Element };
-
 // PROJECT TYPES
 export enum ColumnType {
 	Projects = "Projects",

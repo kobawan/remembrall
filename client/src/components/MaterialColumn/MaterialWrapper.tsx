@@ -1,8 +1,8 @@
 import * as React from "react";
 import { adopt } from "react-adopt";
-import { QueryResult, Mutation, Query } from "react-apollo";
+import { QueryResult, Mutation, Query, MutationFn, MutationResult } from "react-apollo";
 import { MutationUpdaterFn } from "apollo-boost";
-import { CommonFields, MutationRenderProps, AdoptInputProps, MaterialFields } from "../../types";
+import { CommonFields, MutationRenderProps, MaterialFields } from "../../types";
 import { initHandleCache } from "../../utils/cacheHandling";
 import { GET_MATERIALS, ADD_MATERIAL, DELETE_MATERIAL, UPDATE_MATERIAL } from "../../queries/queries";
 
@@ -71,25 +71,32 @@ const updateCache: MutationUpdaterFn<UpdateMaterialData> =
 		return res;
 	});
 
-const components: AdoptInputProps<MaterialRenderProps> = {
+export const MaterialWrapper = adopt<MaterialRenderProps, {}>({
 	materials: ({ render }) => (
-		<Query query={GET_MATERIALS} children={render} />
+		<Query query={GET_MATERIALS} children={render!} />
 	),
 	addMaterial: ({ render }) => (
 		<Mutation mutation={ADD_MATERIAL} update={addToCache}>
-			{(mutation, res) => render({ mutation, res })}
+			{(mutation: MutationFn<AddMaterialData, MaterialInput>, res: MutationResult<AddMaterialData>) => {
+				return render!({ mutation, res });
+			}}
 		</Mutation>
 	),
 	deleteMaterial: ({ render }) => (
 		<Mutation mutation={DELETE_MATERIAL} update={removeFromCache}>
-			{(mutation, res) => render({ mutation, res })}
+			{(mutation: MutationFn<DeleteMaterialData, { id: string }>, res: MutationResult<DeleteMaterialData>) => {
+				return render!({ mutation, res });
+			}}
 		</Mutation>
 	),
 	updateMaterial: ({ render }) => (
 		<Mutation mutation={UPDATE_MATERIAL} update={updateCache}>
-			{(mutation, res) => render({ mutation, res })}
+			{
+				(
+					mutation: MutationFn<UpdateMaterialData, MaterialInput & { id: string }>,
+					res: MutationResult<UpdateMaterialData>
+				) => render!({ mutation, res })
+			}
 		</Mutation>
 	)
-};
-
-export const MaterialWrapper = adopt<MaterialRenderProps>(components);
+});

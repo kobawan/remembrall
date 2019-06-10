@@ -148,11 +148,12 @@ export class TextInputRowWithList extends React.Component<TextInputRowWithListPr
 	/**
 	 * Disables/enables with focus on the input
 	 */
-	private toggleEditing = async () => {
-		await this.setState({ editTags: !this.state.editTags });
-		if(this.textAreaRef.current) {
-			this.textAreaRef.current.focus();
-		}
+	private toggleEditing = () => {
+		this.setState({ editTags: !this.state.editTags }, () => {
+			if(this.textAreaRef.current) {
+				this.textAreaRef.current.focus();
+			}
+		});
 	}
 
 	/**

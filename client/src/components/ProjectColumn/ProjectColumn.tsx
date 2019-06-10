@@ -5,7 +5,7 @@ import { Column } from "../Column/Column";
 import { ColumnType, CommonFields, TicketData } from "../../types";
 import { logErrors } from "../../utils/errorHandling";
 import { ProjectForm } from "../ProjectForm/ProjectForm";
-import { ProjectWrapper, ProjectRenderProps } from "./ProjectWrapper";
+import { ProjectWrapper } from "./ProjectWrapper";
 
 interface ProjectColumnProps {
 	closeForm: () => void;
@@ -40,7 +40,7 @@ export class ProjectColumn extends React.Component<ProjectColumnProps> {
 
 		return (
 			<ProjectWrapper>
-				{({ addProject, deleteProject, updateProject, projects: { data, error }}: ProjectRenderProps) => {
+				{({ addProject, deleteProject, updateProject, projects: { data, error }}) => {
 					/**
 					 * @todo handle loading?
 					 */

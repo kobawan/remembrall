@@ -3,7 +3,7 @@ import { MutationFn } from "react-apollo";
 import { logErrors } from "../../utils/errorHandling";
 import { Column } from "../Column/Column";
 import { ColumnType, CommonFields } from "../../types";
-import { ToolWrapper, ToolRenderProps } from "./ToolWrapper";
+import { ToolWrapper } from "./ToolWrapper";
 
 interface ToolColumnProps {
 	safeDeleteTicket: (data: CommonFields, deleteFn: MutationFn<any, any>) => void;
@@ -18,7 +18,7 @@ export class ToolColumn extends React.Component<ToolColumnProps> {
 		const { safeDeleteTicket } = this.props;
 		return (
 			<ToolWrapper>
-				{({ addTool, updateTool, deleteTool, tools: { data, error }}: ToolRenderProps) => {
+				{({ addTool, updateTool, deleteTool, tools: { data, error }}) => {
 					logErrors(error, addTool, updateTool, deleteTool);
 
 					return (

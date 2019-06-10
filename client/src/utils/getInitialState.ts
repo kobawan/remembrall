@@ -10,7 +10,7 @@ export const getInitialState = <DS = {}, P = undefined>(defaultState: DS, props?
 	const entries = Object.entries(props) as Array<[keyof DS, DS[keyof DS]]>;
 
 	entries.forEach(([key, value]) => {
-		if (value !== undefined && value !== null && state.hasOwnProperty(key)) {
+		if (value !== undefined && value !== null && (state as unknown as object).hasOwnProperty(key)) {
 			state[key] = value;
 		}
 	});

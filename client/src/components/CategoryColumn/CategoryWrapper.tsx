@@ -1,8 +1,8 @@
 import * as React from "react";
 import { adopt } from "react-adopt";
-import { QueryResult, Mutation, Query } from "react-apollo";
+import { QueryResult, Mutation, Query, MutationFn, MutationResult } from "react-apollo";
 import { MutationUpdaterFn } from "apollo-boost";
-import { CommonFields, MutationRenderProps, CategoryFields, AdoptInputProps } from "../../types";
+import { CommonFields, MutationRenderProps, CategoryFields } from "../../types";
 import { initHandleCache } from "../../utils/cacheHandling";
 import { GET_CATEGORIES, ADD_CATEGORY, DELETE_CATEGORY, UPDATE_CATEGORY } from "../../queries/queries";
 
@@ -72,25 +72,32 @@ initHandleCache<UpdateCategoryData, GetCategoryData>(GET_CATEGORIES, (res, data)
 	return res;
 });
 
-const components: AdoptInputProps<CategoryRenderProps> = {
+export const CategoryWrapper = adopt<CategoryRenderProps, {}>({
 	categories: ({ render }) => (
-		<Query query={GET_CATEGORIES} children={render} />
+		<Query query={GET_CATEGORIES} children={render!} />
 	),
 	addCategory: ({ render }) => (
 		<Mutation mutation={ADD_CATEGORY} update={addToCache}>
-			{(mutation, res) => render({ mutation, res })}
+			{(mutation: MutationFn<AddCategoryData, CategoryInput>, res: MutationResult<AddCategoryData>) => {
+				return render!({ mutation, res });
+			}}
 		</Mutation>
 	),
 	deleteCategory: ({ render }) => (
 		<Mutation mutation={DELETE_CATEGORY} update={removeFromCache}>
-			{(mutation, res) => render({ mutation, res })}
+			{(mutation: MutationFn<DeleteCategoryData, { id: string }>, res: MutationResult<DeleteCategoryData>) => {
+				return render!({ mutation, res });
+			}}
 		</Mutation>
 	),
 	updateCategory: ({ render }) => (
 		<Mutation mutation={UPDATE_CATEGORY} update={updateCache}>
-			{(mutation, res) => render({ mutation, res })}
+			{
+				(
+					mutation: MutationFn<UpdateCategoryData, CategoryInput & { id: string }>,
+					res: MutationResult<UpdateCategoryData>
+				) => render!({ mutation, res })
+			}
 		</Mutation>
 	)
-};
-
-export const CategoryWrapper = adopt<CategoryRenderProps>(components);
+});

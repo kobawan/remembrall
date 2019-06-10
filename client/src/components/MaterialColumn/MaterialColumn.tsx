@@ -3,7 +3,7 @@ import { MutationFn } from "react-apollo";
 import { logErrors } from "../../utils/errorHandling";
 import { Column } from "../Column/Column";
 import { ColumnType, CommonFields } from "../../types";
-import { MaterialWrapper, MaterialRenderProps } from "./MaterialWrapper";
+import { MaterialWrapper } from "./MaterialWrapper";
 
 interface MaterialColumnProps {
 	safeDeleteTicket: (data: CommonFields, deleteFn: MutationFn<any, any>) => void;
@@ -18,7 +18,7 @@ export class MaterialColumn extends React.Component<MaterialColumnProps> {
 		const { safeDeleteTicket } = this.props;
 		return (
 			<MaterialWrapper>
-				{({ addMaterial, updateMaterial, deleteMaterial, materials: { data, error }}: MaterialRenderProps) => {
+				{({ addMaterial, updateMaterial, deleteMaterial, materials: { data, error }}) => {
 					logErrors(error, addMaterial, updateMaterial, deleteMaterial);
 
 					return (

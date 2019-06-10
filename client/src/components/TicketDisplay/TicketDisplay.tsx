@@ -1,5 +1,5 @@
 import * as React from "react";
-import "./ticketDisplay.less"
+import "./ticketDisplay.less";
 import { TicketData, CommonFields } from "../../types";
 import { editSvg, trashSvg } from "../Svg/Svg";
 
