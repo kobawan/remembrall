@@ -4,7 +4,7 @@ import { QueryResult, Mutation, Query, MutationFn, MutationResult } from "react-
 import { MutationUpdaterFn } from "apollo-boost";
 import { CommonFields, MutationRenderProps, MaterialFields } from "../../types";
 import { initHandleCache } from "../../utils/cacheHandling";
-import { GET_MATERIALS, ADD_MATERIAL, DELETE_MATERIAL, UPDATE_MATERIAL } from "../../queries/queries";
+import { GET_MATERIALS, ADD_MATERIAL, DELETE_MATERIAL, UPDATE_MATERIAL } from "./materialQueries";
 
 interface GetMaterialData {
 	materials?: MaterialFields[];

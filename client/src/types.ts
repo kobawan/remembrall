@@ -29,9 +29,7 @@ export interface ToolFields extends CommonFields {
 	categories?: string[];
 }
 
-export interface CategoryFields extends CommonFields {
-	tools?: ToolFields[];
-}
+export interface CategoryFields extends CommonFields {}
 
 export interface ProjectFields extends CommonFields {
 	instructions?: string;

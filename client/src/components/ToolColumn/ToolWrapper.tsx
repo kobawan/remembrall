@@ -4,7 +4,7 @@ import { QueryResult, Mutation, Query, MutationFn, MutationResult } from "react-
 import { MutationUpdaterFn } from "apollo-boost";
 import { CommonFields, MutationRenderProps, ToolFields } from "../../types";
 import { initHandleCache } from "../../utils/cacheHandling";
-import { GET_TOOLS, ADD_TOOL, DELETE_TOOL, UPDATE_TOOL } from "../../queries/queries";
+import { GET_TOOLS, ADD_TOOL, DELETE_TOOL, UPDATE_TOOL } from "./toolQueries";
 
 interface GetToolData {
 	tools?: ToolFields[];

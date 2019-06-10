@@ -41,13 +41,6 @@ const resolverMap = {
 			})
 		},
 	},
-	Category: {
-		tools: async function(parent, args, { currentUser }) {
-			return parent.tools.map(toolID => {
-				return currentUser.tools.id(toolID)
-			})
-		}
-	},
 	// MUTATIONS
 	Mutation: {
 		addProject: async function(
@@ -97,16 +90,6 @@ const resolverMap = {
 				{ $push: { categories: category } },
 			);
 			return category;
-		},
-		addToolToCategory: async function(
-			parent,
-			{ params: { tool, category } },
-			{ currentUser }
-		) {
-			const currentCategory = currentUser.categories.id(category);
-			currentCategory.tools.push(tool);
-			await currentUser.save();
-			return currentCategory;
 		},
 		deleteProject: async function(parent, { id }, { currentUser }) {
 			const entry = currentUser.projects.id(id);

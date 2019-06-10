@@ -14,7 +14,6 @@ type Tool {
 type Category {
 	id: ID!
 	name: String!
-	tools: [Tool]
 }
 
 type Project {
@@ -60,7 +59,6 @@ input MaterialInput {
 
 input CategoryInput {
 	name: String!
-	tools: [ID]
 }
 
 input ToolInput {
@@ -78,7 +76,6 @@ type Mutation {
 	addCategory(params: CategoryInput): Category!
 	addTool(params: ToolInput): Tool!
 	addMaterial(params: MaterialInput): Material!
-	addToolToCategory(params: ToolToCategoryInput): Category!
 	deleteProject(id: ID!): Project
 	deleteCategory(id: ID!): Category
 	deleteTool(id: ID!): Tool

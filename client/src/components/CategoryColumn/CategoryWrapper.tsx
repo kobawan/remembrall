@@ -4,7 +4,7 @@ import { QueryResult, Mutation, Query, MutationFn, MutationResult } from "react-
 import { MutationUpdaterFn } from "apollo-boost";
 import { CommonFields, MutationRenderProps, CategoryFields } from "../../types";
 import { initHandleCache } from "../../utils/cacheHandling";
-import { GET_CATEGORIES, ADD_CATEGORY, DELETE_CATEGORY, UPDATE_CATEGORY } from "../../queries/queries";
+import { GET_CATEGORIES, ADD_CATEGORY, DELETE_CATEGORY, UPDATE_CATEGORY } from "./categoryQueries";
 
 interface GetCategoryData {
 	categories?: CategoryFields[];

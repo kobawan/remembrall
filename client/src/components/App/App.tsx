@@ -3,7 +3,7 @@ import { Query, QueryResult } from "react-apollo";
 import "./app.less";
 
 import { getStorageKey, StorageKeys, setStorageKey } from "../../utils/localStorage";
-import { GET_USER_ID } from "../../queries/queries";
+import { GET_USER_ID } from "./appQueries";
 import { Loading } from "../Loading/Loading";
 import { ColumnsManager } from "../ColumnsManager/ColumnsManager";
 

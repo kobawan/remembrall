@@ -2,7 +2,7 @@ import * as React from "react";
 import { Mutation, MutationUpdaterFn, Query, QueryResult, MutationFn, MutationResult } from "react-apollo";
 import { adopt } from "react-adopt";
 import { MutationRenderProps, ProjectFields } from "../../types";
-import { ADD_PROJECT, GET_PROJECTS, DELETE_PROJECT, UPDATE_PROJECT } from "../../queries/queries";
+import { ADD_PROJECT, GET_PROJECTS, DELETE_PROJECT, UPDATE_PROJECT } from "./projectQueries";
 import { initHandleCache } from "../../utils/cacheHandling";
 
 interface GetProjectData {
