@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
@@ -15,7 +16,7 @@ app.use(cors());
 
 // Connecting to database
 mongoose.connect(
-	"mongodb://kobawan:fpfSywHN8pnQpT7@ds137661.mlab.com:37661/remembrall",
+	process.env.DB_URL,
 	{ useNewUrlParser: true },
 )
 mongoose.connection.once("open", () => {
