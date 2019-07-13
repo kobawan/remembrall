@@ -5,6 +5,7 @@ import { MutationUpdaterFn } from "apollo-boost";
 import { CommonFields, MutationRenderProps, CategoryFields } from "../../types";
 import { initHandleCache } from "../../utils/cacheHandling";
 import { GET_CATEGORIES, ADD_CATEGORY, DELETE_CATEGORY, UPDATE_CATEGORY } from "./categoryQueries";
+import { GET_PROJECTS } from "../ProjectColumn/projectQueries";
 
 interface GetCategoryData {
 	categories?: CategoryFields[];
@@ -84,7 +85,7 @@ export const CategoryWrapper = adopt<CategoryRenderProps, {}>({
 		</Mutation>
 	),
 	deleteCategory: ({ render }) => (
-		<Mutation mutation={DELETE_CATEGORY} update={removeFromCache}>
+		<Mutation mutation={DELETE_CATEGORY} update={removeFromCache} refetchQueries={[{ query: GET_PROJECTS }]}>
 			{(mutation: MutationFn<DeleteCategoryData, { id: string }>, res: MutationResult<DeleteCategoryData>) => {
 				return render!({ mutation, res });
 			}}

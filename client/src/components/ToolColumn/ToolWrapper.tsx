@@ -5,6 +5,7 @@ import { MutationUpdaterFn } from "apollo-boost";
 import { CommonFields, MutationRenderProps, ToolFields } from "../../types";
 import { initHandleCache } from "../../utils/cacheHandling";
 import { GET_TOOLS, ADD_TOOL, DELETE_TOOL, UPDATE_TOOL } from "./toolQueries";
+import { GET_PROJECTS } from "../ProjectColumn/projectQueries";
 
 interface GetToolData {
 	tools?: ToolFields[];
@@ -85,7 +86,7 @@ export const ToolWrapper = adopt<ToolRenderProps, {}>({
 		</Mutation>
 	),
 	deleteTool: ({ render }) => (
-		<Mutation mutation={DELETE_TOOL} update={removeFromCache}>
+		<Mutation mutation={DELETE_TOOL} update={removeFromCache} refetchQueries={[{ query: GET_PROJECTS }]}>
 			{(mutation: MutationFn<DeleteToolData, { id: string }>, res: MutationResult<DeleteToolData>) => {
 				return render!({ mutation, res });
 			}}

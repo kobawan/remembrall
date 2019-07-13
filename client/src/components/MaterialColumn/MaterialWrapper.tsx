@@ -5,6 +5,7 @@ import { MutationUpdaterFn } from "apollo-boost";
 import { CommonFields, MutationRenderProps, MaterialFields } from "../../types";
 import { initHandleCache } from "../../utils/cacheHandling";
 import { GET_MATERIALS, ADD_MATERIAL, DELETE_MATERIAL, UPDATE_MATERIAL } from "./materialQueries";
+import { GET_PROJECTS } from "../ProjectColumn/projectQueries";
 
 interface GetMaterialData {
 	materials?: MaterialFields[];
@@ -83,7 +84,7 @@ export const MaterialWrapper = adopt<MaterialRenderProps, {}>({
 		</Mutation>
 	),
 	deleteMaterial: ({ render }) => (
-		<Mutation mutation={DELETE_MATERIAL} update={removeFromCache}>
+		<Mutation mutation={DELETE_MATERIAL} update={removeFromCache} refetchQueries={[{ query: GET_PROJECTS }]}>
 			{(mutation: MutationFn<DeleteMaterialData, { id: string }>, res: MutationResult<DeleteMaterialData>) => {
 				return render!({ mutation, res });
 			}}

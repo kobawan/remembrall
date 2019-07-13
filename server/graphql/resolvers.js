@@ -26,19 +26,19 @@ const resolverMap = {
 	// QUERY HELPERS
 	Project: {
 		categories: async function(parent, args, { currentUser }) {
-			return parent.categories.map(id => {
-				return currentUser.categories.id(id)
-			})
+			return parent.categories
+				.map(id => currentUser.categories.id(id))
+				.filter(res => res !== null)
 		},
 		tools: async function(parent, args, { currentUser }) {
-			return parent.tools.map(id => {
-				return currentUser.tools.id(id)
-			})
+			return parent.tools
+				.map(id => currentUser.tools.id(id))
+				.filter(res => res !== null)
 		},
 		materials: async function(parent, args, { currentUser }) {
-			return parent.materials.map(id => {
-				return currentUser.materials.id(id)
-			})
+			return parent.materials
+				.map(id => currentUser.materials.id(id))
+				.filter(res => res !== null)
 		},
 	},
 	// MUTATIONS
@@ -102,6 +102,9 @@ const resolverMap = {
 		deleteCategory: async function(parent, { id }, { currentUser }) {
 			const entry = currentUser.categories.id(id);
 			if(entry) {
+				currentUser.projects.forEach(({ categories }) => {
+					categories = categories.filter(categoryId => categoryId !== id)
+				})
 				entry.remove();
 				await currentUser.save();
 				return entry
@@ -110,6 +113,9 @@ const resolverMap = {
 		deleteTool: async function(parent, { id }, { currentUser }) {
 			const entry = currentUser.tools.id(id);
 			if(entry) {
+				currentUser.projects.forEach(({ tools }) => {
+					tools = tools.filter(toolId => toolId !== id)
+				})
 				entry.remove();
 				await currentUser.save();
 				return entry
@@ -118,6 +124,9 @@ const resolverMap = {
 		deleteMaterial: async function(parent, { id }, { currentUser }) {
 			const entry = currentUser.materials.id(id);
 			if(entry) {
+				currentUser.projects.forEach(({ materials }) => {
+					materials = materials.filter(materialId => materialId !== id)
+				})
 				entry.remove();
 				await currentUser.save();
 				return entry
