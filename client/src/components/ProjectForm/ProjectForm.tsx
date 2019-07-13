@@ -4,12 +4,15 @@ import isEqual from "lodash.isequal";
 import "./projectForm.less";
 import { ProjectFields, CommonFields } from "../../types";
 import { getInitialState } from "../../utils/getInitialState";
-import { TextAreaRow, OnChangeFn, TextInputRowWithList, TextInputTitle } from "../Form/FormComponents";
+import { TextInputRowWithList } from "../Form/TextInputRowWithList";
 import { logErrors } from "../../utils/errorHandling";
 import { CategoryWrapper, CategoryRenderProps } from "../CategoryColumn/CategoryWrapper";
 import { ToolWrapper, ToolRenderProps } from "../ToolColumn/ToolWrapper";
 import { MaterialWrapper, MaterialRenderProps } from "../MaterialColumn/MaterialWrapper";
 import { Overlay } from "../Overlay/Overlay";
+import { OnChangeFn } from "../Form/types";
+import { TextInputTitle } from "../Form/TextInputTitle";
+import { TextAreaRow } from "../Form/TextAreaRow";
 
 interface FormProps {
 	ticket?: ProjectFields;

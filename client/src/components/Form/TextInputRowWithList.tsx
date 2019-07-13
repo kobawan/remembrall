@@ -1,16 +1,9 @@
 import * as React from "react";
 import { MutationFn } from "react-apollo";
-import "./formComponents.less";
+import "./textInputRowWithList.less";
 import { CommonFields } from "../../types";
 import { plusSvg } from "../Svg/Svg";
-
-export type OnChangeFn = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-
-interface RowProps {
-	name: string;
-	value: string;
-	onChange: OnChangeFn;
-}
+import { OnChangeFn } from "./types";
 
 interface TextInputRowWithListProps {
 	name: string;
@@ -28,73 +21,7 @@ interface TextInputRowWithListState {
 	editTags: boolean;
 }
 
-interface TextInputTitleState {
-	showError: boolean;
-}
-
 const ADD_TEXT = "+ Add ";
-const TITLE_ERROR_MSG = "Invalid input. Title field is required";
-
-export class TextInputTitle extends React.PureComponent<RowProps, TextInputTitleState> {
-	public state: TextInputTitleState = {
-		showError: false,
-	};
-
-	public render() {
-		const { name, value, onChange } = this.props;
-		const { showError } = this.state;
-		return (
-			<div className="formTitle">
-				<input
-					type="text"
-					name={name}
-					onChange={onChange}
-					placeholder="Project name"
-					value={value}
-					className={showError ? "error" : ""}
-					onBlur={this.onBlur}
-					onFocus={this.onFocus}
-				/>
-				<div className="errorMsg">
-					{showError && TITLE_ERROR_MSG}
-				</div>
-			</div>
-		);
-	}
-
-	/**
-	 * Shows input error on blur
-	 */
-	private onBlur = () => {
-		const { showError } = this.state;
-		const { value } = this.props;
-		if(value.length === 0 && !showError) {
-			this.setState({ showError: true });
-		}
-	}
-
-	/**
-	 * Hides input error on focus
-	 */
-	private onFocus = () => {
-		if(this.state.showError) {
-			this.setState({ showError: false });
-		}
-	}
-}
-
-export const TextAreaRow = ({ name, value, onChange }: RowProps) => {
-	return (
-		<div className="formRow">
-			<label>{name}</label>
-			<textarea
-				name={name}
-				onChange={onChange}
-				value={value}
-			/>
-		</div>
-	);
-};
 
 export class TextInputRowWithList extends React.Component<TextInputRowWithListProps, TextInputRowWithListState> {
 	public state: TextInputRowWithListState = {
@@ -111,7 +38,7 @@ export class TextInputRowWithList extends React.Component<TextInputRowWithListPr
 		 * @todo add tags below input
 		 */
 		return (
-			<div className="formRow">
+			<div className="formTextareaWithList">
 				<label>{`${name}${isRequired ? " *" : ""}`}</label>
 				<div className="wrapper">
 					{editTags && (
