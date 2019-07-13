@@ -1,4 +1,5 @@
 import { gql } from "apollo-boost";
+import { CategoriesFragment } from "../CategoryColumn/categoryQueries";
 
 const ProjectsFragment = gql`
 	fragment ProjectsFragment on Project {
@@ -54,4 +55,13 @@ export const DELETE_PROJECT = gql`
 			id
 		}
 	}
+`;
+
+export const UPDATE_PROJECT_TAGS = gql`
+	mutation UpdateProjectTags($id: ID!) {
+		updateProjectTags(id: $id) {
+			...CategoriesFragment
+		}
+	}
+	${CategoriesFragment}
 `;

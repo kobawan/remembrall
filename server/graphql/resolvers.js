@@ -41,6 +41,13 @@ const resolverMap = {
 			})
 		},
 	},
+	Category: {
+		inProjects: async function(parent, args, { currentUser }) {
+			return parent.inProjects.map(id => {
+				return currentUser.projects.id(id)
+			})
+		},
+	},
 	// MUTATIONS
 	Mutation: {
 		addProject: async function(
@@ -174,6 +181,35 @@ const resolverMap = {
 				await currentUser.save();
 				return material;
 			}
+		},
+		updateProjectTags: async function(parent, { id }, { currentUser }) {
+			const categoriesInProject = currentUser.projects.id(id).categories;
+			let updatedTags = [];
+
+			// Make sure all categoriesInProject have project id assigned
+			// and that categories not in the project do not have id assigned
+			currentUser.categories.forEach(category => {
+				const isCategoryInProject = categoriesInProject.includes(category.id);
+				const isProjectInCategory = category.inProjects.includes(id);
+
+				if(isCategoryInProject && !isProjectInCategory) {
+					category.inProjects.push(id);
+					updatedTags.push(category);
+					return;
+				}
+
+				if(!isCategoryInProject && isProjectInCategory) {
+					category.inProjects.splice(
+						category.inProjects.indexOf(id),
+						1,
+					);
+					updatedTags.push(category);
+					return;
+				}
+			});
+
+			await currentUser.save();
+			return updatedTags;
 		},
 	},
 };

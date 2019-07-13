@@ -6,7 +6,7 @@ import { CommonFields, MutationRenderProps, CategoryFields } from "../../types";
 import { initHandleCache } from "../../utils/cacheHandling";
 import { GET_CATEGORIES, ADD_CATEGORY, DELETE_CATEGORY, UPDATE_CATEGORY } from "./categoryQueries";
 
-interface GetCategoryData {
+export interface GetCategoryData {
 	categories?: CategoryFields[];
 }
 

@@ -1,9 +1,11 @@
 import * as React from "react";
 import { Mutation, MutationUpdaterFn, Query, QueryResult, MutationFn, MutationResult } from "react-apollo";
 import { adopt } from "react-adopt";
-import { MutationRenderProps, ProjectFields } from "../../types";
-import { ADD_PROJECT, GET_PROJECTS, DELETE_PROJECT, UPDATE_PROJECT } from "./projectQueries";
+import { MutationRenderProps, ProjectFields, CategoryFields } from "../../types";
+import { ADD_PROJECT, GET_PROJECTS, DELETE_PROJECT, UPDATE_PROJECT, UPDATE_PROJECT_TAGS } from "./projectQueries";
 import { initHandleCache } from "../../utils/cacheHandling";
+import { GetCategoryData } from "../CategoryColumn/CategoryWrapper";
+import { GET_CATEGORIES } from "../CategoryColumn/categoryQueries";
 
 interface GetProjectData {
 	projects?: ProjectFields[];
@@ -25,11 +27,16 @@ interface UpdateProjectData {
 	updateProject: ProjectFields;
 }
 
+interface UpdateProjectTagsData {
+	updateProjectTags: CategoryFields[];
+}
+
 export interface ProjectRenderProps {
 	addProject: MutationRenderProps<AddProjectData, ProjectInput>;
 	deleteProject: MutationRenderProps<DeleteProjectData, { id: string }>;
 	updateProject: MutationRenderProps<UpdateProjectData, ProjectInput & { id: string }>;
 	projects: QueryResult<GetProjectData>;
+	updateProjectTags: MutationRenderProps<UpdateProjectTagsData, { id: string }>;
 }
 
 const addToCache: MutationUpdaterFn<AddProjectData> =
@@ -75,6 +82,21 @@ initHandleCache<UpdateProjectData, GetProjectData>(GET_PROJECTS, (res, data) => 
 	return res;
 });
 
+/**
+ * Updates categories to cache
+ */
+const updateCategoriesCache: MutationUpdaterFn<UpdateProjectTagsData> =
+initHandleCache<UpdateProjectTagsData, GetCategoryData>(GET_CATEGORIES, (res, data) => {
+	data.updateProjectTags.forEach(category => {
+		(res.categories || []).forEach(cacheCategory => {
+			if(cacheCategory.id === category.id) {
+				cacheCategory = category;
+			}
+		});
+	});
+	return res;
+});
+
 export const ProjectWrapper = adopt<ProjectRenderProps, {}>({
 	projects: ({ render }) => (
 		<Query query={GET_PROJECTS} children={render!} />
@@ -102,5 +124,15 @@ export const ProjectWrapper = adopt<ProjectRenderProps, {}>({
 				) => render!({ mutation, res })
 			}
 		</Mutation>
-	)
+	),
+	updateProjectTags: ({ render }) => (
+		<Mutation mutation={UPDATE_PROJECT_TAGS} update={updateCategoriesCache}>
+			{
+				(
+					mutation: MutationFn<UpdateProjectTagsData, { id: string }>,
+					res: MutationResult<UpdateProjectTagsData>
+				) => render!({ mutation, res })
+			}
+		</Mutation>
+	),
 });

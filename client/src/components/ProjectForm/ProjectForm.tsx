@@ -20,6 +20,7 @@ interface FormProps {
 	createTicket: MutationFn<any, any>;
 	deleteTicket: (data: CommonFields) => void;
 	updateTicket: MutationFn<any, any>;
+	updateProjectTags: MutationFn<any, any>;
 }
 
 type InputNames = Exclude<keyof ProjectFields, "id">;
@@ -162,7 +163,7 @@ export class ProjectForm extends React.Component<FormProps, FormState> {
 	/**
 	 * Checks if inputs are valid and then updates or creates project to db
 	 */
-	private submitProject = () => {
+	private submitProject = async () => {
 		const {
 			categories,
 			materials,
@@ -171,9 +172,16 @@ export class ProjectForm extends React.Component<FormProps, FormState> {
 			instructions,
 			notes,
 		} = this.state;
+		const {
+			openInvalidPopup,
+			ticket,
+			updateTicket,
+			createTicket,
+			updateProjectTags,
+		} = this.props;
 
 		if(!this.formIsValid()) {
-			this.props.openInvalidPopup();
+			openInvalidPopup();
 			return;
 		}
 
@@ -187,15 +195,21 @@ export class ProjectForm extends React.Component<FormProps, FormState> {
 				tools: tools.map(tag => tag.id),
 			};
 
-			if(this.props.ticket) {
-				this.props.updateTicket({
+			if(ticket) {
+				await updateTicket({
 					variables: {
 						params,
-						id: this.props.ticket.id,
+						id: ticket.id,
 					},
 				});
+
+				await updateProjectTags({ variables: { id: ticket.id } });
 			} else {
-				this.props.createTicket({ variables: { params } });
+				const res = await createTicket({ variables: { params } });
+
+				if(res && res.data && res.data.createProject.id) {
+					await updateProjectTags({ variables: { id: res.data.updateProject.id } });
+				}
 			}
 		}
 

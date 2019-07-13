@@ -1,9 +1,13 @@
 import { gql } from "apollo-boost";
 
-const CategoriesFragment = gql`
+export const CategoriesFragment = gql`
 	fragment CategoriesFragment on Category {
 		name
 		id
+		inProjects {
+			name
+			id
+		}
 	}
 `;
 

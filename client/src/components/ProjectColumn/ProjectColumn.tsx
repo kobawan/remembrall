@@ -40,11 +40,17 @@ export class ProjectColumn extends React.Component<ProjectColumnProps> {
 
 		return (
 			<ProjectWrapper>
-				{({ addProject, deleteProject, updateProject, projects: { data, error }}) => {
+				{({
+					addProject,
+					deleteProject,
+					updateProject,
+					updateProjectTags,
+					projects: { data, error }
+				}) => {
 					/**
 					 * @todo handle loading?
 					 */
-					logErrors(error, addProject, deleteProject, updateProject);
+					logErrors(error, addProject, deleteProject, updateProject, updateProjectTags);
 
 					return (
 						<div>
@@ -66,6 +72,7 @@ export class ProjectColumn extends React.Component<ProjectColumnProps> {
 									createTicket={addProject.mutation}
 									deleteTicket={(data: CommonFields) => safeDeleteTicket(data, deleteProject.mutation)}
 									updateTicket={updateProject.mutation}
+									updateProjectTags={updateProjectTags.mutation}
 								/>
 							)}
 						</div>
