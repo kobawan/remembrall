@@ -77,13 +77,13 @@ export class Login extends React.PureComponent<LoginProps, LoginState> {
 								>
 									{isLogin ? "Login" : "Register"}
 								</button>
-							</div>
-							<div className={`msg error ${errorMessage ? "" : "hide"}`}>
-								{errorMessage}
-							</div>
-							<div className="msg">
-								{isLogin ? REGISTER_MSG : LOGIN_MSG}
-								<span className="link" onClick={this.toggleLoginRegister}>here</span>
+								<div className={`msg error ${errorMessage ? "" : "hide"}`}>
+									{errorMessage}
+								</div>
+								<div className="msg">
+									{isLogin ? REGISTER_MSG : LOGIN_MSG}
+									<span className="link" onClick={this.toggleLoginRegister}>here</span>
+								</div>
 							</div>
 						</div>
 					);

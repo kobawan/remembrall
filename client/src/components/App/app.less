@@ -2,18 +2,27 @@
 @import "../../styles/colours.less";
 
 .app {
-	padding: 2rem;
+	padding: 2em;
 	width: 100%;
 	height: 100%;
 	box-sizing: border-box;
 
 	.header {
 		display: flex;
-		padding-bottom: 2rem;
+		padding-bottom: 2em;
 		align-items: center;
+		font-size: 1rem;
+
+		@media (orientation: portrait) and (max-width: 450px) {
+			font-size: 0.8rem;
+		}
+	
+		@media (orientation: landscape) and (max-height: 450px) {
+			font-size: calc(0.4rem + 1.5vh);
+		}
 
 		.title {
-			font-size: 3rem;
+			font-size: 3em;
 			font-weight: normal;
 			pointer-events: none;
 			position: relative;
@@ -24,8 +33,13 @@
 		.logout {
 			.boxMixin(@colourBorder);
 			position: absolute;
-			right: 2rem;
-			font-size: 1.5rem;
+			right: 2em;
+			font-size: 1.5em;
+			background-color: white;
+
+			@media (orientation: landscape) and (max-height: 450px) {
+				font-size: 2em;
+			}
 
 			@media (hover: hover) {
 				&:hover {

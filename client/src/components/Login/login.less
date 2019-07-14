@@ -2,16 +2,35 @@
 @import "../../styles/colours.less";
 
 .login {
-	.containerCenter();
-	min-width: 40%;
+	@media (min-width: 451px) and (min-height: 451px) {
+		.containerCenter();
+		min-width: 40%;
+	}
+
+	@media (orientation: portrait) and (max-width: 450px) {
+		font-size: 1.2rem;
+		width: 100%;
+	}
+
+	@media (orientation: landscape) and (max-height: 450px) {
+		font-size: calc(0.4rem + 1.5vh);
+		max-width: 75%;
+		position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+	}
 
 	.footer {
-		margin-top: 1.5rem;
+		margin-top: 1.5em;
 		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
 
 		button {
-			font-size: 1.6rem;
-			margin: 0 1rem;
+			font-size: 1.6em;
+			margin: 0 1em;
+			background-color: white;
 
 			&.loading {
 				cursor: default;
@@ -22,29 +41,29 @@
 				}
 			}
 		}
-	}
 
-	.msg {
-		display: block;
-		margin-top: 1.5rem;
-		font-size: 1.2rem;
-
-		&.error {
-			color: @colourError;
-		}
-
-		&.hide {
-			display: none;
-		}
-
-		.link {
-			color: @colourBorder;
-			cursor: pointer;
-		
-			@media (hover: hover) {
-				&:hover {
-					color: @colourBorder;
-					text-decoration: underline;
+		.msg {
+			display: block;
+			margin-top: 1.5em;
+			font-size: 1.2em;
+	
+			&.error {
+				color: @colourError;
+			}
+	
+			&.hide {
+				display: none;
+			}
+	
+			.link {
+				color: @colourBorder;
+				cursor: pointer;
+			
+				@media (hover: hover) {
+					&:hover {
+						color: @colourBorder;
+						text-decoration: underline;
+					}
 				}
 			}
 		}
