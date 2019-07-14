@@ -3,7 +3,7 @@ import "./app.less";
 
 import { ColumnsManager } from "../ColumnsManager/ColumnsManager";
 import { Login } from "../Login/Login";
-import { getStorageKey, StorageKeys } from "../../utils/localStorage";
+import { getStorageKey, StorageKeys, clearStorageKey } from "../../utils/localStorage";
 
 interface AppState {
 	userHasLoggedIn: boolean;
@@ -17,7 +17,12 @@ export class App extends React.PureComponent<{}, AppState> {
 	public render() {
 		return (
 			<div className="app">
-				<div className="title">Remembrall</div>
+				<div className="header">
+					<div className="title">Remembrall</div>
+					{this.state.userHasLoggedIn && (
+						<button onClick={this.logout} className="logout">Logout</button>
+					)}
+				</div>
 				<hr />
 				{this.state.userHasLoggedIn
 					? <ColumnsManager />
@@ -29,5 +34,10 @@ export class App extends React.PureComponent<{}, AppState> {
 
 	private toggleUserLogin = () => {
 		this.setState({ userHasLoggedIn: !this.state.userHasLoggedIn});
+	}
+
+	private logout = () => {
+		clearStorageKey(StorageKeys.UserId);
+		window.location.reload();
 	}
 }

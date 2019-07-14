@@ -1,14 +1,37 @@
+@import "../../styles/mixin.less";
+@import "../../styles/colours.less";
+
 .app {
 	padding: 2rem;
 	width: 100%;
 	height: 100%;
 	box-sizing: border-box;
 
-	.title {
-		font-size: 3rem;
-		font-weight: normal;
-		text-align: center;
-		pointer-events: none;
-		margin-bottom: 2rem;
+	.header {
+		display: flex;
+		padding-bottom: 2rem;
+		align-items: center;
+
+		.title {
+			font-size: 3rem;
+			font-weight: normal;
+			pointer-events: none;
+			position: relative;
+			left: 50%;
+			transform: translateX(-50%);
+		}
+
+		.logout {
+			.boxMixin(@colourBorder);
+			position: absolute;
+			right: 2rem;
+			font-size: 1.5rem;
+
+			@media (hover: hover) {
+				&:hover {
+					.boxMixinHover();
+				}
+			}
+		}
 	}
 }

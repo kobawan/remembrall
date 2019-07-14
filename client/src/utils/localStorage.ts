@@ -27,3 +27,7 @@ export const setStorageKey = (key: StorageKeys, value: StorageKeysType) => {
 		console.error("Not possible to set item", key, "in local storage");
 	}
 };
+
+export const clearStorageKey = (key: StorageKeys) => {
+	window.localStorage.removeItem(key);
+};
