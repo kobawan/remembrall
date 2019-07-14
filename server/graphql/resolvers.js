@@ -2,7 +2,8 @@ const UserModel = require("../models/user");
 const { ProjectModel } = require("../models/project");
 const { MaterialModel } = require("../models/material");
 const { ToolModel } = require("../models/tool");
-const { CategoryModel } = require("../models/category")
+const { CategoryModel } = require("../models/category");
+const { encryptString, compareEncryptedString } = require("../utils/password");
 
 const resolverMap = {
 	// QUERIES
@@ -43,6 +44,24 @@ const resolverMap = {
 	},
 	// MUTATIONS
 	Mutation: {
+		loginUser: async function(_, { email, password }) {
+			const user = await UserModel.findOne({ email });
+			if(!user) {
+				return null;
+			}
+			const res = await compareEncryptedString(password, user.password);
+			if(!res) {
+				return null;
+			}
+
+			return user;
+		},
+		addUser: async function(_, { email, password }) {
+			const hash = await encryptString(password);
+			const user = new UserModel({ email, password: hash });
+			await user.save();
+			return user;
+		},
 		addProject: async function(
 			parent,
 			{ params: { name, instructions, notes, categories, materials, tools } },

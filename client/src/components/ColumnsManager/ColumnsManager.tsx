@@ -1,4 +1,5 @@
 import * as React from "react";
+import "./columnsManager.less";
 import { ProjectColumn } from "../ProjectColumn/ProjectColumn";
 import { CategoryColumn } from "../CategoryColumn/CategoryColumn";
 import { Popup, PopupMessage } from "../Popup/Popup";
@@ -31,7 +32,7 @@ export class ColumnsManager extends React.Component<{}, ColumnsState> {
 		} = this.state;
 
 		return (
-			<>
+			<div className="columnsContainer">
 				<ProjectColumn
 					safeDeleteTicket={this.safeDeleteTicket}
 					openForm={this.openForm}
@@ -52,7 +53,7 @@ export class ColumnsManager extends React.Component<{}, ColumnsState> {
 						action={popupAction}
 					/>
 				)}
-			</>
+			</div>
 		);
 	}
 

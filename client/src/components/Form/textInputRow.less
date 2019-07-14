@@ -1,0 +1,29 @@
+@import "../../styles/colours.less";
+
+.formTextInput {
+	display: flex;
+	align-items: flex-end;
+	width: 100%;
+	padding-top: 1rem;
+
+	label {
+		margin-right: 1rem;
+		flex: 2;
+		text-transform: capitalize;
+		font-size: 1.6rem;
+	}
+
+	input {
+		flex: 6;
+		border: solid 1px transparent;
+		border-bottom-color: @colourBorder;
+		width: 100%;
+		box-sizing: border-box;
+		font-size: 1.6rem;
+		padding: 0.3rem 0.5rem;
+
+		&:invalid:not(:focus) {
+			border-color: @colourError;
+		}
+	}
+}

@@ -28,6 +28,8 @@ type Project {
 
 type User {
 	id: ID!
+	email: String!
+	password: String!
 	projects: [Project]
 	categories: [Category]
 	materials: [Material]
@@ -72,6 +74,8 @@ input ToolToCategoryInput {
 }
 
 type Mutation {
+	loginUser(email: String!, password: String!): User
+	addUser(email: String!, password: String!): User!
 	addProject(params: ProjectInput): Project!
 	addCategory(params: CategoryInput): Category!
 	addTool(params: ToolInput): Tool!

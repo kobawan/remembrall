@@ -15,14 +15,6 @@ export interface PopupProps {
 }
 
 export class Popup extends React.PureComponent<PopupProps> {
-  private ref = React.createRef<HTMLButtonElement>();
-
-  public componentDidMount() {
-    if(this.ref.current) {
-      this.ref.current.focus();
-    }
-  }
-
   public render () {
     return (
       <div>
@@ -45,10 +37,10 @@ export class Popup extends React.PureComponent<PopupProps> {
     if(text === PopupMessage.changes || text.includes(PopupMessage.delete)) {
       return <>
         <button className="popupButton" onClick={close}>No</button>
-        <button className="popupButton" onClick={action} ref={this.ref}>Yes</button>
+        <button className="popupButton" onClick={action} autoFocus={true}>Yes</button>
       </>;
     }
 
-    return <button className="popupButton" onClick={close} ref={this.ref}>Ok</button>;
+    return <button className="popupButton" onClick={close} autoFocus={true}>Ok</button>;
   }
 }

@@ -1,0 +1,52 @@
+@import "../../styles/mixin.less";
+@import "../../styles/colours.less";
+
+.login {
+	.containerCenter();
+	min-width: 40%;
+
+	.footer {
+		margin-top: 1.5rem;
+		display: flex;
+
+		button {
+			font-size: 1.6rem;
+			margin: 0 1rem;
+
+			&.loading {
+				cursor: default;
+				border: gainsboro;
+
+				&:hover{
+					box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.1);
+				}
+			}
+		}
+	}
+
+	.msg {
+		display: block;
+		margin-top: 1.5rem;
+		font-size: 1.2rem;
+
+		&.error {
+			color: @colourError;
+		}
+
+		&.hide {
+			display: none;
+		}
+
+		.link {
+			color: @colourBorder;
+			cursor: pointer;
+		
+			@media (hover: hover) {
+				&:hover {
+					color: @colourBorder;
+					text-decoration: underline;
+				}
+			}
+		}
+	}
+}

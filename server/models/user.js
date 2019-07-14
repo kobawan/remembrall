@@ -5,6 +5,8 @@ const { MaterialSchema } = require('./material');
 const { ToolSchema } = require('./tool');
 
 const UserSchema = new mongoose.Schema({
+	email: String,
+	password: String,
 	projects: [ProjectSchema],
 	categories: [CategorySchema],
 	materials: [MaterialSchema],

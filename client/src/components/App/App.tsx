@@ -1,62 +1,33 @@
 import * as React from "react";
-import { Query, QueryResult } from "react-apollo";
 import "./app.less";
 
-import { getStorageKey, StorageKeys, setStorageKey } from "../../utils/localStorage";
-import { GET_USER_ID } from "./appQueries";
-import { Loading } from "../Loading/Loading";
 import { ColumnsManager } from "../ColumnsManager/ColumnsManager";
+import { Login } from "../Login/Login";
+import { getStorageKey, StorageKeys } from "../../utils/localStorage";
 
-interface GetUserData {
-	user: { id: string };
+interface AppState {
+	userHasLoggedIn: boolean;
 }
 
-export class App extends React.PureComponent {
-	private userIdHasBeenUpdated = false;
+export class App extends React.PureComponent<{}, AppState> {
+	public state: AppState = {
+		userHasLoggedIn: !!getStorageKey(StorageKeys.UserId),
+	};
 
 	public render() {
 		return (
-			<Query query={GET_USER_ID}>
-				{({ loading, error, data }: QueryResult<GetUserData>) => {
-					this.updateUserIdStorage(data);
-
-					if(error) {
-						console.error(error);
-					}
-
-					return (
-						<div className="app">
-							<div className="title">Remembrall</div>
-							<hr />
-							<div className="grid">
-								{!loading && data && data.user
-									? <ColumnsManager />
-									: (
-										<div className="loadingContainer">
-											<Loading />
-										</div>
-									)
-								}
-							</div>
-						</div>
-					);
-				}}
-			</Query>
+			<div className="app">
+				<div className="title">Remembrall</div>
+				<hr />
+				{this.state.userHasLoggedIn
+					? <ColumnsManager />
+					: <Login updateLoginState={this.toggleUserLogin}/>
+				}
+			</div>
 		);
 	}
 
-	/**
-	 * Gets user id from server and sets it to local storage
-	 */
-	private updateUserIdStorage = (data?: GetUserData) => {
-		if (this.userIdHasBeenUpdated || !data || !data.user) {
-			return;
-		}
-
-		const userId = getStorageKey(StorageKeys.UserId);
-		if (userId !== data.user.id) {
-			setStorageKey(StorageKeys.UserId, data.user.id);
-		}
-		this.userIdHasBeenUpdated = true;
+	private toggleUserLogin = () => {
+		this.setState({ userHasLoggedIn: !this.state.userHasLoggedIn});
 	}
 }
