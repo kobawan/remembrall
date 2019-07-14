@@ -3,14 +3,15 @@
 
 .column {
 	font-size: 1rem;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
 
 	.content {
 		.boxMixin();
 		background-color: gainsboro;
-		margin-top: 2rem;
-		display: flex;
-		flex-direction: column;
-		height: calc(100vh - 19.3rem);
-		overflow-y: scroll;
+		margin-top: 2em;
+    overflow-y: scroll;
+    flex: 1;
 	}
 }

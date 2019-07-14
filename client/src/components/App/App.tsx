@@ -23,7 +23,7 @@ export class App extends React.PureComponent<{}, AppState> {
 						<button onClick={this.logout} className="logout">Logout</button>
 					)}
 				</div>
-				<hr />
+				{!this.state.userHasLoggedIn && <hr />}
 				{this.state.userHasLoggedIn
 					? <ColumnsManager />
 					: <Login updateLoginState={this.toggleUserLogin}/>

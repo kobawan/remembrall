@@ -47,7 +47,7 @@ export class ProjectColumn extends React.Component<ProjectColumnProps> {
 					logErrors(error, addProject, deleteProject, updateProject);
 
 					return (
-						<div>
+						<>
 							<Column
 								tickets={data && data.projects ? data.projects : []}
 								type={ColumnType.Projects}
@@ -68,7 +68,7 @@ export class ProjectColumn extends React.Component<ProjectColumnProps> {
 									updateTicket={updateProject.mutation}
 								/>
 							)}
-						</div>
+						</>
 					);
 				}}
 			</ProjectWrapper>
