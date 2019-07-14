@@ -4,15 +4,21 @@
 .popup {
   .containerCenter();
   z-index: 99;
+  font-size: 1rem;
+
+  @media (orientation: portrait) and (max-width: 450px) {
+		width: 70%;
+	}
 
   .message {
-    font-size: 1.6rem;
+    font-size: 1.6em;
     cursor: default;
     text-align: center;
   }
 
   .popupButton {
-    font-size: 1.6rem;
-    margin: 1rem 0.5rem 0 0.5rem;
+    font-size: 1.6em;
+    margin: 1em 0.5em 0 0.5em;
+    background-color: white;
   }
 }
