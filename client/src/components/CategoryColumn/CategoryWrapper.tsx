@@ -15,7 +15,7 @@ interface AddCategoryData {
 	addCategory: CommonFields;
 }
 
-interface DeleteCategoryData {
+export interface DeleteCategoryData {
 	deleteCategory: CommonFields;
 }
 

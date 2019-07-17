@@ -1,12 +1,12 @@
 import * as React from "react";
 import { MutationFn } from "react-apollo";
-import { CategoryWrapper } from "./CategoryWrapper";
+import { CategoryWrapper, DeleteCategoryData } from "./CategoryWrapper";
 import { logErrors } from "../../utils/errorHandling";
 import { Column } from "../Column/Column";
 import { ColumnType, CommonFields } from "../../types";
 
 interface CategoryColumnProps {
-	safeDeleteTicket: (data: CommonFields, deleteFn: MutationFn<any, any>) => void;
+	safeDeleteTicket: (data: CommonFields, deleteFn: MutationFn<DeleteCategoryData, { id: string }>) => void;
 }
 
 export class CategoryColumn extends React.Component<CategoryColumnProps> {

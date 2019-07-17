@@ -5,7 +5,7 @@ import { Column } from "../Column/Column";
 import { ColumnType, CommonFields, TicketData } from "../../types";
 import { logErrors } from "../../utils/errorHandling";
 import { ProjectForm } from "../ProjectForm/ProjectForm";
-import { ProjectWrapper } from "./ProjectWrapper";
+import { ProjectWrapper, DeleteProjectData } from "./ProjectWrapper";
 
 interface ProjectColumnProps {
 	closeForm: () => void;
@@ -13,7 +13,7 @@ interface ProjectColumnProps {
 	openInvalidPopup: () => void;
 	setFormHasChangesFn: (fn: () => boolean) => void;
 	openForm: (props?: TicketData) => void;
-	safeDeleteTicket: (data: CommonFields, deleteFn: MutationFn<any, any>) => void;
+	safeDeleteTicket: (data: CommonFields, deleteFn: MutationFn<DeleteProjectData, { id: string }>) => void;
 	formOpened: boolean;
 	formProps?: TicketData;
 }

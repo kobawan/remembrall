@@ -9,7 +9,7 @@ interface TextInputRowWithListProps {
 	name: string;
 	options: CommonFields[];
 	tags: CommonFields[];
-	addOption: MutationFn<any, any>;
+	addOption: MutationFn<any, { params: any }>;
 	updateTags: (tags: CommonFields[]) => void;
 	isRequired?: boolean;
 }

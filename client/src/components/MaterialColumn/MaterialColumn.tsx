@@ -3,10 +3,10 @@ import { MutationFn } from "react-apollo";
 import { logErrors } from "../../utils/errorHandling";
 import { Column } from "../Column/Column";
 import { ColumnType, CommonFields } from "../../types";
-import { MaterialWrapper } from "./MaterialWrapper";
+import { MaterialWrapper, DeleteMaterialData } from "./MaterialWrapper";
 
 interface MaterialColumnProps {
-	safeDeleteTicket: (data: CommonFields, deleteFn: MutationFn<any, any>) => void;
+	safeDeleteTicket: (data: CommonFields, deleteFn: MutationFn<DeleteMaterialData, { id: string }>) => void;
 }
 
 export class MaterialColumn extends React.Component<MaterialColumnProps> {

@@ -12,8 +12,8 @@ export interface TicketProps {
 	data?: TicketData;
 	focused: boolean;
 	closeNewTicket: () => void;
-	updateTicket: MutationFn;
-	createTicket: MutationFn;
+	updateTicket: MutationFn<any, { id: string, params: any }>;
+	createTicket: MutationFn<any, { params: any }>;
 	deleteTicket: (data: CommonFields) => void;
 }
 

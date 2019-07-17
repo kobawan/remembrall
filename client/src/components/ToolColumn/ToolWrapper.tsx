@@ -19,7 +19,7 @@ interface UpdateToolData {
 	updateTool: CommonFields;
 }
 
-interface DeleteToolData {
+export interface DeleteToolData {
 	deleteTool: CommonFields;
 }
 

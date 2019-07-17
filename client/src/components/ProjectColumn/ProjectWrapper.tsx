@@ -9,19 +9,26 @@ interface GetProjectData {
 	projects?: ProjectFields[];
 }
 
-interface AddProjectData {
+export interface AddProjectData {
 	addProject: ProjectFields;
 }
 
-interface ProjectInput {
-	params: Pick<ProjectFields, Exclude<keyof ProjectFields, "id">>;
+export interface ProjectInput {
+	params: {
+		name: string;
+		categories: string[];
+		materials: string[];
+		tools: string[];
+		instructions?: string;
+		notes?: string;
+	};
 }
 
-interface DeleteProjectData {
+export interface DeleteProjectData {
 	deleteProject: { id: string } | null;
 }
 
-interface UpdateProjectData {
+export interface UpdateProjectData {
 	updateProject: ProjectFields;
 }
 

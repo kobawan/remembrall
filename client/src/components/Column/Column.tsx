@@ -9,8 +9,8 @@ interface ColumnProps {
 	type: ColumnType;
 	tickets: TicketData[];
 	openForm?: (props?: TicketData) => void;
-	updateTicket: MutationFn<any, any>;
-	createTicket: MutationFn<any, any>;
+	updateTicket: MutationFn<any, { id: string, params: any }>;
+	createTicket: MutationFn<any, { params: any }>;
 	deleteTicket: (data: CommonFields) => void;
 }
 

@@ -14,7 +14,7 @@ interface ColumnsState {
 	formOpened: boolean;
 	formProps?: TicketData;
 	formHasChanges: () => boolean;
-	ticketToDelete?: CommonFields;
+	ticketToDelete?: string;
 }
 
 export class ColumnsManager extends React.Component<{}, ColumnsState> {
@@ -88,12 +88,12 @@ export class ColumnsManager extends React.Component<{}, ColumnsState> {
 	/**
 	 * Popup to delete ticket
 	 */
-	private openDeletePopup = (message: string, deleteFn: MutationFn<any, any>) => {
+	private openDeletePopup = (message: string, deleteFn: MutationFn<any, { id: string }>) => {
 		this.openPopup(message, () => {
 			const { ticketToDelete } = this.state;
 			this.closeAll();
 			if(ticketToDelete) {
-				deleteFn({ variables: ticketToDelete }).then(() => {
+				deleteFn({ variables: { id: ticketToDelete } }).then(() => {
 					this.setState({ ticketToDelete: undefined });
 				});
 			}
@@ -141,9 +141,9 @@ export class ColumnsManager extends React.Component<{}, ColumnsState> {
 	/**
 	 * Opens popup to confirm before deleting ticket
 	 */
-	private safeDeleteTicket = (data: CommonFields, deleteFn: MutationFn<any, any>) => {
-		this.setState({ ticketToDelete: data });
-		this.openDeletePopup(`${PopupMessage.delete} "${data.name}"?`, deleteFn);
+	private safeDeleteTicket = ({ name, id }: CommonFields, deleteFn: MutationFn<any, { id: string }>) => {
+		this.setState({ ticketToDelete: id });
+		this.openDeletePopup(`${PopupMessage.delete} "${name}"?`, deleteFn);
 	}
 
 	/**

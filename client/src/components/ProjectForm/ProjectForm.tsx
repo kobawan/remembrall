@@ -13,6 +13,7 @@ import { Overlay } from "../Overlay/Overlay";
 import { OnChangeFn } from "../Form/types";
 import { TextInputTitle } from "../Form/TextInputTitle";
 import { TextAreaRow } from "../Form/TextAreaRow";
+import { UpdateProjectData, AddProjectData, ProjectInput } from "../ProjectColumn/ProjectWrapper";
 
 interface FormProps {
 	ticket?: ProjectFields;
@@ -20,9 +21,9 @@ interface FormProps {
 	safeCloseForm: () => void;
 	openInvalidPopup: () => void;
 	setFormHasChangesFn: (fn: () => boolean) => void;
-	createTicket: MutationFn<any, any>;
+	createTicket: MutationFn<AddProjectData, ProjectInput>;
 	deleteTicket: (data: CommonFields) => void;
-	updateTicket: MutationFn<any, any>;
+	updateTicket: MutationFn<UpdateProjectData, ProjectInput & { id: string }>;
 }
 
 type InputNames = Exclude<keyof ProjectFields, "id">;

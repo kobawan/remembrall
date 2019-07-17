@@ -19,7 +19,7 @@ interface UpdateMaterialData {
 	updateMaterial: CommonFields;
 }
 
-interface DeleteMaterialData {
+export interface DeleteMaterialData {
 	deleteMaterial: CommonFields;
 }
 

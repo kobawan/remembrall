@@ -6,8 +6,8 @@ import { TicketData, ColumnType } from "../../types";
 interface TicketTextAreaProps {
 	data?: TicketData;
 	type: ColumnType;
-	updateTicket: MutationFn;
-	createTicket: MutationFn;
+	updateTicket: MutationFn<any, { id: string, params: any }>;
+	createTicket: MutationFn<any, { params: any }>;
 	close: () => void;
 	toggleError: (toggleError: boolean) => void;
 	closeNewTicket: () => void;

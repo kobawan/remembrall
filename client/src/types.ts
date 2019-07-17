@@ -41,6 +41,9 @@ export interface ProjectFields extends CommonFields {
 
 export type AllColumnFields = ProjectFields | CategoryFields | MaterialFields | ToolFields;
 
+/**
+ * @todo improve typing
+ */
 export type TicketData = CommonFields & {
 	[key: string]: any;
 };
