@@ -1,7 +1,6 @@
 import * as React from "react";
 import { MutationFn } from "react-apollo";
 import isEqual from "lodash.isequal";
-import "./projectForm.less";
 import { ProjectFields, CommonFields } from "../../types";
 import { getInitialState } from "../../utils/getInitialState";
 import { TextInputRowWithList } from "../Form/TextInputRowWithList";
@@ -9,11 +8,11 @@ import { logErrors } from "../../utils/errorHandling";
 import { CategoryWrapper, CategoryRenderProps } from "../CategoryColumn/CategoryWrapper";
 import { ToolWrapper, ToolRenderProps } from "../ToolColumn/ToolWrapper";
 import { MaterialWrapper, MaterialRenderProps } from "../MaterialColumn/MaterialWrapper";
-import { Overlay } from "../Overlay/Overlay";
 import { OnChangeFn } from "../Form/types";
 import { TextInputTitle } from "../Form/TextInputTitle";
 import { TextAreaRow } from "../Form/TextAreaRow";
 import { UpdateProjectData, AddProjectData, ProjectInput } from "../ProjectColumn/ProjectWrapper";
+import { Form } from "../Form/Form";
 
 interface FormProps {
 	ticket?: ProjectFields;
@@ -60,87 +59,84 @@ export class ProjectForm extends React.Component<FormProps, FormState> {
 
 	public render() {
 		const { safeCloseForm } = this.props;
-		const {
-			name,
-			categories,
-			tools,
-			materials,
-			notes,
-			instructions,
-		} = this.state;
 
-		return (<>
-			<Overlay onClick={safeCloseForm} zIndex={96} />
-			<div className="form">
-				<TextInputTitle
-					name={Fields.name}
-					value={name}
-					onChange={this.handleInput}
-				/>
-				<div className="content">
-					<CategoryWrapper>
-						{({ addCategory, categories: { data, error }}: CategoryRenderProps) => {
-							logErrors(error, addCategory);
-							return (
-								<TextInputRowWithList
-									name={Fields.categories}
-									tags={categories}
-									options={data && data.categories ? data.categories : []}
-									addOption={addCategory.mutation}
-									isRequired={true}
-									updateTags={this.updateCategoryTags}
-								/>
-							);
-						}}
-					</CategoryWrapper>
-					<ToolWrapper>
-						{({ addTool, tools: { data, error }}: ToolRenderProps) => {
-							logErrors(error, addTool);
-							return (
-								<TextInputRowWithList
-									name={Fields.tools}
-									tags={tools}
-									options={data && data.tools ? data.tools : []}
-									addOption={addTool.mutation}
-									isRequired={true}
-									updateTags={this.updateToolTags}
-								/>
-							);
-						}}
-					</ToolWrapper>
-					<MaterialWrapper>
-						{({ addMaterial, materials: { data, error }}: MaterialRenderProps) => {
-							logErrors(error, addMaterial);
-							return (
-								<TextInputRowWithList
-									name={Fields.materials}
-									tags={materials}
-									options={data && data.materials ? data.materials : []}
-									addOption={addMaterial.mutation}
-									isRequired={true}
-									updateTags={this.updateMaterialTags}
-								/>
-							);
-						}}
-					</MaterialWrapper>
-					<TextAreaRow
-						name={Fields.instructions}
-						value={instructions}
-						onChange={this.handleInput}
-					/>
-					<TextAreaRow
-						name={Fields.notes}
-						value={notes}
-						onChange={this.handleInput}
-					/>
-				</div>
-				<div className="footer">
-					<button onClick={safeCloseForm}>Cancel</button>
-					<button onClick={this.submitProject}>Save</button>
-				</div>
-			</div>
-		</>);
+		return(
+			<Form
+				Title={this.renderTitle()}
+				Content={this.renderContent()}
+				safeCloseForm={safeCloseForm}
+				submitForm={this.submitProject}
+			/>
+		);
 	}
+
+	private renderTitle = () => (
+		<TextInputTitle
+			name={Fields.name}
+			value={this.state.name}
+			onChange={this.handleInput}
+		/>
+	)
+
+	private renderContent = () => (
+		<>
+			<CategoryWrapper>
+				{({ addCategory, categories: { data, error }}: CategoryRenderProps) => {
+					logErrors(error, addCategory);
+					return (
+						<TextInputRowWithList
+							name={Fields.categories}
+							tags={this.state.categories}
+							options={data && data.categories ? data.categories : []}
+							addOption={addCategory.mutation}
+							isRequired={true}
+							updateTags={this.updateCategoryTags}
+						/>
+					);
+				}}
+			</CategoryWrapper>
+			<ToolWrapper>
+				{({ addTool, tools: { data, error }}: ToolRenderProps) => {
+					logErrors(error, addTool);
+					return (
+						<TextInputRowWithList
+							name={Fields.tools}
+							tags={this.state.tools}
+							options={data && data.tools ? data.tools : []}
+							addOption={addTool.mutation}
+							isRequired={true}
+							updateTags={this.updateToolTags}
+						/>
+					);
+				}}
+			</ToolWrapper>
+			<MaterialWrapper>
+				{({ addMaterial, materials: { data, error }}: MaterialRenderProps) => {
+					logErrors(error, addMaterial);
+					return (
+						<TextInputRowWithList
+							name={Fields.materials}
+							tags={this.state.materials}
+							options={data && data.materials ? data.materials : []}
+							addOption={addMaterial.mutation}
+							isRequired={true}
+							updateTags={this.updateMaterialTags}
+						/>
+					);
+				}}
+			</MaterialWrapper>
+			<TextAreaRow
+				name={Fields.instructions}
+				value={this.state.instructions}
+				onChange={this.handleInput}
+			/>
+			<TextAreaRow
+				name={Fields.notes}
+				value={this.state.notes}
+				onChange={this.handleInput}
+			/>
+		</>
+	)
 
 	/**
 	 * Handles simple inputs
