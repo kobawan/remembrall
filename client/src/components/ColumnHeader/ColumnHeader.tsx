@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useCallback } from "react";
 import "./columnHeader.less";
 import { ColumnType, TicketData } from "../../types";
 import { plusSvg } from "../Svg/Svg";
@@ -8,19 +8,13 @@ interface ColumnHeaderProps {
 	openEditor: (props?: TicketData) => void;
 }
 
-export class ColumnHeader extends React.PureComponent<ColumnHeaderProps> {
-	public render() {
-		const { type } = this.props;
+export const ColumnHeader = React.memo(({ type, openEditor }: ColumnHeaderProps) => {
+	const openNewTicket = useCallback(() => openEditor(), []);
 
-		return (
-			<div className="columnHeader" onClick={this.openNewTicket}>
-				<span>{type}</span>
-				{plusSvg}
-			</div>
-		);
-	}
-
-	private openNewTicket = () => {
-		this.props.openEditor();
-	}
-}
+	return (
+		<div className="columnHeader" onClick={openNewTicket}>
+			<span>{type}</span>
+			{plusSvg}
+		</div>
+	);
+});

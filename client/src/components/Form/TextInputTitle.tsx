@@ -1,57 +1,39 @@
-import * as React from "react";
+import React, { useState, useCallback } from "react";
 import "./textInputTitle.less";
 import { RowProps } from "./types";
 
 const TITLE_ERROR_MSG = "Invalid input. Title field is required";
 
-interface TextInputTitleState {
-	showError: boolean;
-}
+export const TextInputTitle = React.memo(({ name, value, onChange }: RowProps) => {
+	const [ showError, setShowError ] = useState(false);
 
-export class TextInputTitle extends React.PureComponent<RowProps, TextInputTitleState> {
-	public state: TextInputTitleState = {
-		showError: false,
-	};
-
-	public render() {
-		const { name, value, onChange } = this.props;
-		const { showError } = this.state;
-		return (
-			<div className="formTitle">
-				<input
-					type="text"
-					name={name}
-					onChange={onChange}
-					placeholder="Project name"
-					value={value}
-					className={showError ? "error" : ""}
-					onBlur={this.onBlur}
-					onFocus={this.onFocus}
-				/>
-				<div className="errorMsg">
-					{showError && TITLE_ERROR_MSG}
-				</div>
-			</div>
-		);
-	}
-
-	/**
-	 * Shows input error on blur
-	 */
-	private onBlur = () => {
-		const { showError } = this.state;
-		const { value } = this.props;
+	const onBlur = useCallback(() => {
 		if(value.length === 0 && !showError) {
-			this.setState({ showError: true });
+			setShowError(true);
 		}
-	}
+	}, [value, showError]);
 
-	/**
-	 * Hides input error on focus
-	 */
-	private onFocus = () => {
-		if(this.state.showError) {
-			this.setState({ showError: false });
+	const onFocus = useCallback(() => {
+		if(showError) {
+			setShowError(false);
 		}
-	}
-}
+	}, [showError]);
+
+	return (
+		<div className="formTitle">
+			<input
+				type="text"
+				name={name}
+				onChange={onChange}
+				placeholder="Project name"
+				value={value}
+				className={showError ? "error" : ""}
+				onBlur={onBlur}
+				onFocus={onFocus}
+			/>
+			<div className="errorMsg">
+				{showError && TITLE_ERROR_MSG}
+			</div>
+		</div>
+	);
+});

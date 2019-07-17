@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { MutationFn } from "react-apollo";
 import { logErrors } from "../../utils/errorHandling";
 import { Column } from "../Column/Column";
@@ -9,29 +9,22 @@ interface MaterialColumnProps {
 	safeDeleteTicket: (data: CommonFields, deleteFn: MutationFn<DeleteMaterialData, { id: string }>) => void;
 }
 
-export class MaterialColumn extends React.Component<MaterialColumnProps> {
-	public shouldComponentUpdate() {
-		return false;
-	}
+export const MaterialColumn = React.memo(({ safeDeleteTicket }: MaterialColumnProps) => {
+	return (
+		<MaterialWrapper>
+			{({ addMaterial, updateMaterial, deleteMaterial, materials: { data, error }}) => {
+				logErrors(error, addMaterial, updateMaterial, deleteMaterial);
 
-	public render() {
-		const { safeDeleteTicket } = this.props;
-		return (
-			<MaterialWrapper>
-				{({ addMaterial, updateMaterial, deleteMaterial, materials: { data, error }}) => {
-					logErrors(error, addMaterial, updateMaterial, deleteMaterial);
-
-					return (
-						<Column
-							tickets={data && data.materials ? data.materials : []}
-							type={ColumnType.Materials}
-							updateTicket={updateMaterial.mutation}
-							createTicket={addMaterial.mutation}
-							deleteTicket={(data: CommonFields) => safeDeleteTicket(data, deleteMaterial.mutation)}
-						/>
-					);
-				}}
-			</MaterialWrapper>
-		);
-	}
-}
+				return (
+					<Column
+						tickets={data && data.materials ? data.materials : []}
+						type={ColumnType.Materials}
+						updateTicket={updateMaterial.mutation}
+						createTicket={addMaterial.mutation}
+						deleteTicket={(data: CommonFields) => safeDeleteTicket(data, deleteMaterial.mutation)}
+					/>
+				);
+			}}
+		</MaterialWrapper>
+	);
+});
