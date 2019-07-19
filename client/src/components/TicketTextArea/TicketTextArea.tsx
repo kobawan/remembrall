@@ -67,13 +67,17 @@ export class TicketTextArea extends React.Component<TicketTextAreaProps, TicketT
 	 * Updates or creates the ticket
 	 */
 	private submitChange = async () => {
-		const { data, close, toggleError, closeNewTicket, type } = this.props;
+		const { data, close, closeNewTicket, type } = this.props;
 		const { value } = this.state;
+
 		if(!value) {
-			toggleError(true);
+			closeNewTicket();
 			return;
 		}
 
+		/**
+		 * @todo show error on incompatible naming
+		 */
 		if(data) {
 			// Update ticket
 			if(data.name !== value) {
