@@ -41,6 +41,10 @@ app.use("/graphql", graphqlHTTP(async (req, res) => ({
 // Serving client
 app.use(express.static(path.join(__dirname, '..', 'client', 'dist')));
 
+app.get('/sw.js', (req, res) => {
+	return res.sendFile(path.join(__dirname, '..', 'client', 'sw.js'));
+})
+
 app.get('*', (req, res) => {
 	return res.sendFile(path.join(__dirname, '..', 'client', 'dist', "index.html"));
 });

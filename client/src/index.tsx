@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { InMemoryCache, ApolloClient } from "apollo-boost";
+import { InMemoryCache, ApolloClient, ApolloLink } from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
 import { createHttpLink } from "apollo-link-http";
 import { setContext } from "apollo-link-context";
@@ -9,19 +9,30 @@ import { getStorageKey, StorageKeys } from "./utils/localStorage";
 
 import "./styles/common.less";
 
-const httpLink = createHttpLink({ uri: "/graphql" });
-
-const authLink = setContext((_, { headers }) => ({
-	headers: {
-		...headers,
-		authorization: getStorageKey(StorageKeys.UserId),
-	}
-}));
+const link = ApolloLink.from([
+	setContext((_, { headers }) => ({
+		headers: {
+			...headers,
+			authorization: getStorageKey(StorageKeys.UserId),
+		}
+	})),
+	createHttpLink({ uri: "/graphql" }),
+]);
 
 const client = new ApolloClient({
-	link: authLink.concat(httpLink),
+	link,
 	cache: new InMemoryCache(),
 });
+
+// tslint:disable:no-console
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function() {
+		navigator.serviceWorker.register("/sw.js")
+		.then(() => console.log("Service Worker Registered"))
+		.catch((e) => console.log("Service worker error", e));
+  });
+}
+// tslint:enable:no-console
 
 export class Wrapper extends React.Component {
 	public render() {

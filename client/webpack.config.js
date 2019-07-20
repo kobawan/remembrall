@@ -14,6 +14,7 @@ module.exports = {
         filename: "[name].bundle.js",
         path: path.resolve(__dirname, "dist"),
     },
+    // apollo-link-retry and service workers break on enabled splitchunks
     optimization: {
         splitChunks: {
             chunks: "all",
