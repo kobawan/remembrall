@@ -24,7 +24,7 @@ interface UpdateCategoryData {
 }
 
 interface CategoryInput {
-	params: Pick<CategoryFields, Exclude<keyof CategoryFields, "id">>;
+	params: Omit<CategoryFields, "id">;
 }
 
 export interface CategoryRenderProps {

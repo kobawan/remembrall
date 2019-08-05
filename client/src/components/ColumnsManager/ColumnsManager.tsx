@@ -4,22 +4,20 @@ import { ProjectColumn } from "../ProjectColumn/ProjectColumn";
 import { CategoryColumn } from "../CategoryColumn/CategoryColumn";
 import { Popup, PopupMessage } from "../Popup/Popup";
 import { MutationFn } from "react-apollo";
-import { CommonFields, TicketData } from "../../types";
+import { CommonFields, TicketData, ColumnType } from "../../types";
 import { ToolColumn } from "../ToolColumn/ToolColumn";
 import { MaterialColumn } from "../MaterialColumn/MaterialColumn";
 
 interface ColumnsState {
 	popupText?: string;
 	popupAction?: () => void;
-	formOpened: boolean;
+	formOpened?: ColumnType;
 	formProps?: TicketData;
 	formHasChanges: () => boolean;
-	ticketToDelete?: string;
 }
 
 export class ColumnsManager extends React.Component<{}, ColumnsState> {
 	public state: ColumnsState = {
-		formOpened: false,
 		formHasChanges: () => false,
 	};
 
@@ -44,7 +42,16 @@ export class ColumnsManager extends React.Component<{}, ColumnsState> {
 					openInvalidPopup={this.openInvalidPopup}
 				/>
 				<CategoryColumn safeDeleteTicket={this.safeDeleteTicket} />
-				<ToolColumn safeDeleteTicket={this.safeDeleteTicket} />
+				<ToolColumn
+					safeDeleteTicket={this.safeDeleteTicket}
+					openForm={this.openForm}
+					formOpened={formOpened}
+					formProps={formProps}
+					closeForm={this.closeForm}
+					setFormHasChangesFn={this.setFormHasChangesFn}
+					safeCloseForm={this.safeCloseForm}
+					openInvalidPopup={this.openInvalidPopup}
+				/>
 				<MaterialColumn safeDeleteTicket={this.safeDeleteTicket} />
 				{popupText && (
 					<Popup
@@ -88,15 +95,10 @@ export class ColumnsManager extends React.Component<{}, ColumnsState> {
 	/**
 	 * Popup to delete ticket
 	 */
-	private openDeletePopup = (message: string, deleteFn: MutationFn<any, { id: string }>) => {
+	private openDeletePopup = (message: string, id: string, deleteFn: MutationFn<any, { id: string }>) => {
 		this.openPopup(message, () => {
-			const { ticketToDelete } = this.state;
 			this.closeAll();
-			if(ticketToDelete) {
-				deleteFn({ variables: { id: ticketToDelete } }).then(() => {
-					this.setState({ ticketToDelete: undefined });
-				});
-			}
+			deleteFn({ variables: { id } });
 		});
 	}
 
@@ -105,7 +107,7 @@ export class ColumnsManager extends React.Component<{}, ColumnsState> {
 	 */
 	private closeForm = () => {
 		this.setState({
-			formOpened: false,
+			formOpened: undefined,
 			formProps: undefined,
 		});
 	}
@@ -113,9 +115,9 @@ export class ColumnsManager extends React.Component<{}, ColumnsState> {
 	/**
 	 * Passes ticket props to form on open
 	 */
-	private openForm = (props?: TicketData) => {
+	private openForm = (type: ColumnType, props?: TicketData) => {
 		this.setState({
-			formOpened: true,
+			formOpened: type,
 			formProps: props,
 		});
 	}
@@ -142,8 +144,7 @@ export class ColumnsManager extends React.Component<{}, ColumnsState> {
 	 * Opens popup to confirm before deleting ticket
 	 */
 	private safeDeleteTicket = ({ name, id }: CommonFields, deleteFn: MutationFn<any, { id: string }>) => {
-		this.setState({ ticketToDelete: id });
-		this.openDeletePopup(`${PopupMessage.delete} "${name}"?`, deleteFn);
+		this.openDeletePopup(`${PopupMessage.delete} "${name}"?`, id, deleteFn);
 	}
 
 	/**

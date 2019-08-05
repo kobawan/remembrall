@@ -4,7 +4,11 @@ import { RowProps } from "./types";
 
 const TITLE_ERROR_MSG = "Invalid input. Title field is required";
 
-export const TextInputTitle = React.memo(({ name, value, onChange }: RowProps) => {
+interface TextInputTitleProps extends RowProps {
+	placeholder?: string;
+}
+
+export const TextInputTitle = React.memo(({ name, value, onChange, placeholder }: TextInputTitleProps) => {
 	const [ showError, setShowError ] = useState(false);
 
 	const onBlur = useCallback(() => {
@@ -25,7 +29,7 @@ export const TextInputTitle = React.memo(({ name, value, onChange }: RowProps) =
 				type="text"
 				name={name}
 				onChange={onChange}
-				placeholder="Project name"
+				placeholder={placeholder}
 				value={value}
 				className={showError ? "error" : ""}
 				onBlur={onBlur}

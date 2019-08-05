@@ -21,25 +21,18 @@ export class TicketTextArea extends React.Component<TicketTextAreaProps, TicketT
 	public state: TicketTextAreaState = {
 		value: this.props.data ? this.props.data.name : "",
 	};
-	private textAreaRef = React.createRef<HTMLTextAreaElement>();
-
-	public componentDidMount() {
-		if (this.textAreaRef.current) {
-			this.textAreaRef.current.focus();
-		}
-	}
 
 	public render() {
 		const { value } = this.state;
 		return (
 			<textarea
-				ref={this.textAreaRef}
 				onChange={this.handleInput}
 				onKeyDown={this.handleKeyDown}
 				onBlur={this.submitChange}
 				value={value}
 				placeholder="Name"
 				className="ticketEditer"
+				autoFocus={true}
 			/>
 		);
 	}

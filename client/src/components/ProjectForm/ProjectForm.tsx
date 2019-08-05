@@ -25,8 +25,7 @@ interface FormProps {
 	updateTicket: MutationFn<UpdateProjectData, ProjectInput & { id: string }>;
 }
 
-type InputNames = Exclude<keyof ProjectFields, "id">;
-type FormState = Required<Pick<ProjectFields, InputNames>>;
+type FormState = Required<Omit<ProjectFields, "id">>;
 
 const defaultState: FormState = {
 	name: "",
@@ -75,6 +74,7 @@ export class ProjectForm extends React.Component<FormProps, FormState> {
 			name={Fields.name}
 			value={this.state.name}
 			onChange={this.handleInput}
+			placeholder="Project name"
 		/>
 	)
 

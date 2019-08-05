@@ -12,9 +12,9 @@ interface ProjectColumnProps {
 	safeCloseForm: () => void;
 	openInvalidPopup: () => void;
 	setFormHasChangesFn: (fn: () => boolean) => void;
-	openForm: (props?: TicketData) => void;
+	openForm: (type: ColumnType, props?: TicketData) => void;
 	safeDeleteTicket: (data: CommonFields, deleteFn: MutationFn<DeleteProjectData, { id: string }>) => void;
-	formOpened: boolean;
+	formOpened?: ColumnType;
 	formProps?: TicketData;
 }
 
@@ -54,9 +54,9 @@ export class ProjectColumn extends React.Component<ProjectColumnProps> {
 								updateTicket={updateProject.mutation}
 								deleteTicket={(data: CommonFields) => safeDeleteTicket(data, deleteProject.mutation)}
 								createTicket={addProject.mutation}
-								openForm={openForm}
+								openForm={(props?: TicketData) => openForm(ColumnType.Projects, props)}
 							/>
-							{formOpened && (
+							{formOpened === ColumnType.Projects && (
 								<ProjectForm
 									ticket={formProps}
 									closeForm={closeForm}

@@ -11,11 +11,11 @@ interface GetToolData {
 	tools?: ToolFields[];
 }
 
-interface AddToolData {
+export interface AddToolData {
 	addTool: CommonFields;
 }
 
-interface UpdateToolData {
+export interface UpdateToolData {
 	updateTool: CommonFields;
 }
 
@@ -23,14 +23,14 @@ export interface DeleteToolData {
 	deleteTool: CommonFields;
 }
 
-interface ToolInput {
-	params: { name: string, amount?: number };
+export interface ToolInput {
+	params: Omit<ToolFields, "id">;
 }
 
 export interface ToolRenderProps {
 	tools: QueryResult<GetToolData>;
 	addTool: MutationRenderProps<AddToolData, ToolInput>;
-	updateTool: MutationRenderProps<UpdateToolData, ToolInput>;
+	updateTool: MutationRenderProps<UpdateToolData, ToolInput & { id: string }>;
 	deleteTool: MutationRenderProps<DeleteToolData, { id: string }>;
 }
 
