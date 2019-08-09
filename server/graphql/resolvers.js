@@ -44,7 +44,7 @@ const resolverMap = {
 	},
 	// MUTATIONS
 	Mutation: {
-		loginUser: async function(_, { email, password }) {
+		loginUser: async function(parent, { email, password }) {
 			const user = await UserModel.findOne({ email });
 			if(!user) {
 				return null;
@@ -56,54 +56,38 @@ const resolverMap = {
 
 			return user;
 		},
-		addUser: async function(_, { email, password }) {
+		addUser: async function(parent, { email, password }) {
 			const hash = await encryptString(password);
 			const user = new UserModel({ email, password: hash });
 			await user.save();
 			return user;
 		},
-		addProject: async function(
-			parent,
-			{ params: { name, instructions, notes, categories, materials, tools } },
-			{ currentUser }
-		) {
-			const project = new ProjectModel({ name, instructions, notes, categories, materials, tools });
+		addProject: async function(parent, { params }, { currentUser }) {
+			const project = new ProjectModel(params);
 			await UserModel.update(
 				{ _id: currentUser._id },
 				{ $push: { projects: project } },
 			);
 			return project;
 		},
-		addMaterial: async function(
-			parent,
-			{ params: { name, amount, color } },
-			{ currentUser }
-		) {
-			const material = new MaterialModel({ name, amount, color });
+		addMaterial: async function(parent, { params }, { currentUser }) {
+			const material = new MaterialModel(params);
 			await UserModel.update(
 				{ _id: currentUser._id },
 				{ $push: { materials: material } },
 			);
 			return material;
 		},
-		addTool: async function(
-			parent,
-			{ params: { name, amount } },
-			{ currentUser }
-		) {
-			const tool = new ToolModel({ name, amount });
+		addTool: async function(parent, { params }, { currentUser }) {
+			const tool = new ToolModel(params);
 			await UserModel.update(
 				{ _id: currentUser._id },
 				{ $push: { tools: tool } },
 			);
 			return tool;
 		},
-		addCategory: async function(
-			parent,
-			{ params: { name, tools } },
-			{ currentUser }
-		) {
-			const category = new CategoryModel({ name, tools });
+		addCategory: async function(parent, { params }, { currentUser }) {
+			const category = new CategoryModel(params);
 			await UserModel.update(
 				{ _id: currentUser._id },
 				{ $push: { categories: category } },

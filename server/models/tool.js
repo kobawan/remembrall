@@ -4,7 +4,7 @@ const ToolSchema = new mongoose.Schema({
 	name: String,
 	amount: Number,
 	type: String,
-	size: Number,
+	size: String,
 });
 
 const ToolModel = mongoose.model("Tool", ToolSchema);

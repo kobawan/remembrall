@@ -72,11 +72,6 @@ input ToolInput {
 	size: String
 }
 
-input ToolToCategoryInput {
-	category: ID!
-	tool: ID!
-}
-
 type Mutation {
 	loginUser(email: String!, password: String!): User
 	addUser(email: String!, password: String!): User!

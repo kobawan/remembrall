@@ -1,4 +1,6 @@
-export type OnChangeFn = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+type FormElements = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
+
+export type OnChangeFn = (e: React.ChangeEvent<FormElements>) => void;
 
 export interface RowProps {
 	name: string;

@@ -4,6 +4,9 @@ const ToolsFragment = gql`
 	fragment ToolsFragment on Tool {
 		name
 		id
+		amount
+		type
+		size
 	}
 `;
 

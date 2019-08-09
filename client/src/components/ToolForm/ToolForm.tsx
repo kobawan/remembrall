@@ -2,12 +2,12 @@ import * as React from "react";
 import { MutationFn } from "react-apollo";
 import isEqual from "lodash.isequal";
 import { ToolFields, CommonFields } from "../../types";
-import { getInitialState } from "../../utils/getInitialState";
 import { AddToolData, UpdateToolData, ToolInput } from "../ToolColumn/ToolWrapper";
 import { OnChangeFn } from "../Form/types";
 import { TextInputTitle } from "../Form/TextInputTitle";
 import { Form } from "../Form/Form";
 import { TextInputRow } from "../Form/TextInputRow";
+import { InputRowWithUnit } from "../Form/InputRowWithUnit";
 
 interface FormProps {
 	ticket?: ToolFields;
@@ -20,24 +20,51 @@ interface FormProps {
 	updateTicket: MutationFn<UpdateToolData, ToolInput & { id: string }>;
 }
 
-type FormState = Required<Omit<ToolFields, "id">>;
+enum Fields {
+	name = "name",
+	amount = "amount",
+	type = "type",
+	size = "size",
+	measurement = "measurement",
+}
+
+enum Measurements {
+	mm = "mm",
+	us = "us",
+	uk = "uk",
+}
+
+type FormState = Required<Omit<ToolFields, "id"> & { measurement: Measurements }>;
 
 const defaultState: FormState = {
 	name: "",
 	amount: 1,
 	type: "",
 	size: "",
+	measurement: Measurements.mm,
 };
 
-enum Fields {
-	name = "name",
-	amount = "amount",
-	type = "type",
-	size = "size",
-}
+const getToolDefaultState = (defaultState: FormState, ticket?: ToolFields) => {
+	if(!ticket) {
+		return defaultState;
+	}
+	const { name, amount, type, size = "" } = ticket;
+	const [
+		,
+		value = "",
+		measurement = Measurements.mm,
+	] = size.match(/([\d+\.|\,\d*]+)([a-z]+)/) || [];
+	return {
+		name,
+		amount: amount || 1,
+		type: type || "",
+		size: value,
+		measurement: measurement as Measurements,
+	};
+};
 
 export class ToolForm extends React.Component<FormProps, FormState> {
-	public state: FormState = getInitialState(defaultState, this.props.ticket);
+	public state: FormState = getToolDefaultState(defaultState, this.props.ticket);
 
 	public shouldComponentUpdate(nextProps: FormProps, nextState: FormState) {
 		return !isEqual(this.props.ticket, nextProps.ticket) || !isEqual(this.state, nextState);
@@ -76,21 +103,24 @@ export class ToolForm extends React.Component<FormProps, FormState> {
 				value={`${this.state.type}`}
 				onChange={this.handleInput}
 			/>
-			<TextInputRow
+			<InputRowWithUnit
 				name={Fields.size}
 				value={`${this.state.size}`}
+				unitValue={this.state.measurement}
 				onChange={this.handleInput}
+				type="number"
+				options={Object.keys(Measurements)}
 			/>
 			<TextInputRow
 				name={Fields.amount}
 				value={`${this.state.amount}`}
 				type="number"
-				onChange={this.handleAmountInput}
+				onChange={this.handleNumberInput}
 			/>
 		</>
 	)
 
-	private handleAmountInput: OnChangeFn = (e) => {
+	private handleNumberInput: OnChangeFn = (e) => {
 		const { value } = e.currentTarget;
 
 		this.setState({ amount: +value });
@@ -111,6 +141,7 @@ export class ToolForm extends React.Component<FormProps, FormState> {
 			amount,
 			size,
 			type,
+			measurement,
 		} = this.state;
 
 		if(!this.formIsValid()) {
@@ -122,7 +153,7 @@ export class ToolForm extends React.Component<FormProps, FormState> {
 			const params = {
 				name,
 				amount,
-				size,
+				size: `${size}${measurement}`,
 				type,
 			};
 
@@ -150,6 +181,7 @@ export class ToolForm extends React.Component<FormProps, FormState> {
 			name,
 			size,
 			type,
+			measurement,
 		} = this.state;
 		const ticket = this.props.ticket;
 
@@ -157,7 +189,7 @@ export class ToolForm extends React.Component<FormProps, FormState> {
 			return (
 				amount !== ticket.amount
 				|| name !== ticket.name
-				|| size !== ticket.size
+				|| `${size}${measurement}` !== ticket.size
 				|| type !== ticket.type
 			);
 		}
@@ -167,6 +199,7 @@ export class ToolForm extends React.Component<FormProps, FormState> {
 			|| amount >= 0
 			|| !!size.length
 			|| !!type.length
+			|| measurement !== Measurements.mm
 		);
 	}
 

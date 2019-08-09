@@ -34,9 +34,7 @@ export class TextInputRowWithList extends React.Component<TextInputRowWithListPr
 	public render() {
 		const { name, options, isRequired, tags } = this.props;
 		const { value, hideOptions, editTags } = this.state;
-		/**
-		 * @todo add tags below input
-		 */
+
 		return (
 			<div className="formTextareaWithList">
 				<label>{`${name}${isRequired ? " *" : ""}`}</label>
