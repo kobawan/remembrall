@@ -20,7 +20,7 @@ export const InputRowWithUnit = (({
 }: InputRowWithUnitProps) => {
 	const renderOptions = () => {
 		return options.map((value, i) => (
-			<option value={value} key={i} selected={unitValue === value}>
+			<option value={value} key={i}>
 				{value}
 			</option>
 		));
@@ -36,7 +36,12 @@ export const InputRowWithUnit = (({
 				autoFocus={!!autofocus}
 				className="mainInput"
 			/>
-			<select className="unitsSelect" onChange={onChange} name="measurement">
+			<select
+				className="unitsSelect"
+				onChange={onChange}
+				name="measurement"
+				defaultValue={unitValue}
+			>
 				{renderOptions()}
 			</select>
 		</div>
