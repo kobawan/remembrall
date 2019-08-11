@@ -71,7 +71,10 @@ const resolverMap = {
 			return project;
 		},
 		addMaterial: async function(parent, { params }, { currentUser }) {
-			const material = new MaterialModel(params);
+			const material = new MaterialModel({
+				...params,
+				amount: params.amount !== undefined ? params.amount : 1,
+			});
 			await UserModel.update(
 				{ _id: currentUser._id },
 				{ $push: { materials: material } },

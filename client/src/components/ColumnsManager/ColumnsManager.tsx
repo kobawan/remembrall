@@ -4,7 +4,7 @@ import { ProjectColumn } from "../ProjectColumn/ProjectColumn";
 import { CategoryColumn } from "../CategoryColumn/CategoryColumn";
 import { Popup, PopupMessage } from "../Popup/Popup";
 import { MutationFn } from "react-apollo";
-import { CommonFields, TicketData, ColumnType } from "../../types";
+import { CommonFields, ColumnType, MaterialFields, FormPropsType, ToolFields } from "../../types";
 import { ToolColumn } from "../ToolColumn/ToolColumn";
 import { MaterialColumn } from "../MaterialColumn/MaterialColumn";
 
@@ -12,7 +12,7 @@ interface ColumnsState {
 	popupText?: string;
 	popupAction?: () => void;
 	formOpened?: ColumnType;
-	formProps?: TicketData;
+	formProps?: FormPropsType;
 	formHasChanges: () => boolean;
 }
 
@@ -46,13 +46,22 @@ export class ColumnsManager extends React.Component<{}, ColumnsState> {
 					safeDeleteTicket={this.safeDeleteTicket}
 					openForm={this.openForm}
 					formOpened={formOpened}
-					formProps={formProps}
+					formProps={formProps as ToolFields}
 					closeForm={this.closeForm}
 					setFormHasChangesFn={this.setFormHasChangesFn}
 					safeCloseForm={this.safeCloseForm}
 					openInvalidPopup={this.openInvalidPopup}
 				/>
-				<MaterialColumn safeDeleteTicket={this.safeDeleteTicket} />
+				<MaterialColumn
+					safeDeleteTicket={this.safeDeleteTicket}
+					openForm={this.openForm}
+					formOpened={formOpened}
+					formProps={formProps as MaterialFields}
+					closeForm={this.closeForm}
+					setFormHasChangesFn={this.setFormHasChangesFn}
+					safeCloseForm={this.safeCloseForm}
+					openInvalidPopup={this.openInvalidPopup}
+				/>
 				{popupText && (
 					<Popup
 						text={popupText}
@@ -115,7 +124,7 @@ export class ColumnsManager extends React.Component<{}, ColumnsState> {
 	/**
 	 * Passes ticket props to form on open
 	 */
-	private openForm = (type: ColumnType, props?: TicketData) => {
+	private openForm = (type: ColumnType, props?: FormPropsType) => {
 		this.setState({
 			formOpened: type,
 			formProps: props,

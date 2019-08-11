@@ -6,7 +6,7 @@ export interface MutationRenderProps<TData = any, TVariables = OperationVariable
   res: MutationResult<TData>;
 }
 
-// PROJECT TYPES
+// APP TYPES
 export enum ColumnType {
 	Projects = "Projects",
 	Categories = "Categories",
@@ -20,14 +20,14 @@ export interface CommonFields {
 }
 
 export interface MaterialFields extends CommonFields {
-	amount?: number;
-	color?: string;
+	amount: number;
+	color: string | null;
 }
 
 export interface ToolFields extends CommonFields {
-	amount?: number;
-	type?: string;
-	size?: string;
+	amount: number;
+	type: string | null;
+	size: string | null;
 }
 
 export interface CategoryFields extends CommonFields {}
@@ -48,3 +48,5 @@ export type AllColumnFields = ProjectFields | CategoryFields | MaterialFields | 
 export type TicketData = CommonFields & {
 	[key: string]: any;
 };
+
+export type FormPropsType = ProjectFields | MaterialFields | ToolFields;

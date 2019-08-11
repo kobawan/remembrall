@@ -4,6 +4,8 @@ const MaterialsFragment = gql`
 	fragment MaterialsFragment on Material {
 		name
 		id
+		color
+		amount
 	}
 `;
 

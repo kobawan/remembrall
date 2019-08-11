@@ -1,80 +1,41 @@
 import * as React from "react";
 import { MutationFn } from "react-apollo";
 import isEqual from "lodash.isequal";
-import { ToolFields, CommonFields } from "../../types";
-import { AddToolData, UpdateToolData, ToolInput } from "../ToolColumn/ToolWrapper";
+import { CommonFields, MaterialFields } from "../../types";
 import { OnChangeFn } from "../Form/types";
 import { FormTitle } from "../Form/FormTitle";
 import { Form } from "../Form/Form";
 import { RowInput } from "../Form/RowInput";
-import { RowInputWithUnit } from "../Form/RowInputWithUnit";
+import { AddMaterialData, MaterialInput, UpdateMaterialData } from "../MaterialColumn/MaterialWrapper";
+import { getInitialState } from "../../utils/getInitialState";
 
 interface FormProps {
-	ticket?: ToolFields;
+	ticket?: MaterialFields;
 	closeForm: () => void;
 	safeCloseForm: () => void;
 	openInvalidPopup: () => void;
 	setFormHasChangesFn: (fn: () => boolean) => void;
-	createTicket: MutationFn<AddToolData, ToolInput>;
+	createTicket: MutationFn<AddMaterialData, MaterialInput>;
 	deleteTicket: (data: CommonFields) => void;
-	updateTicket: MutationFn<UpdateToolData, ToolInput & { id: string }>;
+	updateTicket: MutationFn<UpdateMaterialData, MaterialInput & { id: string }>;
 }
 
 enum Fields {
 	name = "name",
 	amount = "amount",
-	type = "type",
-	size = "size",
-	measurement = "measurement",
+	color = "color",
 }
 
-enum Measurements {
-	mm = "mm",
-	us = "us",
-	uk = "uk",
-}
-
-type FormState = Omit<ToolFields, "id"> & { measurement: Measurements | null };
-
-const parseValueAndUnit = (value: string | null) => {
-	const [size, measurement] = (value || "").split(";");
-	return {
-		size: size && size.length ? size : null,
-		measurement: measurement && measurement.length ? measurement as Measurements : null,
-	};
-};
-
-const joinValueAndUnit = (value: string | null, unit: Measurements | null) => {
-	if (value === null && unit === null) {
-		return null;
-	}
-	return `${value || ""};${unit || ""}`;
-};
+type FormState = Omit<MaterialFields, "id">;
 
 const defaultState: FormState = {
 	name: "",
 	amount: 1,
-	type: null,
-	size: null,
-	measurement: null,
+	color: null,
 };
 
-const getToolDefaultState = (defaultState: FormState, ticket?: ToolFields) => {
-	if(!ticket) {
-		return defaultState;
-	}
-	const { name, amount, type, size } = ticket;
-
-	return {
-		name,
-		type,
-		amount: amount === null ? 1 : amount,
-		...parseValueAndUnit(size),
-	};
-};
-
-export class ToolForm extends React.Component<FormProps, FormState> {
-	public state: FormState = getToolDefaultState(defaultState, this.props.ticket);
+export class MaterialForm extends React.Component<FormProps, FormState> {
+	public state: FormState = getInitialState(defaultState, this.props.ticket);
 
 	public shouldComponentUpdate(nextProps: FormProps, nextState: FormState) {
 		return !isEqual(this.props.ticket, nextProps.ticket) || !isEqual(this.state, nextState);
@@ -102,25 +63,16 @@ export class ToolForm extends React.Component<FormProps, FormState> {
 			name={Fields.name}
 			value={this.state.name}
 			onChange={this.handleInput}
-			placeholder="Tool name"
+			placeholder="Material name"
 		/>
 	)
 
 	private renderContent = () => (
 		<>
 			<RowInput
-				name={Fields.type}
-				value={this.state.type || ""}
+				name={Fields.color}
+				value={this.state.color || ""}
 				onChange={this.handleInput}
-			/>
-			<RowInputWithUnit
-				name={Fields.size}
-				value={this.state.size || ""}
-				unitValue={this.state.measurement || Measurements.mm}
-				onChange={this.handleInput}
-				onUnitChange={this.handleInput}
-				type="number"
-				options={Object.keys(Measurements)}
 			/>
 			<RowInput
 				name={Fields.amount}
@@ -150,9 +102,7 @@ export class ToolForm extends React.Component<FormProps, FormState> {
 		const {
 			name,
 			amount,
-			size,
-			type,
-			measurement,
+			color,
 		} = this.state;
 
 		if(!this.formIsValid()) {
@@ -164,8 +114,7 @@ export class ToolForm extends React.Component<FormProps, FormState> {
 			const params = {
 				name,
 				amount,
-				size: joinValueAndUnit(size, measurement),
-				type,
+				color,
 			};
 
 			if(this.props.ticket) {
@@ -190,9 +139,7 @@ export class ToolForm extends React.Component<FormProps, FormState> {
 		const {
 			amount,
 			name,
-			size,
-			type,
-			measurement,
+			color,
 		} = this.state;
 		const ticket = this.props.ticket;
 
@@ -200,17 +147,14 @@ export class ToolForm extends React.Component<FormProps, FormState> {
 			return (
 				amount !== ticket.amount
 				|| name !== ticket.name
-				|| joinValueAndUnit(size, measurement) !== ticket.size
-				|| type !== ticket.type
+				|| color !== ticket.color
 			);
 		}
 
 		return (
 			!!name.length
 			|| amount !== 1
-			|| !!size && !!size.length
-			|| !!type && !!type.length
-			|| measurement !== null
+			|| !!color && !!color.length
 		);
 	}
 

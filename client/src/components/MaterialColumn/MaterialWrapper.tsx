@@ -2,7 +2,7 @@ import * as React from "react";
 import { adopt } from "react-adopt";
 import { QueryResult, Mutation, Query, MutationFn, MutationResult } from "react-apollo";
 import { MutationUpdaterFn } from "apollo-boost";
-import { CommonFields, MutationRenderProps, MaterialFields } from "../../types";
+import { MutationRenderProps, MaterialFields } from "../../types";
 import { initHandleCache } from "../../utils/cacheHandling";
 import { GET_MATERIALS, ADD_MATERIAL, DELETE_MATERIAL, UPDATE_MATERIAL } from "./materialQueries";
 import { GET_PROJECTS } from "../ProjectColumn/projectQueries";
@@ -11,25 +11,25 @@ interface GetMaterialData {
 	materials?: MaterialFields[];
 }
 
-interface AddMaterialData {
-	addMaterial: CommonFields;
+export interface AddMaterialData {
+	addMaterial: MaterialFields;
 }
 
-interface UpdateMaterialData {
-	updateMaterial: CommonFields;
+export interface UpdateMaterialData {
+	updateMaterial: MaterialFields;
 }
 
 export interface DeleteMaterialData {
-	deleteMaterial: CommonFields;
+	deleteMaterial: { id: string } | null;
 }
 
-interface MaterialInput {
-	params: { name: string, amount?: number, color?: string };
+export interface MaterialInput {
+	params: Omit<MaterialFields, "id">;
 }
 export interface MaterialRenderProps {
 	materials: QueryResult<GetMaterialData>;
 	addMaterial: MutationRenderProps<AddMaterialData, MaterialInput>;
-	updateMaterial: MutationRenderProps<UpdateMaterialData, MaterialInput>;
+	updateMaterial: MutationRenderProps<UpdateMaterialData, MaterialInput & { id: string }>;
 	deleteMaterial: MutationRenderProps<DeleteMaterialData, { id: string }>;
 }
 const addToCache: MutationUpdaterFn<AddMaterialData> =

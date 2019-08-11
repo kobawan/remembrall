@@ -1,7 +1,7 @@
 import * as React from "react";
 import { MutationFn } from "react-apollo";
 import isEqual from "lodash.isequal";
-import { ProjectFields, CommonFields } from "../../types";
+import { ProjectFields, CommonFields, MaterialFields, ToolFields } from "../../types";
 import { getInitialState } from "../../utils/getInitialState";
 import { RowInputWithList } from "../Form/RowInputWithList";
 import { logErrors } from "../../utils/errorHandling";
@@ -152,11 +152,11 @@ export class ProjectForm extends React.Component<FormProps, FormState> {
 	}
 
 	private updateToolTags = (tags: CommonFields[]) => {
-		this.setState({ tools: tags });
+		this.setState({ tools: tags as ToolFields[] });
 	}
 
 	private updateMaterialTags = (tags: CommonFields[]) => {
-		this.setState({ materials: tags });
+		this.setState({ materials: tags as MaterialFields[] });
 	}
 
 	/**

@@ -2,7 +2,7 @@ import * as React from "react";
 import { adopt } from "react-adopt";
 import { QueryResult, Mutation, Query, MutationFn, MutationResult } from "react-apollo";
 import { MutationUpdaterFn } from "apollo-boost";
-import { CommonFields, MutationRenderProps, ToolFields } from "../../types";
+import { MutationRenderProps, ToolFields } from "../../types";
 import { initHandleCache } from "../../utils/cacheHandling";
 import { GET_TOOLS, ADD_TOOL, DELETE_TOOL, UPDATE_TOOL } from "./toolQueries";
 import { GET_PROJECTS } from "../ProjectColumn/projectQueries";
@@ -12,15 +12,15 @@ interface GetToolData {
 }
 
 export interface AddToolData {
-	addTool: CommonFields;
+	addTool: ToolFields;
 }
 
 export interface UpdateToolData {
-	updateTool: CommonFields;
+	updateTool: ToolFields;
 }
 
 export interface DeleteToolData {
-	deleteTool: CommonFields;
+	deleteTool: { id: string } | null;
 }
 
 export interface ToolInput {

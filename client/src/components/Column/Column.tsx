@@ -2,13 +2,13 @@ import * as React from "react";
 import { MutationFn } from "react-apollo";
 import "./column.less";
 import { Ticket } from "../Ticket/Ticket";
-import { ColumnType, TicketData, CommonFields } from "../../types";
+import { ColumnType, TicketData, CommonFields, FormPropsType } from "../../types";
 import { ColumnHeader } from "../ColumnHeader/ColumnHeader";
 
 interface ColumnProps {
 	type: ColumnType;
 	tickets: TicketData[];
-	openForm?: (props?: TicketData) => void;
+	openForm?: (props?: FormPropsType) => void;
 	updateTicket: MutationFn<any, { id: string, params: any }>;
 	createTicket: MutationFn<any, { params: any }>;
 	deleteTicket: (data: CommonFields) => void;
