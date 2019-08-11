@@ -12,7 +12,7 @@ import { OnChangeFn } from "../Form/types";
 import { FormTitle } from "../Form/FormTitle";
 import { RowTextArea } from "../Form/RowTextArea";
 import { UpdateProjectData, AddProjectData, ProjectInput } from "../ProjectColumn/ProjectWrapper";
-import { Form } from "../Form/Form";
+import { Form, FormSize } from "../Form/Form";
 
 interface FormProps {
 	ticket?: ProjectFields;
@@ -65,6 +65,7 @@ export class ProjectForm extends React.Component<FormProps, FormState> {
 				Content={this.renderContent()}
 				safeCloseForm={safeCloseForm}
 				submitForm={this.submitProject}
+				size={FormSize.large}
 			/>
 		);
 	}

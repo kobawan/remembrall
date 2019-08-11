@@ -3,15 +3,34 @@
 
 .form {
 	.containerCenter();
-	min-width: 70%;
 	max-height: 90%;
 	z-index: 97;
 	font-size: 1rem;
 	box-sizing: border-box;
 
-	@media (orientation: portrait) and (max-width: 575px) {
-		font-size: calc(0.3rem + 1.2vw);
-		width: 90%;
+	&.small,
+	&.medium {
+		width: 40em;
+
+		@media (max-width: 465px) {
+			width: 90%;
+		}
+
+		@media (orientation: portrait) and (max-width: 440px) {
+			font-size: calc(0.3rem + 1.2vw);
+		}
+	}
+
+	&.large {
+		width: 60em;
+
+		@media (max-width: 645px) {
+			width: 90%;
+		}
+
+		@media (orientation: portrait) and (max-width: 465px) {
+			font-size: calc(0.3rem + 1.2vw);
+		}
 	}
 
 	.content {

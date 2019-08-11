@@ -4,7 +4,7 @@ import isEqual from "lodash.isequal";
 import { CommonFields, MaterialFields } from "../../types";
 import { OnChangeFn } from "../Form/types";
 import { FormTitle } from "../Form/FormTitle";
-import { Form } from "../Form/Form";
+import { Form, FormSize } from "../Form/Form";
 import { RowInput } from "../Form/RowInput";
 import { AddMaterialData, MaterialInput, UpdateMaterialData } from "../MaterialColumn/MaterialWrapper";
 import { getInitialState } from "../../utils/getInitialState";
@@ -54,6 +54,7 @@ export class MaterialForm extends React.Component<FormProps, FormState> {
 				Content={this.renderContent()}
 				safeCloseForm={safeCloseForm}
 				submitForm={this.submitProject}
+				size={FormSize.small}
 			/>
 		);
 	}

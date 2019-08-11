@@ -5,7 +5,7 @@ import { ToolFields, CommonFields } from "../../types";
 import { AddToolData, UpdateToolData, ToolInput } from "../ToolColumn/ToolWrapper";
 import { OnChangeFn } from "../Form/types";
 import { FormTitle } from "../Form/FormTitle";
-import { Form } from "../Form/Form";
+import { Form, FormSize } from "../Form/Form";
 import { RowInput } from "../Form/RowInput";
 import { RowInputWithUnit } from "../Form/RowInputWithUnit";
 
@@ -93,6 +93,7 @@ export class ToolForm extends React.Component<FormProps, FormState> {
 				Content={this.renderContent()}
 				safeCloseForm={safeCloseForm}
 				submitForm={this.submitProject}
+				size={FormSize.medium}
 			/>
 		);
 	}

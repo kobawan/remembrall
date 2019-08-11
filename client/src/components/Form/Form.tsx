@@ -2,11 +2,18 @@ import React from "react";
 import "./form.less";
 import { Overlay } from "../Overlay/Overlay";
 
+export enum FormSize {
+	small = "small",
+	medium = "medium",
+	large = "large",
+}
+
 interface FormProps {
 	Title: React.ReactNode;
 	Content: React.ReactNode;
 	safeCloseForm: () => void;
 	submitForm: () => void;
+	size: FormSize;
 }
 
 export const Form = React.memo(({
@@ -14,10 +21,11 @@ export const Form = React.memo(({
 	Content,
 	safeCloseForm,
 	submitForm,
+	size,
 }: FormProps) => {
 	return (<>
 		<Overlay onClick={safeCloseForm} zIndex={96} />
-		<div className="form">
+		<div className={`form ${size}`}>
 			{Title}
 			<div className="content">
 				{Content}
