@@ -51,6 +51,7 @@ export class MaterialColumn extends React.Component<MaterialColumnProps> {
 								updateTicket={updateMaterial.mutation}
 								deleteTicket={(data: CommonFields) => safeDeleteTicket(data, deleteMaterial.mutation)}
 								openForm={(props?: FormPropsType) => openForm(ColumnType.Materials, props)}
+								displayFields={["name", "color", "amount"]}
 							/>
 							{formOpened === ColumnType.Materials && (
 								<MaterialForm

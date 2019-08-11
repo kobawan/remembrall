@@ -8,8 +8,9 @@ import { TicketDisplay } from "../TicketDisplay/TicketDisplay";
 
 export interface TicketProps {
 	type: ColumnType;
-	openForm?: (props?: TicketData) => void;
+	openForm: (props?: TicketData) => void;
 	data: TicketData;
+	displayFields: string[];
 	focused: boolean;
 	updateTicket: MutationFn<any, { id: string, params: any }>;
 	deleteTicket: (data: CommonFields) => void;
@@ -38,6 +39,7 @@ export class Ticket extends React.Component<TicketProps, TicketState> {
 			deleteTicket,
 			updateTicket,
 			type,
+			displayFields,
 		} = this.props;
 
 		return (<>
@@ -46,9 +48,10 @@ export class Ticket extends React.Component<TicketProps, TicketState> {
 					? (
 						<TicketDisplay
 							data={data}
-							openEditor={openForm || this.toggleTextArea}
+							openEditor={openForm}
 							deleteTicket={deleteTicket}
 							openTextArea={this.toggleTextArea}
+							displayFields={displayFields}
 						/>
 					) : (
 						<TicketTextArea

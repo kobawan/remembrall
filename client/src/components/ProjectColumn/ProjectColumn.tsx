@@ -54,6 +54,7 @@ export class ProjectColumn extends React.Component<ProjectColumnProps> {
 								updateTicket={updateProject.mutation}
 								deleteTicket={(data: CommonFields) => safeDeleteTicket(data, deleteProject.mutation)}
 								openForm={(props?: FormPropsType) => openForm(ColumnType.Projects, props)}
+								displayFields={["name"]}
 							/>
 							{formOpened === ColumnType.Projects && (
 								<ProjectForm

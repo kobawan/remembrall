@@ -51,6 +51,7 @@ export class ToolColumn extends React.Component<ToolColumnProps> {
 								updateTicket={updateTool.mutation}
 								deleteTicket={(data: CommonFields) => safeDeleteTicket(data, deleteTool.mutation)}
 								openForm={(props?: FormPropsType) => openForm(ColumnType.Tools, props)}
+								displayFields={["name", "type", "size", "amount"]}
 							/>
 							{formOpened === ColumnType.Tools && (
 								<ToolForm

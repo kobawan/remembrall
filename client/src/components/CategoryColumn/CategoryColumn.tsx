@@ -50,6 +50,7 @@ export class CategoryColumn extends React.Component<CategoryColumnProps> {
 								updateTicket={updateCategory.mutation}
 								deleteTicket={(data: CommonFields) => safeDeleteTicket(data, deleteCategory.mutation)}
 								openForm={(props?: FormPropsType) => openForm(ColumnType.Categories, props)}
+								displayFields={["name"]}
 							/>
 							{formOpened === ColumnType.Categories && (
 								<CategoryForm

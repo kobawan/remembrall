@@ -8,6 +8,7 @@ import { ColumnHeader } from "../ColumnHeader/ColumnHeader";
 interface ColumnProps {
 	type: ColumnType;
 	tickets: TicketData[];
+	displayFields: string[];
 	openForm: (props?: FormPropsType) => void;
 	updateTicket: MutationFn<any, { id: string, params: any }>;
 	deleteTicket: (data: CommonFields) => void;
@@ -31,7 +32,7 @@ export class Column extends React.Component<ColumnProps> {
 	 * Shows all tickets from db
 	 */
 	private renderTickets = () => {
-		const { tickets, type, updateTicket, openForm, deleteTicket } = this.props;
+		const { tickets, type, updateTicket, openForm, deleteTicket, displayFields } = this.props;
 		return tickets.map((data, index) => (
 			<Ticket
 				data={data}
@@ -41,6 +42,7 @@ export class Column extends React.Component<ColumnProps> {
 				openForm={openForm}
 				updateTicket={updateTicket}
 				deleteTicket={deleteTicket}
+				displayFields={displayFields}
 			/>
 		));
 	}

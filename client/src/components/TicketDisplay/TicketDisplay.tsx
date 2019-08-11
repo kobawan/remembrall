@@ -8,26 +8,36 @@ export interface TicketDisplayProps {
 	data: TicketData;
 	deleteTicket: (data: CommonFields) => void;
 	openTextArea: () => void;
+	displayFields: string[];
 }
 
 export class TicketDisplay extends React.Component<TicketDisplayProps> {
 	public render() {
-		const { openTextArea, data: { name } } = this.props;
 		return (
-			<div className="ticketDisplay">
-				<span onClick={this.openEditorWithInfo}>
-					{name}
-				</span>
+			<div className="ticketDisplay" onClick={this.openEditorWithInfo}>
+				{this.renderDisplayedValues()}
 				<div className="ticketOptions">
-					<div className="ticketIcon" onClick={openTextArea}>
+					<div className="ticketIcon" onClick={this.editName}>
 						{editSvg}
 					</div>
-					<div className="ticketIcon" onClick={this.deleteTicket}>
+					<div className="ticketIcon" onClick={this.removeTicket}>
 						{trashSvg}
 					</div>
 				</div>
 			</div>
 		);
+	}
+
+	private editName = (e: React.MouseEvent<HTMLDivElement>) => {
+		e.stopPropagation();
+		this.props.openTextArea();
+	}
+
+	private removeTicket = (e: React.MouseEvent<HTMLDivElement>) => {
+		e.stopPropagation();
+		const { deleteTicket, data: { id, name } } = this.props;
+
+		deleteTicket({ id, name });
 	}
 
 	/**
@@ -38,11 +48,28 @@ export class TicketDisplay extends React.Component<TicketDisplayProps> {
 		openEditor(data);
 	}
 
-	/**
-	 * Deletes the ticket from db
-	 */
-	private deleteTicket = () => {
-		const { deleteTicket, data: { id, name } } = this.props;
-		deleteTicket({ id, name });
+	private renderDisplayedValues = () => {
+		const {
+			displayFields,
+			data,
+		} = this.props;
+
+		return displayFields.map((key, i) => {
+			if(!data.hasOwnProperty(key)) {
+				return null;
+			}
+			const value = (
+				data[key] === null
+				|| data[key] === undefined
+				|| typeof data[key] === "string" && !data[key].length
+			) ? "-" : data[key].toString().replace(";", " ");
+
+			return (
+				<div key={i} className="ticketDisplayInfoRow">
+					<small className="ticketDisplayKey">{key}:</small>
+					<span>{value}</span>
+				</div>
+			);
+		});
 	}
 }
