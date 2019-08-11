@@ -28,22 +28,24 @@ export const InputRowWithUnit = (({
 	return (
 		<div className="formTextInputWithUnit">
 			<label>{name}</label>
-			<input
-				type={type ? type : "text"}
-				name={name}
-				onChange={onChange}
-				value={value}
-				autoFocus={!!autofocus}
-				className="mainInput"
-			/>
-			<select
-				className="unitsSelect"
-				onChange={onChange}
-				name="measurement"
-				defaultValue={unitValue}
-			>
-				{renderOptions()}
-			</select>
+			<div className="formTextInputContainer">
+				<input
+					type={type ? type : "text"}
+					name={name}
+					onChange={onChange}
+					value={value}
+					autoFocus={!!autofocus}
+					className="mainInput"
+				/>
+				<select
+					className="unitsSelect"
+					onChange={onChange}
+					name="measurement"
+					defaultValue={unitValue}
+				>
+					{renderOptions()}
+				</select>
+			</div>
 		</div>
 	);
 });
