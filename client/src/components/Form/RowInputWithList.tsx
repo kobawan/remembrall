@@ -1,11 +1,12 @@
 import * as React from "react";
 import { MutationFn } from "react-apollo";
-import "./textInputRowWithList.less";
+import "./rowInputWithList.less";
 import { CommonFields } from "../../types";
 import { plusSvg } from "../Svg/Svg";
 import { OnChangeFn } from "./types";
+import { FormRow, FormRowDirection } from "./FormRow";
 
-interface TextInputRowWithListProps {
+interface RowInputWithListProps {
 	name: string;
 	options: CommonFields[];
 	tags: CommonFields[];
@@ -14,7 +15,7 @@ interface TextInputRowWithListProps {
 	isRequired?: boolean;
 }
 
-interface TextInputRowWithListState {
+interface RowInputWithListState {
 	value: string;
 	valueFromDb?: CommonFields;
 	hideOptions: boolean;
@@ -23,8 +24,8 @@ interface TextInputRowWithListState {
 
 const ADD_TEXT = "+ Add ";
 
-export class TextInputRowWithList extends React.Component<TextInputRowWithListProps, TextInputRowWithListState> {
-	public state: TextInputRowWithListState = {
+export class RowInputWithList extends React.Component<RowInputWithListProps, RowInputWithListState> {
+	public state: RowInputWithListState = {
 		value: "",
 		hideOptions: false,
 		editTags: false,
@@ -36,37 +37,35 @@ export class TextInputRowWithList extends React.Component<TextInputRowWithListPr
 		const { value, hideOptions, editTags } = this.state;
 
 		return (
-			<div className="formTextareaWithList">
-				<label>{`${name}${isRequired ? " *" : ""}`}</label>
-				<div className="wrapper">
-					{editTags && (
-						<input
-							type="text"
-							ref={this.textAreaRef}
-							name={name}
-							list={name}
-							onChange={this.onChange}
-							value={value}
-							onKeyUp={this.addTagOnEnter}
-							onBlur={this.addTagOnEnterOrBlur}
-						/>
+			<FormRow name={name} isRequired={isRequired} direction={FormRowDirection.column}>
+				{editTags && (
+					<input
+						type="text"
+						ref={this.textAreaRef}
+						name={name}
+						list={name}
+						onChange={this.onChange}
+						value={value}
+						onKeyUp={this.addTagOnEnter}
+						onBlur={this.addTagOnEnterOrBlur}
+						className="rowInputListMain"
+					/>
+				)}
+				<div className="rowInputListTags">
+					{!editTags && (
+						<div className="open" onClick={this.toggleEditing}>
+							{plusSvg}
+						</div>
 					)}
-					<div className="tags">
-						{!editTags && (
-							<div className="open" onClick={this.toggleEditing}>
-								{plusSvg}
-							</div>
-						)}
-						{this.renderTags(tags)}
-					</div>
-					{!hideOptions && (
-						<datalist id={name}>
-							{this.renderAddOption()}
-							{this.renderOptions(options)}
-						</datalist>
-					)}
+					{this.renderTags(tags)}
 				</div>
-			</div>
+				{!hideOptions && (
+					<datalist id={name}>
+						{this.renderAddOption()}
+						{this.renderOptions(options)}
+					</datalist>
+				)}
+			</FormRow>
 		);
 	}
 

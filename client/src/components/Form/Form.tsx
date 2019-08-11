@@ -3,8 +3,8 @@ import "./form.less";
 import { Overlay } from "../Overlay/Overlay";
 
 interface FormProps {
-	Title: JSX.Element;
-	Content: JSX.Element;
+	Title: React.ReactNode;
+	Content: React.ReactNode;
 	safeCloseForm: () => void;
 	submitForm: () => void;
 }

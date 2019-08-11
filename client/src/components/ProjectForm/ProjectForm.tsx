@@ -3,14 +3,14 @@ import { MutationFn } from "react-apollo";
 import isEqual from "lodash.isequal";
 import { ProjectFields, CommonFields } from "../../types";
 import { getInitialState } from "../../utils/getInitialState";
-import { TextInputRowWithList } from "../Form/TextInputRowWithList";
+import { RowInputWithList } from "../Form/RowInputWithList";
 import { logErrors } from "../../utils/errorHandling";
 import { CategoryWrapper, CategoryRenderProps } from "../CategoryColumn/CategoryWrapper";
 import { ToolWrapper, ToolRenderProps } from "../ToolColumn/ToolWrapper";
 import { MaterialWrapper, MaterialRenderProps } from "../MaterialColumn/MaterialWrapper";
 import { OnChangeFn } from "../Form/types";
-import { TextInputTitle } from "../Form/TextInputTitle";
-import { TextAreaRow } from "../Form/TextAreaRow";
+import { FormTitle } from "../Form/FormTitle";
+import { RowTextArea } from "../Form/RowTextArea";
 import { UpdateProjectData, AddProjectData, ProjectInput } from "../ProjectColumn/ProjectWrapper";
 import { Form } from "../Form/Form";
 
@@ -70,7 +70,7 @@ export class ProjectForm extends React.Component<FormProps, FormState> {
 	}
 
 	private renderTitle = () => (
-		<TextInputTitle
+		<FormTitle
 			name={Fields.name}
 			value={this.state.name}
 			onChange={this.handleInput}
@@ -84,7 +84,7 @@ export class ProjectForm extends React.Component<FormProps, FormState> {
 				{({ addCategory, categories: { data, error }}: CategoryRenderProps) => {
 					logErrors(error, addCategory);
 					return (
-						<TextInputRowWithList
+						<RowInputWithList
 							name={Fields.categories}
 							tags={this.state.categories}
 							options={data && data.categories ? data.categories : []}
@@ -99,7 +99,7 @@ export class ProjectForm extends React.Component<FormProps, FormState> {
 				{({ addTool, tools: { data, error }}: ToolRenderProps) => {
 					logErrors(error, addTool);
 					return (
-						<TextInputRowWithList
+						<RowInputWithList
 							name={Fields.tools}
 							tags={this.state.tools}
 							options={data && data.tools ? data.tools : []}
@@ -114,7 +114,7 @@ export class ProjectForm extends React.Component<FormProps, FormState> {
 				{({ addMaterial, materials: { data, error }}: MaterialRenderProps) => {
 					logErrors(error, addMaterial);
 					return (
-						<TextInputRowWithList
+						<RowInputWithList
 							name={Fields.materials}
 							tags={this.state.materials}
 							options={data && data.materials ? data.materials : []}
@@ -125,12 +125,12 @@ export class ProjectForm extends React.Component<FormProps, FormState> {
 					);
 				}}
 			</MaterialWrapper>
-			<TextAreaRow
+			<RowTextArea
 				name={Fields.instructions}
 				value={this.state.instructions}
 				onChange={this.handleInput}
 			/>
-			<TextAreaRow
+			<RowTextArea
 				name={Fields.notes}
 				value={this.state.notes}
 				onChange={this.handleInput}

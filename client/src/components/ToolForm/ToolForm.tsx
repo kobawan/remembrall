@@ -4,10 +4,10 @@ import isEqual from "lodash.isequal";
 import { ToolFields, CommonFields } from "../../types";
 import { AddToolData, UpdateToolData, ToolInput } from "../ToolColumn/ToolWrapper";
 import { OnChangeFn } from "../Form/types";
-import { TextInputTitle } from "../Form/TextInputTitle";
+import { FormTitle } from "../Form/FormTitle";
 import { Form } from "../Form/Form";
-import { TextInputRow } from "../Form/TextInputRow";
-import { InputRowWithUnit } from "../Form/InputRowWithUnit";
+import { RowInput } from "../Form/RowInput";
+import { RowInputWithUnit } from "../Form/RowInputWithUnit";
 
 interface FormProps {
 	ticket?: ToolFields;
@@ -48,12 +48,12 @@ const getToolDefaultState = (defaultState: FormState, ticket?: ToolFields) => {
 	if(!ticket) {
 		return defaultState;
 	}
-	const { name, amount, type, size = "" } = ticket;
+	const { name, amount, type, size } = ticket;
 	const [
 		,
 		value = "",
 		measurement = Measurements.mm,
-	] = size.match(/([\d+\.|\,\d*]+)([a-z]+)/) || [];
+	] = (size || "").match(/([\d+\.|\,\d*]+)([a-z]+)/) || [];
 	return {
 		name,
 		amount: amount || 1,
@@ -88,7 +88,7 @@ export class ToolForm extends React.Component<FormProps, FormState> {
 	}
 
 	private renderTitle = () => (
-		<TextInputTitle
+		<FormTitle
 			name={Fields.name}
 			value={this.state.name}
 			onChange={this.handleInput}
@@ -98,20 +98,21 @@ export class ToolForm extends React.Component<FormProps, FormState> {
 
 	private renderContent = () => (
 		<>
-			<TextInputRow
+			<RowInput
 				name={Fields.type}
 				value={`${this.state.type}`}
 				onChange={this.handleInput}
 			/>
-			<InputRowWithUnit
+			<RowInputWithUnit
 				name={Fields.size}
 				value={`${this.state.size}`}
 				unitValue={this.state.measurement}
 				onChange={this.handleInput}
+				onUnitChange={this.handleInput}
 				type="number"
 				options={Object.keys(Measurements)}
 			/>
-			<TextInputRow
+			<RowInput
 				name={Fields.amount}
 				value={`${this.state.amount}`}
 				type="number"

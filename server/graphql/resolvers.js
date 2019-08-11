@@ -79,7 +79,10 @@ const resolverMap = {
 			return material;
 		},
 		addTool: async function(parent, { params }, { currentUser }) {
-			const tool = new ToolModel(params);
+			const tool = new ToolModel({
+				...params,
+				amount: params.amount !== undefined ? params.amount : 1,
+			});
 			await UserModel.update(
 				{ _id: currentUser._id },
 				{ $push: { tools: tool } },

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { MutationFn } from "react-apollo";
 import "./login.less";
-import { TextInputRow } from "../Form/TextInputRow";
+import { RowInput } from "../Form/RowInput";
 import { OnChangeFn } from "../Form/types";
 import { LoginWrapper, LoginUserData, UserInput, AddUserData } from "./LoginWrapper";
 import { logErrors } from "../../utils/errorHandling";
@@ -45,21 +45,21 @@ export class Login extends React.PureComponent<LoginProps, LoginState> {
 
 					return (
 						<div className="login">
-							<TextInputRow
+							<RowInput
 								name="Email:"
 								type="email"
 								value={email}
 								onChange={this.onChangeUsername}
 								autofocus={true}
 							/>
-							<TextInputRow
+							<RowInput
 								name="Password:"
 								type="password"
 								value={password}
 								onChange={this.onChangePassword}
 							/>
 							{!isLogin && (
-								<TextInputRow
+								<RowInput
 									name="Confirm password:"
 									type="password"
 									value={confirmPassword}

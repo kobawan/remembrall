@@ -1,0 +1,22 @@
+.formRow {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	padding-top: 1em;
+
+	.formRowLabel {
+		margin-right: 1em;
+		flex: 2;
+		text-transform: capitalize;
+		font-size: 1.6em;
+	}
+
+	.formRowContent {
+		display: flex;
+		flex: 6;
+
+		&.column {
+			flex-direction: column;
+		}
+	}
+}

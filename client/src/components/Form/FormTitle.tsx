@@ -1,14 +1,14 @@
 import React, { useState, useCallback } from "react";
-import "./textInputTitle.less";
+import "./formTitle.less";
 import { RowProps } from "./types";
 
 const TITLE_ERROR_MSG = "Invalid input. Title field is required";
 
-interface TextInputTitleProps extends RowProps {
+interface FormTitleProps extends RowProps {
 	placeholder?: string;
 }
 
-export const TextInputTitle = React.memo(({ name, value, onChange, placeholder }: TextInputTitleProps) => {
+export const FormTitle = React.memo(({ name, value, onChange, placeholder }: FormTitleProps) => {
 	const [ showError, setShowError ] = useState(false);
 
 	const onBlur = useCallback(() => {
@@ -31,11 +31,11 @@ export const TextInputTitle = React.memo(({ name, value, onChange, placeholder }
 				onChange={onChange}
 				placeholder={placeholder}
 				value={value}
-				className={showError ? "error" : ""}
+				className={`rowInputTitle ${showError ? "error" : ""}`}
 				onBlur={onBlur}
 				onFocus={onFocus}
 			/>
-			<div className="errorMsg">
+			<div className="rowInputTitleError">
 				{showError && TITLE_ERROR_MSG}
 			</div>
 		</div>
