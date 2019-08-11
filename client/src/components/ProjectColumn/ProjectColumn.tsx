@@ -2,7 +2,7 @@ import * as React from "react";
 import { MutationFn } from "react-apollo";
 import isEqual from "lodash.isequal";
 import { Column } from "../Column/Column";
-import { ColumnType, CommonFields, TicketData } from "../../types";
+import { ColumnType, CommonFields, FormPropsType } from "../../types";
 import { logErrors } from "../../utils/errorHandling";
 import { ProjectForm } from "../ProjectForm/ProjectForm";
 import { ProjectWrapper, DeleteProjectData } from "./ProjectWrapper";
@@ -12,10 +12,10 @@ interface ProjectColumnProps {
 	safeCloseForm: () => void;
 	openInvalidPopup: () => void;
 	setFormHasChangesFn: (fn: () => boolean) => void;
-	openForm: (type: ColumnType, props?: TicketData) => void;
+	openForm: (type: ColumnType, props?: FormPropsType) => void;
 	safeDeleteTicket: (data: CommonFields, deleteFn: MutationFn<DeleteProjectData, { id: string }>) => void;
 	formOpened?: ColumnType;
-	formProps?: TicketData;
+	formProps?: FormPropsType;
 }
 
 export class ProjectColumn extends React.Component<ProjectColumnProps> {
@@ -53,8 +53,7 @@ export class ProjectColumn extends React.Component<ProjectColumnProps> {
 								type={ColumnType.Projects}
 								updateTicket={updateProject.mutation}
 								deleteTicket={(data: CommonFields) => safeDeleteTicket(data, deleteProject.mutation)}
-								createTicket={addProject.mutation}
-								openForm={(props?: TicketData) => openForm(ColumnType.Projects, props)}
+								openForm={(props?: FormPropsType) => openForm(ColumnType.Projects, props)}
 							/>
 							{formOpened === ColumnType.Projects && (
 								<ProjectForm

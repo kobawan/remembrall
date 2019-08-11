@@ -9,11 +9,9 @@ import { TicketDisplay } from "../TicketDisplay/TicketDisplay";
 export interface TicketProps {
 	type: ColumnType;
 	openForm?: (props?: TicketData) => void;
-	data?: TicketData;
+	data: TicketData;
 	focused: boolean;
-	closeNewTicket: () => void;
 	updateTicket: MutationFn<any, { id: string, params: any }>;
-	createTicket: MutationFn<any, { params: any }>;
 	deleteTicket: (data: CommonFields) => void;
 }
 
@@ -38,9 +36,7 @@ export class Ticket extends React.Component<TicketProps, TicketState> {
 			data,
 			openForm,
 			deleteTicket,
-			createTicket,
 			updateTicket,
-			closeNewTicket,
 			type,
 		} = this.props;
 
@@ -60,10 +56,8 @@ export class Ticket extends React.Component<TicketProps, TicketState> {
 							key={name}
 							type={type}
 							updateTicket={updateTicket}
-							createTicket={createTicket}
 							close={this.toggleTextArea}
 							toggleError={this.toggleError}
-							closeNewTicket={closeNewTicket}
 						/>
 					)
 				}

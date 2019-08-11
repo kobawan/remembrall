@@ -4,13 +4,11 @@ import "./ticketTextArea.less";
 import { TicketData, ColumnType } from "../../types";
 
 interface TicketTextAreaProps {
-	data?: TicketData;
+	data: TicketData;
 	type: ColumnType;
 	updateTicket: MutationFn<any, { id: string, params: any }>;
-	createTicket: MutationFn<any, { params: any }>;
 	close: () => void;
 	toggleError: (toggleError: boolean) => void;
-	closeNewTicket: () => void;
 }
 
 interface TicketTextAreaState {
@@ -19,7 +17,7 @@ interface TicketTextAreaState {
 
 export class TicketTextArea extends React.Component<TicketTextAreaProps, TicketTextAreaState> {
 	public state: TicketTextAreaState = {
-		value: this.props.data ? this.props.data.name : "",
+		value: this.props.data.name,
 	};
 
 	public render() {
@@ -57,39 +55,28 @@ export class TicketTextArea extends React.Component<TicketTextAreaProps, TicketT
 	}
 
 	/**
-	 * Updates or creates the ticket
+	 * Updates the ticket's name
 	 */
 	private submitChange = async () => {
-		const { data, close, closeNewTicket, type } = this.props;
+		const { data, close, type } = this.props;
 		const { value } = this.state;
 
-		if(!value) {
-			closeNewTicket();
+		if(!value.length) {
+			this.props.toggleError(true);
 			return;
 		}
 
 		/**
 		 * @todo show error on incompatible naming
 		 */
-		if(data) {
-			// Update ticket
-			if(data.name !== value) {
-				await this.props.updateTicket({
-					variables: {
-						id: data.id,
-						params: { name: type === ColumnType.Projects ? value : value.toLowerCase() },
-					},
-				});
-			}
-			close();
-		} else {
-			// Create ticket
-			await this.props.createTicket({
+		if(data.name !== value) {
+			await this.props.updateTicket({
 				variables: {
+					id: data.id,
 					params: { name: type === ColumnType.Projects ? value : value.toLowerCase() },
-				}
+				},
 			});
-			closeNewTicket();
 		}
+		close();
 	}
 }

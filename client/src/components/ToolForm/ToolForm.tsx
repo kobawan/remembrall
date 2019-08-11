@@ -163,7 +163,7 @@ export class ToolForm extends React.Component<FormProps, FormState> {
 
 		if(this.formHasChanges()) {
 			const params = {
-				name,
+				name: name.toLowerCase(),
 				amount,
 				size: joinValueAndUnit(size, measurement),
 				type,
@@ -200,7 +200,7 @@ export class ToolForm extends React.Component<FormProps, FormState> {
 		if(ticket) {
 			return (
 				amount !== ticket.amount
-				|| name !== ticket.name
+				|| name.toLowerCase() !== ticket.name
 				|| joinValueAndUnit(size, measurement) !== ticket.size
 				|| type !== ticket.type
 			);

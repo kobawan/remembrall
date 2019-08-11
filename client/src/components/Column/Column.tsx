@@ -8,58 +8,22 @@ import { ColumnHeader } from "../ColumnHeader/ColumnHeader";
 interface ColumnProps {
 	type: ColumnType;
 	tickets: TicketData[];
-	openForm?: (props?: FormPropsType) => void;
+	openForm: (props?: FormPropsType) => void;
 	updateTicket: MutationFn<any, { id: string, params: any }>;
-	createTicket: MutationFn<any, { params: any }>;
 	deleteTicket: (data: CommonFields) => void;
 }
 
-interface ColumnState {
-	showNewTicket: boolean;
-}
-
-export class Column extends React.Component<ColumnProps, ColumnState> {
-	public state: ColumnState = {
-		showNewTicket: false,
-	};
-
+export class Column extends React.Component<ColumnProps> {
 	public render() {
 		const { type, openForm } = this.props;
-		const { showNewTicket } = this.state;
 
 		return (
 			<div className="column">
-				<ColumnHeader type={type} openEditor={openForm || this.toggleNewTicket} />
+				<ColumnHeader type={type} openEditor={openForm} />
 				<div className="content">
 					{this.renderTickets()}
-					{showNewTicket && this.renderNewTicket()}
 				</div>
 			</div>
-		);
-	}
-
-	/**
-	 * Opens a new ticket that doesn't need a form
-	 */
-	private toggleNewTicket = () => {
-		this.setState({ showNewTicket: !this.state.showNewTicket });
-	}
-
-	/**
-	 * Shows a ticket in edit mode
-	 */
-	private renderNewTicket = () => {
-		const { type, updateTicket, deleteTicket, createTicket } = this.props;
-
-		return (
-			<Ticket
-				type={type}
-				focused={true}
-				updateTicket={updateTicket}
-				deleteTicket={deleteTicket}
-				createTicket={createTicket}
-				closeNewTicket={this.toggleNewTicket}
-			/>
 		);
 	}
 
@@ -67,7 +31,7 @@ export class Column extends React.Component<ColumnProps, ColumnState> {
 	 * Shows all tickets from db
 	 */
 	private renderTickets = () => {
-		const { tickets, type, updateTicket, openForm, deleteTicket, createTicket } = this.props;
+		const { tickets, type, updateTicket, openForm, deleteTicket } = this.props;
 		return tickets.map((data, index) => (
 			<Ticket
 				data={data}
@@ -77,8 +41,6 @@ export class Column extends React.Component<ColumnProps, ColumnState> {
 				openForm={openForm}
 				updateTicket={updateTicket}
 				deleteTicket={deleteTicket}
-				createTicket={createTicket}
-				closeNewTicket={this.toggleNewTicket}
 			/>
 		));
 	}

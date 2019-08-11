@@ -2,7 +2,7 @@ import * as React from "react";
 import { adopt } from "react-adopt";
 import { QueryResult, Mutation, Query, MutationFn, MutationResult } from "react-apollo";
 import { MutationUpdaterFn } from "apollo-boost";
-import { CommonFields, MutationRenderProps, CategoryFields } from "../../types";
+import { MutationRenderProps, CategoryFields } from "../../types";
 import { initHandleCache } from "../../utils/cacheHandling";
 import { GET_CATEGORIES, ADD_CATEGORY, DELETE_CATEGORY, UPDATE_CATEGORY } from "./categoryQueries";
 import { GET_PROJECTS } from "../ProjectColumn/projectQueries";
@@ -11,19 +11,19 @@ interface GetCategoryData {
 	categories?: CategoryFields[];
 }
 
-interface AddCategoryData {
-	addCategory: CommonFields;
+export interface AddCategoryData {
+	addCategory: CategoryFields;
 }
 
 export interface DeleteCategoryData {
-	deleteCategory: CommonFields;
+	deleteCategory: CategoryFields;
 }
 
-interface UpdateCategoryData {
-	updateCategory: CommonFields;
+export interface UpdateCategoryData {
+	updateCategory: CategoryFields;
 }
 
-interface CategoryInput {
+export interface CategoryInput {
 	params: Omit<CategoryFields, "id">;
 }
 

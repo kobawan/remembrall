@@ -4,7 +4,14 @@ import { ProjectColumn } from "../ProjectColumn/ProjectColumn";
 import { CategoryColumn } from "../CategoryColumn/CategoryColumn";
 import { Popup, PopupMessage } from "../Popup/Popup";
 import { MutationFn } from "react-apollo";
-import { CommonFields, ColumnType, MaterialFields, FormPropsType, ToolFields } from "../../types";
+import {
+	CommonFields,
+	ColumnType,
+	MaterialFields,
+	FormPropsType,
+	ToolFields,
+	CategoryFields,
+} from "../../types";
 import { ToolColumn } from "../ToolColumn/ToolColumn";
 import { MaterialColumn } from "../MaterialColumn/MaterialColumn";
 
@@ -41,7 +48,16 @@ export class ColumnsManager extends React.Component<{}, ColumnsState> {
 					safeCloseForm={this.safeCloseForm}
 					openInvalidPopup={this.openInvalidPopup}
 				/>
-				<CategoryColumn safeDeleteTicket={this.safeDeleteTicket} />
+				<CategoryColumn
+					safeDeleteTicket={this.safeDeleteTicket}
+					openForm={this.openForm}
+					formOpened={formOpened}
+					formProps={formProps as CategoryFields}
+					closeForm={this.closeForm}
+					setFormHasChangesFn={this.setFormHasChangesFn}
+					safeCloseForm={this.safeCloseForm}
+					openInvalidPopup={this.openInvalidPopup}
+				/>
 				<ToolColumn
 					safeDeleteTicket={this.safeDeleteTicket}
 					openForm={this.openForm}

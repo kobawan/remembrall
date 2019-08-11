@@ -49,7 +49,6 @@ export class MaterialColumn extends React.Component<MaterialColumnProps> {
 								tickets={data && data.materials ? data.materials : []}
 								type={ColumnType.Materials}
 								updateTicket={updateMaterial.mutation}
-								createTicket={addMaterial.mutation}
 								deleteTicket={(data: CommonFields) => safeDeleteTicket(data, deleteMaterial.mutation)}
 								openForm={(props?: FormPropsType) => openForm(ColumnType.Materials, props)}
 							/>
