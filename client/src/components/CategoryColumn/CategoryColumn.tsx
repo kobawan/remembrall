@@ -6,6 +6,7 @@ import { logErrors } from "../../utils/errorHandling";
 import { Column } from "../Column/Column";
 import { ColumnType, CommonFields, FormPropsType, CategoryFields } from "../../types";
 import { CategoryForm } from "../CategoryForm/CategoryForm";
+import { DisplayDirection } from "../TicketDisplay/TicketDisplay";
 
 interface CategoryColumnProps {
 	safeDeleteTicket: (data: CommonFields, deleteFn: MutationFn<DeleteCategoryData, { id: string }>) => void;
@@ -51,6 +52,7 @@ export class CategoryColumn extends React.Component<CategoryColumnProps> {
 								deleteTicket={(data: CommonFields) => safeDeleteTicket(data, deleteCategory.mutation)}
 								openForm={(props?: FormPropsType) => openForm(ColumnType.Categories, props)}
 								displayFields={["name"]}
+								displayDirection={DisplayDirection.row}
 							/>
 							{formOpened === ColumnType.Categories && (
 								<CategoryForm

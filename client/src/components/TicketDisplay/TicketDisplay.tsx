@@ -3,12 +3,18 @@ import "./ticketDisplay.less";
 import { TicketData, CommonFields } from "../../types";
 import { editSvg, trashSvg } from "../Svg/Svg";
 
+export enum DisplayDirection {
+	column = "ticketDisplayColumn",
+	row = "ticketDisplayRow",
+}
+
 export interface TicketDisplayProps {
 	openEditor: (props?: TicketData) => void;
 	data: TicketData;
 	deleteTicket: (data: CommonFields) => void;
 	openTextArea: () => void;
 	displayFields: string[];
+	displayDirection: DisplayDirection;
 }
 
 export class TicketDisplay extends React.Component<TicketDisplayProps> {
@@ -52,20 +58,29 @@ export class TicketDisplay extends React.Component<TicketDisplayProps> {
 		const {
 			displayFields,
 			data,
+			displayDirection,
 		} = this.props;
 
 		return displayFields.map((key, i) => {
 			if(!data.hasOwnProperty(key)) {
 				return null;
 			}
-			const value = (
+			let value = null;
+			if(
 				data[key] === null
 				|| data[key] === undefined
 				|| typeof data[key] === "string" && !data[key].length
-			) ? "-" : data[key].toString().replace(";", " ");
+			) {
+				value = "-";
+			} else if(typeof data[key] === "object") {
+				const res = data[key].map(({ name }: { name: string }) => name).join(", ");
+				value = res.length ? res : "-";
+			} else {
+				value = data[key].toString().replace(";", " ");
+			}
 
 			return (
-				<div key={i} className="ticketDisplayInfoRow">
+				<div key={i} className={`ticketDisplayInfoRow ${displayDirection}`}>
 					<small className="ticketDisplayKey">{key}:</small>
 					<span>{value}</span>
 				</div>

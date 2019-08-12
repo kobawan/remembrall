@@ -4,6 +4,7 @@ import "./column.less";
 import { Ticket } from "../Ticket/Ticket";
 import { ColumnType, TicketData, CommonFields, FormPropsType } from "../../types";
 import { ColumnHeader } from "../ColumnHeader/ColumnHeader";
+import { DisplayDirection } from "../TicketDisplay/TicketDisplay";
 
 interface ColumnProps {
 	type: ColumnType;
@@ -12,6 +13,7 @@ interface ColumnProps {
 	openForm: (props?: FormPropsType) => void;
 	updateTicket: MutationFn<any, { id: string, params: any }>;
 	deleteTicket: (data: CommonFields) => void;
+	displayDirection: DisplayDirection;
 }
 
 export class Column extends React.Component<ColumnProps> {
@@ -32,7 +34,15 @@ export class Column extends React.Component<ColumnProps> {
 	 * Shows all tickets from db
 	 */
 	private renderTickets = () => {
-		const { tickets, type, updateTicket, openForm, deleteTicket, displayFields } = this.props;
+		const {
+			tickets,
+			type,
+			updateTicket,
+			openForm,
+			deleteTicket,
+			displayFields,
+			displayDirection,
+		} = this.props;
 		return tickets.map((data, index) => (
 			<Ticket
 				data={data}
@@ -43,6 +53,7 @@ export class Column extends React.Component<ColumnProps> {
 				updateTicket={updateTicket}
 				deleteTicket={deleteTicket}
 				displayFields={displayFields}
+				displayDirection={displayDirection}
 			/>
 		));
 	}

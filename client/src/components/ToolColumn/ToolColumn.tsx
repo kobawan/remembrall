@@ -6,6 +6,7 @@ import { Column } from "../Column/Column";
 import { ColumnType, CommonFields, FormPropsType, ToolFields } from "../../types";
 import { ToolWrapper, DeleteToolData } from "./ToolWrapper";
 import { ToolForm } from "../ToolForm/ToolForm";
+import { DisplayDirection } from "../TicketDisplay/TicketDisplay";
 
 interface ToolColumnProps {
 	safeDeleteTicket: (data: CommonFields, deleteFn: MutationFn<DeleteToolData, { id: string }>) => void;
@@ -52,6 +53,7 @@ export class ToolColumn extends React.Component<ToolColumnProps> {
 								deleteTicket={(data: CommonFields) => safeDeleteTicket(data, deleteTool.mutation)}
 								openForm={(props?: FormPropsType) => openForm(ColumnType.Tools, props)}
 								displayFields={["name", "type", "size", "amount"]}
+								displayDirection={DisplayDirection.row}
 							/>
 							{formOpened === ColumnType.Tools && (
 								<ToolForm

@@ -9,7 +9,15 @@
 	.ticketDisplayInfoRow {
 		padding: 0.125em;
 		display: flex;
-		align-items: center;
+
+		&.ticketDisplayColumn {
+			flex-direction: column;
+		}
+
+		&.ticketDisplayRow {
+			flex-direction: row;
+			align-items: center;
+		}
 
 		.ticketDisplayKey {
 			text-transform: capitalize;

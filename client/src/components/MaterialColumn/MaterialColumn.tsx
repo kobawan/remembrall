@@ -6,6 +6,7 @@ import { Column } from "../Column/Column";
 import { ColumnType, CommonFields, MaterialFields, FormPropsType } from "../../types";
 import { MaterialWrapper, DeleteMaterialData } from "./MaterialWrapper";
 import { MaterialForm } from "../MaterialForm/MaterialForm";
+import { DisplayDirection } from "../TicketDisplay/TicketDisplay";
 
 interface MaterialColumnProps {
 	safeDeleteTicket: (data: CommonFields, deleteFn: MutationFn<DeleteMaterialData, { id: string }>) => void;
@@ -52,6 +53,7 @@ export class MaterialColumn extends React.Component<MaterialColumnProps> {
 								deleteTicket={(data: CommonFields) => safeDeleteTicket(data, deleteMaterial.mutation)}
 								openForm={(props?: FormPropsType) => openForm(ColumnType.Materials, props)}
 								displayFields={["name", "color", "amount"]}
+								displayDirection={DisplayDirection.row}
 							/>
 							{formOpened === ColumnType.Materials && (
 								<MaterialForm

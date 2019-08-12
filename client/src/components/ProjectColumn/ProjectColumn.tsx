@@ -6,6 +6,7 @@ import { ColumnType, CommonFields, FormPropsType } from "../../types";
 import { logErrors } from "../../utils/errorHandling";
 import { ProjectForm } from "../ProjectForm/ProjectForm";
 import { ProjectWrapper, DeleteProjectData } from "./ProjectWrapper";
+import { DisplayDirection } from "../TicketDisplay/TicketDisplay";
 
 interface ProjectColumnProps {
 	closeForm: () => void;
@@ -54,7 +55,8 @@ export class ProjectColumn extends React.Component<ProjectColumnProps> {
 								updateTicket={updateProject.mutation}
 								deleteTicket={(data: CommonFields) => safeDeleteTicket(data, deleteProject.mutation)}
 								openForm={(props?: FormPropsType) => openForm(ColumnType.Projects, props)}
-								displayFields={["name"]}
+								displayFields={["name", "categories", "tools", "materials"]}
+								displayDirection={DisplayDirection.column}
 							/>
 							{formOpened === ColumnType.Projects && (
 								<ProjectForm
