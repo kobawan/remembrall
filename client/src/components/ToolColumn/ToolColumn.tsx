@@ -7,7 +7,6 @@ import { ColumnType, CommonFields, FormPropsType, ToolFields } from "../../types
 import { ToolWrapper, DeleteToolData } from "./ToolWrapper";
 import { ToolForm } from "../ToolForm/ToolForm";
 import { DisplayDirection } from "../TicketDisplay/TicketDisplay";
-import { BasicTicketTooltipProps } from "../TicketTooltip/TicketTooltip";
 import { FormManagerProps } from "../ColumnsManager/types";
 
 interface ToolColumnProps {
@@ -18,8 +17,6 @@ interface ToolColumnProps {
 	openForm: (props: FormManagerProps) => void;
 	formOpened?: ColumnType;
 	formProps?: FormPropsType;
-	showTooltip: (props: BasicTicketTooltipProps) => void;
-	closeTooltip: () => void;
 }
 
 export class ToolColumn extends React.Component<ToolColumnProps> {
@@ -39,8 +36,6 @@ export class ToolColumn extends React.Component<ToolColumnProps> {
 			closeForm,
 			openChangesPopup,
 			openInvalidPopup,
-			showTooltip,
-			closeTooltip,
 		} = this.props;
 
 		return (
@@ -62,8 +57,6 @@ export class ToolColumn extends React.Component<ToolColumnProps> {
 								openForm={openToolForm}
 								displayFields={["name", "type", "size", "amount"]}
 								displayDirection={DisplayDirection.row}
-								showTooltip={showTooltip}
-								closeTooltip={closeTooltip}
 							/>
 							{formOpened === ColumnType.Tools && (
 								<ToolForm

@@ -7,7 +7,6 @@ import { ColumnType, CommonFields, FormPropsType, MaterialFields } from "../../t
 import { MaterialWrapper, DeleteMaterialData } from "./MaterialWrapper";
 import { MaterialForm } from "../MaterialForm/MaterialForm";
 import { DisplayDirection } from "../TicketDisplay/TicketDisplay";
-import { BasicTicketTooltipProps } from "../TicketTooltip/TicketTooltip";
 import { FormManagerProps } from "../ColumnsManager/types";
 
 interface MaterialColumnProps {
@@ -18,8 +17,6 @@ interface MaterialColumnProps {
 	openForm: (props: FormManagerProps) => void;
 	formOpened?: ColumnType;
 	formProps?: FormPropsType;
-	showTooltip: (props: BasicTicketTooltipProps) => void;
-	closeTooltip: () => void;
 }
 
 export class MaterialColumn extends React.Component<MaterialColumnProps> {
@@ -39,8 +36,6 @@ export class MaterialColumn extends React.Component<MaterialColumnProps> {
 			closeForm,
 			openChangesPopup,
 			openInvalidPopup,
-			showTooltip,
-			closeTooltip,
 		} = this.props;
 
 		return (
@@ -62,8 +57,6 @@ export class MaterialColumn extends React.Component<MaterialColumnProps> {
 								openForm={openMaterialForm}
 								displayFields={["name", "color", "amount"]}
 								displayDirection={DisplayDirection.row}
-								showTooltip={showTooltip}
-								closeTooltip={closeTooltip}
 							/>
 							{formOpened === ColumnType.Materials && (
 								<MaterialForm

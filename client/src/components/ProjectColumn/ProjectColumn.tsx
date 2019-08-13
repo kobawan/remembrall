@@ -7,7 +7,6 @@ import { logErrors } from "../../utils/errorHandling";
 import { ProjectForm } from "../ProjectForm/ProjectForm";
 import { ProjectWrapper, DeleteProjectData } from "./ProjectWrapper";
 import { DisplayDirection } from "../TicketDisplay/TicketDisplay";
-import { BasicTicketTooltipProps } from "../TicketTooltip/TicketTooltip";
 import { FormManagerProps } from "../ColumnsManager/types";
 
 interface ProjectColumnProps {
@@ -18,8 +17,6 @@ interface ProjectColumnProps {
 	safeDeleteTicket: (data: CommonFields, deleteFn: MutationFn<DeleteProjectData, { id: string }>) => void;
 	formOpened?: ColumnType;
 	formProps?: FormPropsType;
-	showTooltip: (props: BasicTicketTooltipProps) => void;
-	closeTooltip: () => void;
 }
 
 export class ProjectColumn extends React.Component<ProjectColumnProps> {
@@ -39,8 +36,6 @@ export class ProjectColumn extends React.Component<ProjectColumnProps> {
 			closeForm,
 			openChangesPopup,
 			openInvalidPopup,
-			showTooltip,
-			closeTooltip,
 		} = this.props;
 
 		return (
@@ -65,8 +60,6 @@ export class ProjectColumn extends React.Component<ProjectColumnProps> {
 								openForm={openProjectForm}
 								displayFields={["name", "categories", "tools", "materials"]}
 								displayDirection={DisplayDirection.column}
-								showTooltip={showTooltip}
-								closeTooltip={closeTooltip}
 							/>
 							{formOpened === ColumnType.Projects && (
 								<ProjectForm

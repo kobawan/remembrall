@@ -7,26 +7,20 @@ import { Popup, PopupMessage } from "../Popup/Popup";
 import { CommonFields } from "../../types";
 import { ToolColumn } from "../ToolColumn/ToolColumn";
 import { MaterialColumn } from "../MaterialColumn/MaterialColumn";
-import { TicketTooltip, BasicTicketTooltipProps } from "../TicketTooltip/TicketTooltip";
+import { TicketTooltip } from "../FilterTooltip/FilterTooltip";
 import { reducer, initialState, ReducerType } from "./reducer";
 import {
-	setFilterTooltipAction,
-	removeFilterTooltipAction,
 	closePopupAction,
 	openPopupAction,
 	openFormAction,
 	closeFormAction,
 } from "./actions";
 import { FormManagerProps } from "./types";
+import { ReducerContext } from "./context";
 
 export const ColumnsManager: React.FC = () => {
-	const [
-		{ filterTooltipState, popupState, formState },
-		dispatch,
-	] = useReducer<ReducerType>(reducer, initialState);
-
-	const showTooltip = (props: BasicTicketTooltipProps) => setFilterTooltipAction(dispatch, props);
-	const closeTooltip = () => removeFilterTooltipAction(dispatch);
+	const [ state, dispatch ] = useReducer<ReducerType>(reducer, initialState);
+	const { filterTooltipState, popupState, formState } = state;
 
 	const closePopup = () => closePopupAction(dispatch);
 	const openChangesPopup = () => openPopupAction(dispatch, {
@@ -60,23 +54,23 @@ export const ColumnsManager: React.FC = () => {
 		closeForm,
 		openInvalidPopup,
 		openChangesPopup,
-		showTooltip,
-		closeTooltip,
 		safeDeleteTicket,
 	};
 
 	return (
-		<div className="columnsContainer">
-			<ProjectColumn {...columnProps} />
-			<CategoryColumn {...columnProps} />
-			<ToolColumn {...columnProps} />
-			<MaterialColumn {...columnProps} />
-			{popupState && (
-				<Popup {...popupState} close={closePopup} />
-			)}
-			{filterTooltipState && (
-				<TicketTooltip {...filterTooltipState} closeTooltip={closeTooltip} />
-			)}
-		</div>
+		<ReducerContext.Provider value={{ state, dispatch }}>
+			<div className="columnsContainer">
+				<ProjectColumn {...columnProps} />
+				<CategoryColumn {...columnProps} />
+				<ToolColumn {...columnProps} />
+				<MaterialColumn {...columnProps} />
+				{popupState && (
+					<Popup {...popupState} close={closePopup} />
+				)}
+				{filterTooltipState && (
+					<TicketTooltip {...filterTooltipState} />
+				)}
+			</div>
+		</ReducerContext.Provider>
 	);
 };

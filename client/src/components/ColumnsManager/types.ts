@@ -1,5 +1,5 @@
 import { ColumnType, FormPropsType } from "../../types";
-import { BasicTicketTooltipProps } from "../TicketTooltip/TicketTooltip";
+import { BasicTicketTooltipProps } from "../FilterTooltip/FilterTooltip";
 import { BasicPopupProps } from "../Popup/Popup";
 
 export type PopupManagerProps = BasicPopupProps | undefined;

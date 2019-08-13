@@ -1,32 +1,32 @@
 import { TooltipManagerProps, PopupManagerProps, FormManagerProps } from "./types";
 
 export enum ActionType {
-	setFilterTooltip = "setFilterTooltip",
-	removeFilterTooltip = "removeFilterTooltip",
+	openFilterTooltip = "openFilterTooltip",
+	closeFilterTooltip = "closeFilterTooltip",
 	openPopup = "openPopup",
 	closePopup = "closePopup",
 	openForm = "openForm",
 	closeForm = "closeForm",
 }
 
-export interface SetFilterTooltipAction {
-  type: ActionType.setFilterTooltip;
+export interface OpenFilterTooltipAction {
+  type: ActionType.openFilterTooltip;
   payload: Exclude<TooltipManagerProps, undefined>;
 }
 
-export const setFilterTooltipAction = (
-	dispatch: React.Dispatch<SetFilterTooltipAction>,
+export const openFilterTooltipAction = (
+	dispatch: React.Dispatch<OpenFilterTooltipAction>,
 	payload: Exclude<TooltipManagerProps, undefined>,
 ) => {
-	dispatch({ type: ActionType.setFilterTooltip, payload });
+	dispatch({ type: ActionType.openFilterTooltip, payload });
 };
 
-export interface RemoveFilterTooltipAction {
-	type: ActionType.removeFilterTooltip;
+export interface CloseFilterTooltipAction {
+	type: ActionType.closeFilterTooltip;
 }
 
-export const removeFilterTooltipAction = (dispatch: React.Dispatch<RemoveFilterTooltipAction>) => {
-	dispatch({ type: ActionType.removeFilterTooltip });
+export const closeFilterTooltipAction = (dispatch: React.Dispatch<CloseFilterTooltipAction>) => {
+	dispatch({ type: ActionType.closeFilterTooltip });
 };
 
 export interface OpenPopupAction {

@@ -1,8 +1,10 @@
-import React, { useState } from "react";
-import "./ticketTooltip.less";
+import React, { useState, useContext } from "react";
+import "./filterTooltip.less";
 import { Overlay } from "../Overlay/Overlay";
 import { OverlayZIndex } from "../../types";
 import { Checkbox } from "../checkbox/Checkbox";
+import { ReducerContext } from "../ColumnsManager/context";
+import { closeFilterTooltipAction } from "../ColumnsManager/actions";
 
 const TICKET_TOOLTIP_SIZE = 200;
 
@@ -22,18 +24,14 @@ export interface BasicTicketTooltipProps {
 	ticketWidth: number;
 }
 
-interface TicketTooltipProps extends BasicTicketTooltipProps {
-	closeTooltip: () => void;
-}
-
-export const TicketTooltip: React.FC<TicketTooltipProps> = ({
+export const TicketTooltip: React.FC<BasicTicketTooltipProps> = ({
 	top,
 	left,
-	closeTooltip,
 	ticketWidth,
 }) => {
 	const [checkboxLinkedChecked, setCheckboxLinkedCheckedState] = useState(false);
 	const [checkboxUnusedChecked, setCheckboxUnusedCheckedState] = useState(false);
+	const { dispatch } = useContext(ReducerContext);
 
 	// @todo handle window resizing
 	const showLeft = document.body.clientWidth - left - ticketWidth < TICKET_TOOLTIP_SIZE;
@@ -42,6 +40,8 @@ export const TicketTooltip: React.FC<TicketTooltipProps> = ({
 		top: `${top}px`,
 		left: `${showLeft ? left : left + ticketWidth}px`,
 	};
+
+	const closeTooltip = () => closeFilterTooltipAction(dispatch);
 	const handleOnClick = () => {
 		closeTooltip();
 

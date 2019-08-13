@@ -1,7 +1,7 @@
 import React from "react";
 import {
-	SetFilterTooltipAction,
-	RemoveFilterTooltipAction,
+	OpenFilterTooltipAction,
+	CloseFilterTooltipAction,
 	OpenPopupAction,
 	ClosePopupAction,
 	ActionType,
@@ -10,16 +10,16 @@ import {
 } from "./actions";
 import { TooltipManagerProps, PopupManagerProps, FormManagerProps } from "./types";
 
-type Actions = (
-	SetFilterTooltipAction
-	| RemoveFilterTooltipAction
+export type Actions = (
+	OpenFilterTooltipAction
+	| CloseFilterTooltipAction
 	| OpenPopupAction
 	| ClosePopupAction
 	| OpenFormAction
 	| CloseFormAction
 );
 
-interface State {
+export interface State {
 	filterTooltipState: TooltipManagerProps;
 	popupState: PopupManagerProps;
 	formState: Partial<FormManagerProps>;
@@ -35,9 +35,9 @@ export type ReducerType = React.Reducer<State, Actions>;
 
 export const reducer: ReducerType = (state, action) => {
   switch (action.type) {
-    case ActionType.setFilterTooltip:
+    case ActionType.openFilterTooltip:
 			return { ...state, filterTooltipState: action.payload };
-		case ActionType.removeFilterTooltip:
+		case ActionType.closeFilterTooltip:
 			return { ...state, filterTooltipState: undefined };
 		case ActionType.openPopup:
 			return { ...state, popupState: action.payload };

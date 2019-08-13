@@ -5,7 +5,6 @@ import "./ticket.less";
 import { ColumnType, TicketData, CommonFields } from "../../types";
 import { TicketTextArea } from "../TicketTextArea/TicketTextArea";
 import { TicketDisplay, DisplayDirection } from "../TicketDisplay/TicketDisplay";
-import { BasicTicketTooltipProps } from "../TicketTooltip/TicketTooltip";
 
 export interface TicketProps {
 	type: ColumnType;
@@ -16,8 +15,6 @@ export interface TicketProps {
 	updateTicket: MutationFn<any, { id: string, params: any }>;
 	deleteTicket: (data: CommonFields) => void;
 	displayDirection: DisplayDirection;
-	showTooltip: (props: BasicTicketTooltipProps) => void;
-	closeTooltip: () => void;
 }
 
 interface TicketState {
@@ -45,8 +42,6 @@ export class Ticket extends React.Component<TicketProps, TicketState> {
 			type,
 			displayFields,
 			displayDirection,
-			showTooltip,
-			closeTooltip,
 		} = this.props;
 
 		return (<>
@@ -60,8 +55,6 @@ export class Ticket extends React.Component<TicketProps, TicketState> {
 							openTextArea={this.toggleTextArea}
 							displayFields={displayFields}
 							displayDirection={displayDirection}
-							showTooltip={showTooltip}
-							closeTooltip={closeTooltip}
 						/>
 					) : (
 						<TicketTextArea

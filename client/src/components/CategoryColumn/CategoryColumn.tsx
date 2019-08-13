@@ -7,7 +7,6 @@ import { Column } from "../Column/Column";
 import { ColumnType, CommonFields, FormPropsType } from "../../types";
 import { CategoryForm } from "../CategoryForm/CategoryForm";
 import { DisplayDirection } from "../TicketDisplay/TicketDisplay";
-import { BasicTicketTooltipProps } from "../TicketTooltip/TicketTooltip";
 import { FormManagerProps } from "../ColumnsManager/types";
 
 interface CategoryColumnProps {
@@ -18,8 +17,6 @@ interface CategoryColumnProps {
 	openForm: (props: FormManagerProps) => void;
 	formOpened?: ColumnType;
 	formProps?: FormPropsType;
-	showTooltip: (props: BasicTicketTooltipProps) => void;
-	closeTooltip: () => void;
 }
 
 export class CategoryColumn extends React.Component<CategoryColumnProps> {
@@ -39,8 +36,6 @@ export class CategoryColumn extends React.Component<CategoryColumnProps> {
 			closeForm,
 			openInvalidPopup,
 			openChangesPopup,
-			showTooltip,
-			closeTooltip,
 		} = this.props;
 		return (
 			<CategoryWrapper>
@@ -60,8 +55,6 @@ export class CategoryColumn extends React.Component<CategoryColumnProps> {
 								openForm={openCategoryForm}
 								displayFields={["name"]}
 								displayDirection={DisplayDirection.row}
-								showTooltip={showTooltip}
-								closeTooltip={closeTooltip}
 							/>
 							{formOpened === ColumnType.Categories && (
 								<CategoryForm

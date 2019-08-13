@@ -1,8 +1,29 @@
-import * as React from "react";
+import React, { useContext } from "react";
 import "./ticketDisplay.less";
 import { TicketData, CommonFields } from "../../types";
 import { editSvg, trashSvg, filterSvg } from "../Svg/Svg";
-import { BasicTicketTooltipProps } from "../TicketTooltip/TicketTooltip";
+import { ReducerContext } from "../ColumnsManager/context";
+import { openFilterTooltipAction } from "../ColumnsManager/actions";
+
+const formatDisplayFields = (data: TicketData, key: string) => {
+	if(!data.hasOwnProperty(key)) {
+		return null;
+	}
+	let value = null;
+	if(
+		data[key] === null
+		|| data[key] === undefined
+		|| typeof data[key] === "string" && !data[key].length
+	) {
+		value = "-";
+	} else if(typeof data[key] === "object") {
+		const res = data[key].map(({ name }: { name: string }) => name).join(", ");
+		value = res.length ? res : "-";
+	} else {
+		value = data[key].toString().replace(";", " ");
+	}
+	return value;
+};
 
 export enum DisplayDirection {
 	column = "ticketDisplayColumn",
@@ -16,97 +37,66 @@ export interface TicketDisplayProps {
 	openTextArea: () => void;
 	displayFields: string[];
 	displayDirection: DisplayDirection;
-	showTooltip: (props: BasicTicketTooltipProps) => void;
-	closeTooltip: () => void;
 }
 
-export class TicketDisplay extends React.Component<TicketDisplayProps> {
-	private ref = React.createRef<HTMLDivElement>();
+export const TicketDisplay: React.FC<TicketDisplayProps> = ({
+	openTextArea,
+	deleteTicket,
+	data,
+	openEditor,
+	displayFields,
+	displayDirection,
+}) => {
+	const ref = React.createRef<HTMLDivElement>();
+	const { dispatch } = useContext(ReducerContext);
 
-	public render() {
-		return (
-			<div className="ticketDisplay" onClick={this.openEditorWithInfo} ref={this.ref}>
-				{this.renderDisplayedValues()}
-				<div className="ticketOptions">
-					<div className="ticketIcon" onClick={this.editName}>
-						{editSvg}
-					</div>
-					<div className="ticketIcon" onClick={this.removeTicket}>
-						{trashSvg}
-					</div>
-					<div className="ticketIcon" onClick={this.showFilterOptions}>
-						{filterSvg}
-					</div>
-				</div>
-			</div>
-		);
-	}
-
-	private showFilterOptions = (e: React.MouseEvent<HTMLDivElement>) => {
+	const showFilterOptions = (e: React.MouseEvent<HTMLDivElement>) => {
 		e.stopPropagation();
-		const { showTooltip } = this.props;
-		if(!this.ref.current) {
+		if(!ref.current) {
 			return;
 		}
-		const { left, top, width } = this.ref.current.getBoundingClientRect();
-		showTooltip({
+		const { left, top, width } = ref.current.getBoundingClientRect();
+		openFilterTooltipAction(dispatch, {
 			top,
 			left,
 			ticketWidth: width,
 		});
-	}
+	};
 
-	private editName = (e: React.MouseEvent<HTMLDivElement>) => {
+	const editName = (e: React.MouseEvent<HTMLDivElement>) => {
 		e.stopPropagation();
-		this.props.openTextArea();
-	}
+		openTextArea();
+	};
 
-	private removeTicket = (e: React.MouseEvent<HTMLDivElement>) => {
+	const removeTicket = (e: React.MouseEvent<HTMLDivElement>) => {
 		e.stopPropagation();
-		const { deleteTicket, data: { id, name } } = this.props;
-
+		const { id, name } = data;
 		deleteTicket({ id, name });
-	}
+	};
 
-	/**
-	 * Opens editor with existing ticket data
-	 */
-	private openEditorWithInfo = () => {
-		const { openEditor, data } = this.props;
-		openEditor(data);
-	}
+	const renderDisplayedValues = () => {
+		return displayFields.map((key, i) => (
+			<div key={i} className={`ticketDisplayInfoRow ${displayDirection}`}>
+				<small className="ticketDisplayKey">{key}:</small>
+				<span>{formatDisplayFields(data, key)}</span>
+			</div>
+		));
+	};
 
-	private renderDisplayedValues = () => {
-		const {
-			displayFields,
-			data,
-			displayDirection,
-		} = this.props;
-
-		return displayFields.map((key, i) => {
-			if(!data.hasOwnProperty(key)) {
-				return null;
-			}
-			let value = null;
-			if(
-				data[key] === null
-				|| data[key] === undefined
-				|| typeof data[key] === "string" && !data[key].length
-			) {
-				value = "-";
-			} else if(typeof data[key] === "object") {
-				const res = data[key].map(({ name }: { name: string }) => name).join(", ");
-				value = res.length ? res : "-";
-			} else {
-				value = data[key].toString().replace(";", " ");
-			}
-
-			return (
-				<div key={i} className={`ticketDisplayInfoRow ${displayDirection}`}>
-					<small className="ticketDisplayKey">{key}:</small>
-					<span>{value}</span>
+	return (
+		<div className="ticketDisplay" onClick={() => openEditor(data)} ref={ref}>
+			{renderDisplayedValues()}
+			<div className="ticketOptions">
+				<div className="ticketIcon" onClick={editName}>
+					{editSvg}
 				</div>
-			);
-		});
-	}
-}
+				<div className="ticketIcon" onClick={removeTicket}>
+					{trashSvg}
+				</div>
+				<div className="ticketIcon" onClick={showFilterOptions}>
+					{filterSvg}
+				</div>
+			</div>
+		</div>
+	);
+};
