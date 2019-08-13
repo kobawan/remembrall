@@ -12,9 +12,8 @@ import { getInitialState } from "../../utils/getInitialState";
 interface FormProps {
 	ticket?: MaterialFields;
 	closeForm: () => void;
-	safeCloseForm: () => void;
 	openInvalidPopup: () => void;
-	setFormHasChangesFn: (fn: () => boolean) => void;
+	openChangesPopup: () => void;
 	createTicket: MutationFn<AddMaterialData, MaterialInput>;
 	deleteTicket: (data: CommonFields) => void;
 	updateTicket: MutationFn<UpdateMaterialData, MaterialInput & { id: string }>;
@@ -41,20 +40,18 @@ export class MaterialForm extends React.Component<FormProps, FormState> {
 		return !isEqual(this.props.ticket, nextProps.ticket) || !isEqual(this.state, nextState);
 	}
 
-	public componentDidMount() {
-		this.props.setFormHasChangesFn(this.formHasChanges);
-	}
-
 	public render() {
-		const { safeCloseForm } = this.props;
+		const { openChangesPopup, closeForm } = this.props;
 
 		return(
 			<Form
 				Title={this.renderTitle()}
 				Content={this.renderContent()}
-				safeCloseForm={safeCloseForm}
 				submitForm={this.submitProject}
 				size={FormSize.small}
+				formHasChangesFn={this.formHasChanges}
+				openChangesPopup={openChangesPopup}
+				closeForm={closeForm}
 			/>
 		);
 	}

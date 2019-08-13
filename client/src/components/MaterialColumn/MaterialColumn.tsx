@@ -12,9 +12,8 @@ import { BasicTicketTooltipProps } from "../TicketTooltip/TicketTooltip";
 interface MaterialColumnProps {
 	safeDeleteTicket: (data: CommonFields, deleteFn: MutationFn<DeleteMaterialData, { id: string }>) => void;
 	closeForm: () => void;
-	safeCloseForm: () => void;
 	openInvalidPopup: () => void;
-	setFormHasChangesFn: (fn: () => boolean) => void;
+	openChangesPopup: () => void;
 	openForm: (type: ColumnType, props?: FormPropsType) => void;
 	formOpened?: ColumnType;
 	formProps?: FormPropsType;
@@ -37,8 +36,7 @@ export class MaterialColumn extends React.Component<MaterialColumnProps> {
 			formOpened,
 			formProps,
 			closeForm,
-			setFormHasChangesFn,
-			safeCloseForm,
+			openChangesPopup,
 			openInvalidPopup,
 			showTooltip,
 			closeTooltip,
@@ -66,9 +64,8 @@ export class MaterialColumn extends React.Component<MaterialColumnProps> {
 								<MaterialForm
 									ticket={formProps as MaterialFields}
 									closeForm={closeForm}
-									safeCloseForm={safeCloseForm}
 									openInvalidPopup={openInvalidPopup}
-									setFormHasChangesFn={setFormHasChangesFn}
+									openChangesPopup={openChangesPopup}
 									createTicket={addMaterial.mutation}
 									deleteTicket={(data: CommonFields) => safeDeleteTicket(data, deleteMaterial.mutation)}
 									updateTicket={updateMaterial.mutation}

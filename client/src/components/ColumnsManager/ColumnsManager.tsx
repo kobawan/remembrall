@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import "./columnsManager.less";
 import { ProjectColumn } from "../ProjectColumn/ProjectColumn";
 import { CategoryColumn } from "../CategoryColumn/CategoryColumn";
@@ -13,158 +13,82 @@ import { ToolColumn } from "../ToolColumn/ToolColumn";
 import { MaterialColumn } from "../MaterialColumn/MaterialColumn";
 import { TicketTooltip, BasicTicketTooltipProps } from "../TicketTooltip/TicketTooltip";
 
-interface ColumnsState {
+interface PopupManagerProps {
 	popupText?: string;
 	popupAction?: () => void;
+}
+interface FormManagerProps {
 	formOpened?: ColumnType;
 	formProps?: FormPropsType;
-	formHasChanges: () => boolean;
-	tooltipProps?: BasicTicketTooltipProps;
 }
+type TooltipManagerProps = BasicTicketTooltipProps | undefined;
 
-export class ColumnsManager extends React.Component<{}, ColumnsState> {
-	public state: ColumnsState = {
-		formHasChanges: () => false,
+export const ColumnsManager: React.FC = () => {
+	const [tooltipProps, setTooltipProps] = useState<TooltipManagerProps>(undefined);
+	const [
+		{ popupText, popupAction },
+		setPopupProps,
+	] = useState<PopupManagerProps>({ popupText: undefined, popupAction: undefined });
+	const [
+		{ formOpened, formProps },
+		setFormProps,
+	] = useState<FormManagerProps>({ formOpened: undefined, formProps: undefined });
+
+	const showTooltip = (props: BasicTicketTooltipProps) => setTooltipProps(props);
+	const closeTooltip = () => setTooltipProps(undefined);
+
+	const closePopup = () => setPopupProps({ popupText: undefined, popupAction: undefined });
+	const openChangesPopup = () => setPopupProps({
+		popupText: PopupMessage.changes,
+		popupAction: closeAll,
+	});
+	const openInvalidPopup = () => setPopupProps({ popupText: PopupMessage.invalid });
+	const openDeletePopup = (popupText: string, id: string, deleteFn: MutationFn<any, { id: string }>) => {
+		const popupAction = () => {
+			closeAll();
+			deleteFn({ variables: { id } });
+		};
+		setPopupProps({ popupText, popupAction });
 	};
 
-	public render() {
-		const {
-			popupText,
-			popupAction,
-			formOpened,
-			formProps,
-			tooltipProps,
-		} = this.state;
+	const openForm = (formOpened: ColumnType, formProps?: FormPropsType) => setFormProps({ formOpened, formProps });
+	const closeForm = () => setFormProps({ formOpened: undefined, formProps: undefined });
 
-		const columnProps = {
-			safeDeleteTicket: this.safeDeleteTicket,
-			openForm: this.openForm,
-			formOpened: formOpened,
-			formProps: formProps,
-			closeForm: this.closeForm,
-			setFormHasChangesFn: this.setFormHasChangesFn,
-			safeCloseForm: this.safeCloseForm,
-			openInvalidPopup: this.openInvalidPopup,
-			showTooltip: this.showTooltip,
-			closeTooltip: this.closeTooltip,
-		};
+	const safeDeleteTicket = ({ name, id }: CommonFields, deleteFn: MutationFn<any, { id: string }>) => {
+		openDeletePopup(`${PopupMessage.delete} "${name}"?`, id, deleteFn);
+	};
 
-		return (
-			<div className="columnsContainer">
-				<ProjectColumn {...columnProps} />
-				<CategoryColumn {...columnProps} />
-				<ToolColumn {...columnProps} />
-				<MaterialColumn {...columnProps} />
-				{popupText && (
-					<Popup
-						text={popupText}
-						close={this.closePopup}
-						action={popupAction}
-					/>
-				)}
-				{tooltipProps && (
-					<TicketTooltip {...tooltipProps} closeTooltip={this.closeTooltip} />
-				)}
-			</div>
-		);
-	}
+	const closeAll = () => {
+		closePopup();
+		closeForm();
+	};
 
-	private showTooltip = (tooltipProps: BasicTicketTooltipProps) => {
-		this.setState({ tooltipProps });
-	}
+	const columnProps = {
+		safeDeleteTicket,
+		openForm,
+		formOpened,
+		formProps,
+		closeForm,
+		openInvalidPopup,
+		openChangesPopup,
+		showTooltip,
+		closeTooltip,
+	};
 
-	private closeTooltip = () => {
-		this.setState({ tooltipProps: undefined });
-	}
-
-	private closePopup = () => {
-		this.setState({
-			popupText: undefined,
-			popupAction: undefined,
-		});
-	}
-
-	private openPopup = (popupText: string, popupAction?: () => void) => {
-		this.setState({
-			popupText,
-			popupAction,
-		});
-	}
-
-	/**
-	 * Popup for cancelling form changes
-	 */
-	private openChangesPopup = () => {
-		this.openPopup(PopupMessage.changes, this.closeAll);
-	}
-
-	/**
-	 * Popup for submitting form with invalid values
-	 */
-	private openInvalidPopup = () => {
-		this.openPopup(PopupMessage.invalid);
-	}
-
-	/**
-	 * Popup to delete ticket
-	 */
-	private openDeletePopup = (message: string, id: string, deleteFn: MutationFn<any, { id: string }>) => {
-		this.openPopup(message, () => {
-			this.closeAll();
-			deleteFn({ variables: { id } });
-		});
-	}
-
-	/**
-	 * Closes the form
-	 */
-	private closeForm = () => {
-		this.setState({
-			formOpened: undefined,
-			formProps: undefined,
-		});
-	}
-
-	/**
-	 * Passes ticket props to form on open
-	 */
-	private openForm = (type: ColumnType, props?: FormPropsType) => {
-		this.setState({
-			formOpened: type,
-			formProps: props,
-		});
-	}
-
-	/**
-	 * Allows checking for changes from the form to be able to safely close it
-	 */
-	private setFormHasChangesFn = (fn: () => boolean) => {
-		this.setState({ formHasChanges: fn });
-	}
-
-	/**
-	 * Checks if form has changes, so it can close it.
-	 */
-	private safeCloseForm = () => {
-		if(this.state.formHasChanges()) {
-			this.openChangesPopup();
-		} else {
-			this.closeForm();
-		}
-	}
-
-	/**
-	 * Opens popup to confirm before deleting ticket
-	 */
-	private safeDeleteTicket = ({ name, id }: CommonFields, deleteFn: MutationFn<any, { id: string }>) => {
-		this.openDeletePopup(`${PopupMessage.delete} "${name}"?`, id, deleteFn);
-	}
-
-	/**
-	 * Closes both the popup and the form even if it has changes
-	 */
-	private closeAll = () => {
-		this.closePopup();
-		this.closeForm();
-	}
-}
+	return (
+		<div className="columnsContainer">
+			<ProjectColumn {...columnProps} />
+			<CategoryColumn {...columnProps} />
+			<ToolColumn {...columnProps} />
+			<MaterialColumn {...columnProps} />
+			<Popup
+				text={popupText}
+				close={closePopup}
+				action={popupAction}
+			/>
+			{tooltipProps && (
+				<TicketTooltip {...tooltipProps} closeTooltip={closeTooltip} />
+			)}
+		</div>
+	);
+};

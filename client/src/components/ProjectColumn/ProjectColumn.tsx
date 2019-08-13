@@ -11,9 +11,8 @@ import { BasicTicketTooltipProps } from "../TicketTooltip/TicketTooltip";
 
 interface ProjectColumnProps {
 	closeForm: () => void;
-	safeCloseForm: () => void;
 	openInvalidPopup: () => void;
-	setFormHasChangesFn: (fn: () => boolean) => void;
+	openChangesPopup: () => void;
 	openForm: (type: ColumnType, props?: FormPropsType) => void;
 	safeDeleteTicket: (data: CommonFields, deleteFn: MutationFn<DeleteProjectData, { id: string }>) => void;
 	formOpened?: ColumnType;
@@ -37,8 +36,7 @@ export class ProjectColumn extends React.Component<ProjectColumnProps> {
 			formOpened,
 			formProps,
 			closeForm,
-			setFormHasChangesFn,
-			safeCloseForm,
+			openChangesPopup,
 			openInvalidPopup,
 			showTooltip,
 			closeTooltip,
@@ -69,9 +67,8 @@ export class ProjectColumn extends React.Component<ProjectColumnProps> {
 								<ProjectForm
 									ticket={formProps}
 									closeForm={closeForm}
-									safeCloseForm={safeCloseForm}
 									openInvalidPopup={openInvalidPopup}
-									setFormHasChangesFn={setFormHasChangesFn}
+									openChangesPopup={openChangesPopup}
 									createTicket={addProject.mutation}
 									deleteTicket={(data: CommonFields) => safeDeleteTicket(data, deleteProject.mutation)}
 									updateTicket={updateProject.mutation}

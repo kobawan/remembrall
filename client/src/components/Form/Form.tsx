@@ -12,18 +12,24 @@ export enum FormSize {
 interface FormProps {
 	Title: React.ReactNode;
 	Content: React.ReactNode;
-	safeCloseForm: () => void;
 	submitForm: () => void;
 	size: FormSize;
+	formHasChangesFn: () => boolean;
+	openChangesPopup: () => void;
+	closeForm: () => void;
 }
 
 export const Form = React.memo(({
 	Title,
 	Content,
-	safeCloseForm,
 	submitForm,
 	size,
+	formHasChangesFn,
+	openChangesPopup,
+	closeForm,
 }: FormProps) => {
+	const safeCloseForm = () => formHasChangesFn() ? openChangesPopup() : closeForm();
+
 	return (<>
 		<Overlay onClick={safeCloseForm} zIndex={OverlayZIndex.Form} />
 		<div className={`form ${size}`}>

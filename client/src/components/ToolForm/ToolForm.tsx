@@ -12,9 +12,8 @@ import { RowInputWithUnit } from "../Form/RowInputWithUnit";
 interface FormProps {
 	ticket?: ToolFields;
 	closeForm: () => void;
-	safeCloseForm: () => void;
 	openInvalidPopup: () => void;
-	setFormHasChangesFn: (fn: () => boolean) => void;
+	openChangesPopup: () => void;
 	createTicket: MutationFn<AddToolData, ToolInput>;
 	deleteTicket: (data: CommonFields) => void;
 	updateTicket: MutationFn<UpdateToolData, ToolInput & { id: string }>;
@@ -80,20 +79,18 @@ export class ToolForm extends React.Component<FormProps, FormState> {
 		return !isEqual(this.props.ticket, nextProps.ticket) || !isEqual(this.state, nextState);
 	}
 
-	public componentDidMount() {
-		this.props.setFormHasChangesFn(this.formHasChanges);
-	}
-
 	public render() {
-		const { safeCloseForm } = this.props;
+		const { openChangesPopup, closeForm } = this.props;
 
 		return(
 			<Form
 				Title={this.renderTitle()}
 				Content={this.renderContent()}
-				safeCloseForm={safeCloseForm}
 				submitForm={this.submitProject}
 				size={FormSize.medium}
+				formHasChangesFn={this.formHasChanges}
+				openChangesPopup={openChangesPopup}
+				closeForm={closeForm}
 			/>
 		);
 	}

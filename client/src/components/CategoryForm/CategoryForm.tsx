@@ -10,9 +10,8 @@ import { AddCategoryData, CategoryInput, UpdateCategoryData } from "../CategoryC
 interface FormProps {
 	ticket?: CategoryFields;
 	closeForm: () => void;
-	safeCloseForm: () => void;
 	openInvalidPopup: () => void;
-	setFormHasChangesFn: (fn: () => boolean) => void;
+	openChangesPopup: () => void;
 	createTicket: MutationFn<AddCategoryData, CategoryInput>;
 	deleteTicket: (data: CommonFields) => void;
 	updateTicket: MutationFn<UpdateCategoryData, CategoryInput & { id: string }>;
@@ -33,20 +32,20 @@ export class CategoryForm extends React.Component<FormProps, FormState> {
 		return !isEqual(this.props.ticket, nextProps.ticket) || !isEqual(this.state, nextState);
 	}
 
-	public componentDidMount() {
-		this.props.setFormHasChangesFn(this.formHasChanges);
-	}
-
 	public render() {
-		const { safeCloseForm } = this.props;
-
+		const {
+			openChangesPopup,
+			closeForm,
+		} = this.props;
 		return(
 			<Form
 				Title={this.renderTitle()}
 				Content={null}
-				safeCloseForm={safeCloseForm}
 				submitForm={this.submitProject}
 				size={FormSize.small}
+				formHasChangesFn={this.formHasChanges}
+				openChangesPopup={openChangesPopup}
+				closeForm={closeForm}
 			/>
 		);
 	}

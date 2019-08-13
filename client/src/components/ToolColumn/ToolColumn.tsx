@@ -12,9 +12,8 @@ import { BasicTicketTooltipProps } from "../TicketTooltip/TicketTooltip";
 interface ToolColumnProps {
 	safeDeleteTicket: (data: CommonFields, deleteFn: MutationFn<DeleteToolData, { id: string }>) => void;
 	closeForm: () => void;
-	safeCloseForm: () => void;
 	openInvalidPopup: () => void;
-	setFormHasChangesFn: (fn: () => boolean) => void;
+	openChangesPopup: () => void;
 	openForm: (type: ColumnType, props?: FormPropsType) => void;
 	formOpened?: ColumnType;
 	formProps?: FormPropsType;
@@ -37,8 +36,7 @@ export class ToolColumn extends React.Component<ToolColumnProps> {
 			formOpened,
 			formProps,
 			closeForm,
-			setFormHasChangesFn,
-			safeCloseForm,
+			openChangesPopup,
 			openInvalidPopup,
 			showTooltip,
 			closeTooltip,
@@ -66,9 +64,8 @@ export class ToolColumn extends React.Component<ToolColumnProps> {
 								<ToolForm
 									ticket={formProps as ToolFields}
 									closeForm={closeForm}
-									safeCloseForm={safeCloseForm}
 									openInvalidPopup={openInvalidPopup}
-									setFormHasChangesFn={setFormHasChangesFn}
+									openChangesPopup={openChangesPopup}
 									createTicket={addTool.mutation}
 									deleteTicket={(data: CommonFields) => safeDeleteTicket(data, deleteTool.mutation)}
 									updateTicket={updateTool.mutation}

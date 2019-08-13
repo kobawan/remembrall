@@ -12,9 +12,8 @@ import { BasicTicketTooltipProps } from "../TicketTooltip/TicketTooltip";
 interface CategoryColumnProps {
 	safeDeleteTicket: (data: CommonFields, deleteFn: MutationFn<DeleteCategoryData, { id: string }>) => void;
 	closeForm: () => void;
-	safeCloseForm: () => void;
 	openInvalidPopup: () => void;
-	setFormHasChangesFn: (fn: () => boolean) => void;
+	openChangesPopup: () => void;
 	openForm: (type: ColumnType, props?: FormPropsType) => void;
 	formOpened?: ColumnType;
 	formProps?: CategoryFields;
@@ -37,9 +36,8 @@ export class CategoryColumn extends React.Component<CategoryColumnProps> {
 			formOpened,
 			formProps,
 			closeForm,
-			setFormHasChangesFn,
-			safeCloseForm,
 			openInvalidPopup,
+			openChangesPopup,
 			showTooltip,
 			closeTooltip,
 		} = this.props;
@@ -65,9 +63,8 @@ export class CategoryColumn extends React.Component<CategoryColumnProps> {
 								<CategoryForm
 									ticket={formProps}
 									closeForm={closeForm}
-									safeCloseForm={safeCloseForm}
 									openInvalidPopup={openInvalidPopup}
-									setFormHasChangesFn={setFormHasChangesFn}
+									openChangesPopup={openChangesPopup}
 									createTicket={addCategory.mutation}
 									deleteTicket={(data: CommonFields) => safeDeleteTicket(data, deleteCategory.mutation)}
 									updateTicket={updateCategory.mutation}

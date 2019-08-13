@@ -34,6 +34,8 @@ export const TicketTooltip: React.FC<TicketTooltipProps> = ({
 }) => {
 	const [checkboxLinkedChecked, setCheckboxLinkedCheckedState] = useState(false);
 	const [checkboxUnusedChecked, setCheckboxUnusedCheckedState] = useState(false);
+
+	// @todo handle window resizing
 	const showLeft = document.body.clientWidth - left - ticketWidth < TICKET_TOOLTIP_SIZE;
 	const position = showLeft ? TicketTooltipPosition.left : TicketTooltipPosition.right;
 	const style: React.CSSProperties = {
