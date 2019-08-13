@@ -7,13 +7,11 @@ import { MutationFn } from "react-apollo";
 import {
 	CommonFields,
 	ColumnType,
-	MaterialFields,
 	FormPropsType,
-	ToolFields,
-	CategoryFields,
 } from "../../types";
 import { ToolColumn } from "../ToolColumn/ToolColumn";
 import { MaterialColumn } from "../MaterialColumn/MaterialColumn";
+import { TicketTooltip, BasicTicketTooltipProps } from "../TicketTooltip/TicketTooltip";
 
 interface ColumnsState {
 	popupText?: string;
@@ -21,6 +19,7 @@ interface ColumnsState {
 	formOpened?: ColumnType;
 	formProps?: FormPropsType;
 	formHasChanges: () => boolean;
+	tooltipProps?: BasicTicketTooltipProps;
 }
 
 export class ColumnsManager extends React.Component<{}, ColumnsState> {
@@ -34,50 +33,28 @@ export class ColumnsManager extends React.Component<{}, ColumnsState> {
 			popupAction,
 			formOpened,
 			formProps,
+			tooltipProps,
 		} = this.state;
+
+		const columnProps = {
+			safeDeleteTicket: this.safeDeleteTicket,
+			openForm: this.openForm,
+			formOpened: formOpened,
+			formProps: formProps,
+			closeForm: this.closeForm,
+			setFormHasChangesFn: this.setFormHasChangesFn,
+			safeCloseForm: this.safeCloseForm,
+			openInvalidPopup: this.openInvalidPopup,
+			showTooltip: this.showTooltip,
+			closeTooltip: this.closeTooltip,
+		};
 
 		return (
 			<div className="columnsContainer">
-				<ProjectColumn
-					safeDeleteTicket={this.safeDeleteTicket}
-					openForm={this.openForm}
-					formOpened={formOpened}
-					formProps={formProps}
-					closeForm={this.closeForm}
-					setFormHasChangesFn={this.setFormHasChangesFn}
-					safeCloseForm={this.safeCloseForm}
-					openInvalidPopup={this.openInvalidPopup}
-				/>
-				<CategoryColumn
-					safeDeleteTicket={this.safeDeleteTicket}
-					openForm={this.openForm}
-					formOpened={formOpened}
-					formProps={formProps as CategoryFields}
-					closeForm={this.closeForm}
-					setFormHasChangesFn={this.setFormHasChangesFn}
-					safeCloseForm={this.safeCloseForm}
-					openInvalidPopup={this.openInvalidPopup}
-				/>
-				<ToolColumn
-					safeDeleteTicket={this.safeDeleteTicket}
-					openForm={this.openForm}
-					formOpened={formOpened}
-					formProps={formProps as ToolFields}
-					closeForm={this.closeForm}
-					setFormHasChangesFn={this.setFormHasChangesFn}
-					safeCloseForm={this.safeCloseForm}
-					openInvalidPopup={this.openInvalidPopup}
-				/>
-				<MaterialColumn
-					safeDeleteTicket={this.safeDeleteTicket}
-					openForm={this.openForm}
-					formOpened={formOpened}
-					formProps={formProps as MaterialFields}
-					closeForm={this.closeForm}
-					setFormHasChangesFn={this.setFormHasChangesFn}
-					safeCloseForm={this.safeCloseForm}
-					openInvalidPopup={this.openInvalidPopup}
-				/>
+				<ProjectColumn {...columnProps} />
+				<CategoryColumn {...columnProps} />
+				<ToolColumn {...columnProps} />
+				<MaterialColumn {...columnProps} />
 				{popupText && (
 					<Popup
 						text={popupText}
@@ -85,8 +62,19 @@ export class ColumnsManager extends React.Component<{}, ColumnsState> {
 						action={popupAction}
 					/>
 				)}
+				{tooltipProps && (
+					<TicketTooltip {...tooltipProps} closeTooltip={this.closeTooltip} />
+				)}
 			</div>
 		);
+	}
+
+	private showTooltip = (tooltipProps: BasicTicketTooltipProps) => {
+		this.setState({ tooltipProps });
+	}
+
+	private closeTooltip = () => {
+		this.setState({ tooltipProps: undefined });
 	}
 
 	private closePopup = () => {

@@ -1,7 +1,8 @@
 import * as React from "react";
 import "./ticketDisplay.less";
 import { TicketData, CommonFields } from "../../types";
-import { editSvg, trashSvg } from "../Svg/Svg";
+import { editSvg, trashSvg, filterSvg } from "../Svg/Svg";
+import { BasicTicketTooltipProps } from "../TicketTooltip/TicketTooltip";
 
 export enum DisplayDirection {
 	column = "ticketDisplayColumn",
@@ -15,12 +16,16 @@ export interface TicketDisplayProps {
 	openTextArea: () => void;
 	displayFields: string[];
 	displayDirection: DisplayDirection;
+	showTooltip: (props: BasicTicketTooltipProps) => void;
+	closeTooltip: () => void;
 }
 
 export class TicketDisplay extends React.Component<TicketDisplayProps> {
+	private ref = React.createRef<HTMLDivElement>();
+
 	public render() {
 		return (
-			<div className="ticketDisplay" onClick={this.openEditorWithInfo}>
+			<div className="ticketDisplay" onClick={this.openEditorWithInfo} ref={this.ref}>
 				{this.renderDisplayedValues()}
 				<div className="ticketOptions">
 					<div className="ticketIcon" onClick={this.editName}>
@@ -29,9 +34,26 @@ export class TicketDisplay extends React.Component<TicketDisplayProps> {
 					<div className="ticketIcon" onClick={this.removeTicket}>
 						{trashSvg}
 					</div>
+					<div className="ticketIcon" onClick={this.showFilterOptions}>
+						{filterSvg}
+					</div>
 				</div>
 			</div>
 		);
+	}
+
+	private showFilterOptions = (e: React.MouseEvent<HTMLDivElement>) => {
+		e.stopPropagation();
+		const { showTooltip } = this.props;
+		if(!this.ref.current) {
+			return;
+		}
+		const { left, top, width } = this.ref.current.getBoundingClientRect();
+		showTooltip({
+			top,
+			left,
+			ticketWidth: width,
+		});
 	}
 
 	private editName = (e: React.MouseEvent<HTMLDivElement>) => {

@@ -33,6 +33,53 @@
 			font-size: calc(0.4rem + 1.2vh);
 		}
 
+		.appFilter {
+			left: 2em;
+		}
+
+		.logout {
+			right: 2em;
+		}
+
+		.appFilter,
+		.logout {
+			.boxMixin(@colourBorder);
+			position: absolute;
+			font-size: 1.5em;
+			background-color: white;
+			padding: 0;
+
+			.filter,
+			.exit {
+				display: block;
+				width: 2rem;
+				height: 2rem;
+				margin: 0.7rem;
+				fill: @colourSvg;
+				transition: transform 0.3s ease;
+				
+				.filterPath {
+					stroke: @colourSvg;
+				}
+
+				.diagonalPath {
+					stroke: black;
+					stroke-width: 0.25em;
+				}
+			}
+
+			@media (hover: hover) {
+				&:hover {
+					.boxMixinHover();
+		
+					> .filter,
+					> .exit {
+						transform: scale(1.2);
+					}
+				}
+			}
+		}
+
 		.title {
 			font-size: 3em;
 			font-weight: normal;
@@ -40,24 +87,6 @@
 			position: relative;
 			left: 50%;
 			transform: translateX(-50%);
-		}
-
-		.logout {
-			.boxMixin(@colourBorder);
-			position: absolute;
-			right: 2em;
-			font-size: 1.5em;
-			background-color: white;
-
-			@media (orientation: landscape) and (max-height: 450px) {
-				font-size: 2em;
-			}
-
-			@media (hover: hover) {
-				&:hover {
-					.boxMixinHover();
-				}
-			}
 		}
 	}
 }

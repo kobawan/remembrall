@@ -1,0 +1,25 @@
+@import "../../styles/mixin.less";
+
+.ticketTooltip {
+	.boxMixin();
+	position: absolute;
+	width: 12.5em;
+	z-index: 95;
+	padding: 0.8em;
+	background-color: white;
+	font-size: 1.4em;
+	display: flex;
+	flex-direction: column;
+	
+	&.ticketTooltipLeft {
+		transform: translateX(-14.28em);
+	}
+
+	.ticketTooltipTitle {
+    margin-bottom: 0.35em;
+	}
+
+	.ticketTooltipButton {
+		align-self: center;
+	}
+}

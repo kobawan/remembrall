@@ -1,6 +1,7 @@
 import * as React from "react";
 import "./popup.less";
 import { Overlay } from "../Overlay/Overlay";
+import { OverlayZIndex } from "../../types";
 
 export enum PopupMessage {
   changes = "Are you sure you want to cancel?",
@@ -18,7 +19,7 @@ export class Popup extends React.PureComponent<PopupProps> {
   public render () {
     return (
       <div>
-        <Overlay zIndex={98}/>
+        <Overlay zIndex={OverlayZIndex.Popup}/>
         <div className="popup">
           <div className="message">
             {this.props.text}

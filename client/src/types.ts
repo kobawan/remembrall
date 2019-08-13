@@ -14,6 +14,12 @@ export enum ColumnType {
 	Materials = "Materials",
 }
 
+export enum OverlayZIndex {
+	Popup = 98,
+	Form = 96,
+	Tooltip = 94,
+}
+
 export interface CommonFields {
 	id: string;
 	name: string;

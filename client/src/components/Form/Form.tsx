@@ -1,6 +1,7 @@
 import React from "react";
 import "./form.less";
 import { Overlay } from "../Overlay/Overlay";
+import { OverlayZIndex } from "../../types";
 
 export enum FormSize {
 	small = "small",
@@ -24,7 +25,7 @@ export const Form = React.memo(({
 	size,
 }: FormProps) => {
 	return (<>
-		<Overlay onClick={safeCloseForm} zIndex={96} />
+		<Overlay onClick={safeCloseForm} zIndex={OverlayZIndex.Form} />
 		<div className={`form ${size}`}>
 			{Title}
 			<div className="content">

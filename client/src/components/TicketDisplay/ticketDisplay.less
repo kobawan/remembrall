@@ -38,14 +38,25 @@
 				background-color: #dcdcdc;
 			}
 
-			.edit, .trash {
+			.edit, .trash, .filter {
 				display: block;
 				width: 1.25em;
 				height: 1.25em;
 				fill: @colourSvg;
+			}
 
-				> path {
+			.edit, .trash {
+				stroke: @colourSvg;
+			}
+
+			.filter {
+				.filterPath {
 					stroke: @colourSvg;
+				}
+
+				.diagonalPath {
+					stroke: black;
+					stroke-width: 0.25em;
 				}
 			}
 		}

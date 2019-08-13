@@ -7,6 +7,7 @@ import { ColumnType, CommonFields, FormPropsType, ToolFields } from "../../types
 import { ToolWrapper, DeleteToolData } from "./ToolWrapper";
 import { ToolForm } from "../ToolForm/ToolForm";
 import { DisplayDirection } from "../TicketDisplay/TicketDisplay";
+import { BasicTicketTooltipProps } from "../TicketTooltip/TicketTooltip";
 
 interface ToolColumnProps {
 	safeDeleteTicket: (data: CommonFields, deleteFn: MutationFn<DeleteToolData, { id: string }>) => void;
@@ -16,7 +17,9 @@ interface ToolColumnProps {
 	setFormHasChangesFn: (fn: () => boolean) => void;
 	openForm: (type: ColumnType, props?: FormPropsType) => void;
 	formOpened?: ColumnType;
-	formProps?: ToolFields;
+	formProps?: FormPropsType;
+	showTooltip: (props: BasicTicketTooltipProps) => void;
+	closeTooltip: () => void;
 }
 
 export class ToolColumn extends React.Component<ToolColumnProps> {
@@ -37,6 +40,8 @@ export class ToolColumn extends React.Component<ToolColumnProps> {
 			setFormHasChangesFn,
 			safeCloseForm,
 			openInvalidPopup,
+			showTooltip,
+			closeTooltip,
 		} = this.props;
 
 		return (
@@ -54,10 +59,12 @@ export class ToolColumn extends React.Component<ToolColumnProps> {
 								openForm={(props?: FormPropsType) => openForm(ColumnType.Tools, props)}
 								displayFields={["name", "type", "size", "amount"]}
 								displayDirection={DisplayDirection.row}
+								showTooltip={showTooltip}
+								closeTooltip={closeTooltip}
 							/>
 							{formOpened === ColumnType.Tools && (
 								<ToolForm
-									ticket={formProps}
+									ticket={formProps as ToolFields}
 									closeForm={closeForm}
 									safeCloseForm={safeCloseForm}
 									openInvalidPopup={openInvalidPopup}

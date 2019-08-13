@@ -5,6 +5,7 @@ import { Ticket } from "../Ticket/Ticket";
 import { ColumnType, TicketData, CommonFields, FormPropsType } from "../../types";
 import { ColumnHeader } from "../ColumnHeader/ColumnHeader";
 import { DisplayDirection } from "../TicketDisplay/TicketDisplay";
+import { BasicTicketTooltipProps } from "../TicketTooltip/TicketTooltip";
 
 interface ColumnProps {
 	type: ColumnType;
@@ -14,6 +15,8 @@ interface ColumnProps {
 	updateTicket: MutationFn<any, { id: string, params: any }>;
 	deleteTicket: (data: CommonFields) => void;
 	displayDirection: DisplayDirection;
+	showTooltip: (props: BasicTicketTooltipProps) => void;
+	closeTooltip: () => void;
 }
 
 export class Column extends React.Component<ColumnProps> {
@@ -42,6 +45,8 @@ export class Column extends React.Component<ColumnProps> {
 			deleteTicket,
 			displayFields,
 			displayDirection,
+			showTooltip,
+			closeTooltip,
 		} = this.props;
 		return tickets.map((data, index) => (
 			<Ticket
@@ -54,6 +59,8 @@ export class Column extends React.Component<ColumnProps> {
 				deleteTicket={deleteTicket}
 				displayFields={displayFields}
 				displayDirection={displayDirection}
+				showTooltip={showTooltip}
+				closeTooltip={closeTooltip}
 			/>
 		));
 	}

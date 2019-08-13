@@ -3,10 +3,11 @@ import { MutationFn } from "react-apollo";
 import isEqual from "lodash.isequal";
 import { logErrors } from "../../utils/errorHandling";
 import { Column } from "../Column/Column";
-import { ColumnType, CommonFields, MaterialFields, FormPropsType } from "../../types";
+import { ColumnType, CommonFields, FormPropsType, MaterialFields } from "../../types";
 import { MaterialWrapper, DeleteMaterialData } from "./MaterialWrapper";
 import { MaterialForm } from "../MaterialForm/MaterialForm";
 import { DisplayDirection } from "../TicketDisplay/TicketDisplay";
+import { BasicTicketTooltipProps } from "../TicketTooltip/TicketTooltip";
 
 interface MaterialColumnProps {
 	safeDeleteTicket: (data: CommonFields, deleteFn: MutationFn<DeleteMaterialData, { id: string }>) => void;
@@ -16,7 +17,9 @@ interface MaterialColumnProps {
 	setFormHasChangesFn: (fn: () => boolean) => void;
 	openForm: (type: ColumnType, props?: FormPropsType) => void;
 	formOpened?: ColumnType;
-	formProps?: MaterialFields;
+	formProps?: FormPropsType;
+	showTooltip: (props: BasicTicketTooltipProps) => void;
+	closeTooltip: () => void;
 }
 
 export class MaterialColumn extends React.Component<MaterialColumnProps> {
@@ -37,6 +40,8 @@ export class MaterialColumn extends React.Component<MaterialColumnProps> {
 			setFormHasChangesFn,
 			safeCloseForm,
 			openInvalidPopup,
+			showTooltip,
+			closeTooltip,
 		} = this.props;
 
 		return (
@@ -54,10 +59,12 @@ export class MaterialColumn extends React.Component<MaterialColumnProps> {
 								openForm={(props?: FormPropsType) => openForm(ColumnType.Materials, props)}
 								displayFields={["name", "color", "amount"]}
 								displayDirection={DisplayDirection.row}
+								showTooltip={showTooltip}
+								closeTooltip={closeTooltip}
 							/>
 							{formOpened === ColumnType.Materials && (
 								<MaterialForm
-									ticket={formProps}
+									ticket={formProps as MaterialFields}
 									closeForm={closeForm}
 									safeCloseForm={safeCloseForm}
 									openInvalidPopup={openInvalidPopup}
