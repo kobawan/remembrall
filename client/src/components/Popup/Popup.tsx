@@ -9,21 +9,24 @@ export enum PopupMessage {
   delete = "Are you sure you want to delete",
 }
 
-export interface PopupProps {
-  text?: string;
-  close: () => void;
+export interface BasicPopupProps {
+  text: string;
   action?: () => void;
+}
+
+export interface PopupProps extends BasicPopupProps {
+  close: () => void;
 }
 
 export class Popup extends React.PureComponent<PopupProps> {
   public render () {
     const { text } = this.props;
-    return text && (
+    return (
       <div>
         <Overlay zIndex={OverlayZIndex.Popup}/>
         <div className="popup">
           <div className="message">
-            {this.props.text}
+            {text}
           </div>
           <div>
             {this.renderButtons()}
@@ -35,9 +38,6 @@ export class Popup extends React.PureComponent<PopupProps> {
 
   private renderButtons = () => {
     const { text, close, action } = this.props;
-    if (!text) {
-      return;
-    }
 
     if(text === PopupMessage.changes || text.includes(PopupMessage.delete)) {
       return <>

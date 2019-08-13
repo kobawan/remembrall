@@ -4,19 +4,20 @@ import isEqual from "lodash.isequal";
 import { CategoryWrapper, DeleteCategoryData } from "./CategoryWrapper";
 import { logErrors } from "../../utils/errorHandling";
 import { Column } from "../Column/Column";
-import { ColumnType, CommonFields, FormPropsType, CategoryFields } from "../../types";
+import { ColumnType, CommonFields, FormPropsType } from "../../types";
 import { CategoryForm } from "../CategoryForm/CategoryForm";
 import { DisplayDirection } from "../TicketDisplay/TicketDisplay";
 import { BasicTicketTooltipProps } from "../TicketTooltip/TicketTooltip";
+import { FormManagerProps } from "../ColumnsManager/types";
 
 interface CategoryColumnProps {
 	safeDeleteTicket: (data: CommonFields, deleteFn: MutationFn<DeleteCategoryData, { id: string }>) => void;
 	closeForm: () => void;
 	openInvalidPopup: () => void;
 	openChangesPopup: () => void;
-	openForm: (type: ColumnType, props?: FormPropsType) => void;
+	openForm: (props: FormManagerProps) => void;
 	formOpened?: ColumnType;
-	formProps?: CategoryFields;
+	formProps?: FormPropsType;
 	showTooltip: (props: BasicTicketTooltipProps) => void;
 	closeTooltip: () => void;
 }
@@ -45,6 +46,9 @@ export class CategoryColumn extends React.Component<CategoryColumnProps> {
 			<CategoryWrapper>
 				{({ addCategory, updateCategory, deleteCategory, categories: { data, error }}) => {
 					logErrors(error, addCategory, updateCategory, deleteCategory);
+					const openCategoryForm = (formProps?: FormPropsType) => {
+						openForm({ formOpened: ColumnType.Categories, formProps });
+					};
 
 					return (
 						<>
@@ -53,7 +57,7 @@ export class CategoryColumn extends React.Component<CategoryColumnProps> {
 								type={ColumnType.Categories}
 								updateTicket={updateCategory.mutation}
 								deleteTicket={(data: CommonFields) => safeDeleteTicket(data, deleteCategory.mutation)}
-								openForm={(props?: FormPropsType) => openForm(ColumnType.Categories, props)}
+								openForm={openCategoryForm}
 								displayFields={["name"]}
 								displayDirection={DisplayDirection.row}
 								showTooltip={showTooltip}
