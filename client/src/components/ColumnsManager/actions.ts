@@ -1,8 +1,11 @@
-import { TooltipManagerProps, PopupManagerProps, FormManagerProps } from "./types";
+import { PopupManagerState, FormManagerState } from "./types";
+import { BasicFilterTooltipProps, FilterType } from "../FilterTooltip/FilterTooltip";
 
 export enum ActionType {
 	openFilterTooltip = "openFilterTooltip",
 	closeFilterTooltip = "closeFilterTooltip",
+	setFilter = "setFilter",
+	removeFilter = "removeFilter",
 	openPopup = "openPopup",
 	closePopup = "closePopup",
 	openForm = "openForm",
@@ -11,12 +14,12 @@ export enum ActionType {
 
 export interface OpenFilterTooltipAction {
   type: ActionType.openFilterTooltip;
-  payload: Exclude<TooltipManagerProps, undefined>;
+  payload: BasicFilterTooltipProps;
 }
 
 export const openFilterTooltipAction = (
 	dispatch: React.Dispatch<OpenFilterTooltipAction>,
-	payload: Exclude<TooltipManagerProps, undefined>,
+	payload: BasicFilterTooltipProps,
 ) => {
 	dispatch({ type: ActionType.openFilterTooltip, payload });
 };
@@ -29,14 +32,32 @@ export const closeFilterTooltipAction = (dispatch: React.Dispatch<CloseFilterToo
 	dispatch({ type: ActionType.closeFilterTooltip });
 };
 
+export interface SetFilterAction {
+	type: ActionType.setFilter;
+	payload: FilterType;
+}
+
+export const setFilterAction = (dispatch: React.Dispatch<SetFilterAction>, payload: FilterType) => {
+	dispatch({ type: ActionType.setFilter, payload });
+};
+
+export interface RemoveFilterAction {
+	type: ActionType.removeFilter;
+	payload?: FilterType;
+}
+
+export const removeFilterAction = (dispatch: React.Dispatch<RemoveFilterAction>, payload?: FilterType) => {
+	dispatch({ type: ActionType.removeFilter, payload });
+};
+
 export interface OpenPopupAction {
 	type: ActionType.openPopup;
-	payload: Exclude<PopupManagerProps, undefined>;
+	payload: Exclude<PopupManagerState, undefined>;
 }
 
 export const openPopupAction = (
 	dispatch: React.Dispatch<OpenPopupAction>,
-	payload: Exclude<PopupManagerProps, undefined>,
+	payload: Exclude<PopupManagerState, undefined>,
 ) => {
 	dispatch({ type: ActionType.openPopup, payload });
 };
@@ -51,12 +72,12 @@ export const closePopupAction = (dispatch: React.Dispatch<ClosePopupAction>) => 
 
 export interface OpenFormAction {
 	type: ActionType.openForm;
-	payload: FormManagerProps;
+	payload: FormManagerState;
 }
 
 export const openFormAction = (
 	dispatch: React.Dispatch<OpenFormAction>,
-	payload: FormManagerProps,
+	payload: FormManagerState,
 ) => {
 	dispatch({ type: ActionType.openForm, payload });
 };

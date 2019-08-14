@@ -1,9 +1,10 @@
 import React, { useContext } from "react";
 import "./ticketDisplay.less";
-import { TicketData, CommonFields } from "../../types";
+import { TicketData, CommonFields, ColumnType } from "../../types";
 import { editSvg, trashSvg, filterSvg } from "../Svg/Svg";
 import { ReducerContext } from "../ColumnsManager/context";
 import { openFilterTooltipAction } from "../ColumnsManager/actions";
+import { FormManagerState } from "../ColumnsManager/types";
 
 const formatDisplayFields = (data: TicketData, key: string) => {
 	if(!data.hasOwnProperty(key)) {
@@ -31,21 +32,23 @@ export enum DisplayDirection {
 }
 
 export interface TicketDisplayProps {
-	openEditor: (props?: TicketData) => void;
+	openForm: (props: FormManagerState) => void;
 	data: TicketData;
 	deleteTicket: (data: CommonFields) => void;
 	openTextArea: () => void;
 	displayFields: string[];
 	displayDirection: DisplayDirection;
+	type: ColumnType;
 }
 
 export const TicketDisplay: React.FC<TicketDisplayProps> = ({
 	openTextArea,
 	deleteTicket,
 	data,
-	openEditor,
+	openForm,
 	displayFields,
 	displayDirection,
+	type,
 }) => {
 	const ref = React.createRef<HTMLDivElement>();
 	const { dispatch } = useContext(ReducerContext);
@@ -84,7 +87,7 @@ export const TicketDisplay: React.FC<TicketDisplayProps> = ({
 	};
 
 	return (
-		<div className="ticketDisplay" onClick={() => openEditor(data)} ref={ref}>
+		<div className="ticketDisplay" onClick={() => openForm({ formOpened: type, formProps: data })} ref={ref}>
 			{renderDisplayedValues()}
 			<div className="ticketOptions">
 				<div className="ticketIcon" onClick={editName}>

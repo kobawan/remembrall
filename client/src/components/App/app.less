@@ -32,24 +32,15 @@
 		@media (orientation: landscape) and (max-height: 450px) {
 			font-size: calc(0.4rem + 1.2vh);
 		}
-
-		.appFilter {
-			left: 2em;
-		}
-
-		.logout {
-			right: 2em;
-		}
-
-		.appFilter,
+		
 		.logout {
 			.boxMixin(@colourBorder);
+			right: 1.3333em;
 			position: absolute;
 			font-size: 1.5em;
 			background-color: white;
 			padding: 0;
 
-			.filter,
 			.exit {
 				display: block;
 				width: 2rem;
@@ -72,7 +63,6 @@
 				&:hover {
 					.boxMixinHover();
 		
-					> .filter,
 					> .exit {
 						transform: scale(1.2);
 					}

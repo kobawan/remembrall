@@ -1,6 +1,5 @@
-import * as React from "react";
+import React, { useReducer } from "react";
 import { MutationFn } from "react-apollo";
-import isEqual from "lodash.isequal";
 import { CommonFields, MaterialFields } from "../../types";
 import { OnChangeFn } from "../Form/types";
 import { FormTitle } from "../Form/FormTitle";
@@ -8,6 +7,9 @@ import { Form, FormSize } from "../Form/Form";
 import { RowInput } from "../Form/RowInput";
 import { AddMaterialData, MaterialInput, UpdateMaterialData } from "../MaterialColumn/MaterialWrapper";
 import { getInitialState } from "../../utils/getInitialState";
+import { updateMaterialFieldAction } from "./actions";
+import { MaterialState, materialReducer, MaterialReducerType, initialMaterialState } from "./reducer";
+import { formHasChanges, submitForm } from "../Form/formUtils";
 
 interface FormProps {
 	ticket?: MaterialFields;
@@ -25,143 +27,86 @@ enum Fields {
 	color = "color",
 }
 
-type FormState = Omit<MaterialFields, "id">;
+const requiredFields = [Fields.name];
 
-const defaultState: FormState = {
-	name: "",
-	amount: 1,
-	color: null,
-};
+const convertToDbTicket = (state: MaterialState) => ({
+	amount: state.amount,
+	name: state.name.toLowerCase(),
+	color: state.color,
+});
 
-export class MaterialForm extends React.Component<FormProps, FormState> {
-	public state: FormState = getInitialState(defaultState, this.props.ticket);
+export const MaterialForm: React.FC<FormProps> = ({
+	ticket,
+	openChangesPopup,
+	closeForm,
+	openInvalidPopup,
+	updateTicket,
+	createTicket,
+}) => {
+	const [ state, dispatch ] = useReducer<MaterialReducerType>(
+		materialReducer,
+		getInitialState(initialMaterialState, ticket),
+	);
 
-	public shouldComponentUpdate(nextProps: FormProps, nextState: FormState) {
-		return !isEqual(this.props.ticket, nextProps.ticket) || !isEqual(this.state, nextState);
-	}
+	const updateField: OnChangeFn = (e) => {
+		updateMaterialFieldAction(dispatch, {
+			key: e.currentTarget.name as keyof MaterialState,
+			value: e.currentTarget.value,
+		});
+	};
+	const updateNumberField: OnChangeFn = (e) => {
+		updateMaterialFieldAction(dispatch, {
+			key: e.currentTarget.name as keyof MaterialState,
+			value: +e.currentTarget.value,
+		});
+	};
 
-	public render() {
-		const { openChangesPopup, closeForm } = this.props;
+	const submitMaterial = () => {
+		submitForm({
+			requiredFields,
+			stateTicket: convertToDbTicket(state),
+			dbTicket: ticket,
+			openInvalidPopup,
+			updateTicket: updateTicket as MutationFn,
+			createTicket: createTicket as MutationFn,
+			closeForm,
+		});
+	};
 
-		return(
-			<Form
-				Title={this.renderTitle()}
-				Content={this.renderContent()}
-				submitForm={this.submitProject}
-				size={FormSize.small}
-				formHasChangesFn={this.formHasChanges}
-				openChangesPopup={openChangesPopup}
-				closeForm={closeForm}
-			/>
-		);
-	}
-
-	private renderTitle = () => (
+	const Title = (
 		<FormTitle
 			name={Fields.name}
-			value={this.state.name}
-			onChange={this.handleInput}
+			value={state.name}
+			onChange={updateField}
 			placeholder="Material name"
 		/>
-	)
+	);
 
-	private renderContent = () => (
+	const Content = (
 		<>
 			<RowInput
 				name={Fields.color}
-				value={this.state.color || ""}
-				onChange={this.handleInput}
+				value={state.color || ""}
+				onChange={updateField}
 			/>
 			<RowInput
 				name={Fields.amount}
-				value={`${this.state.amount}`}
+				value={`${state.amount}`}
 				type="number"
-				onChange={this.handleNumberInput}
+				onChange={updateNumberField}
 			/>
 		</>
-	)
+	);
 
-	private handleNumberInput: OnChangeFn = (e) => {
-		const { value } = e.currentTarget;
-
-		this.setState({ amount: +value });
-	}
-
-	private handleInput: OnChangeFn = (e) => {
-		const { name, value } = e.currentTarget;
-
-		this.setState({ [name]: value } as any);
-	}
-
-	/**
-	 * Checks if inputs are valid and then updates or creates project to db
-	 */
-	private submitProject = () => {
-		const {
-			name,
-			amount,
-			color,
-		} = this.state;
-
-		if(!this.formIsValid()) {
-			this.props.openInvalidPopup();
-			return;
-		}
-
-		if(this.formHasChanges()) {
-			const params = {
-				name: name.toLowerCase(),
-				amount,
-				color,
-			};
-
-			if(this.props.ticket) {
-				this.props.updateTicket({
-					variables: {
-						params,
-						id: this.props.ticket.id,
-					},
-				});
-			} else {
-				this.props.createTicket({ variables: { params } });
-			}
-		}
-
-		this.props.closeForm();
-	}
-
-	/**
-	 * Checks if form contains changes
-	 */
-	private formHasChanges = () => {
-		const {
-			amount,
-			name,
-			color,
-		} = this.state;
-		const ticket = this.props.ticket;
-
-		if(ticket) {
-			return (
-				amount !== ticket.amount
-				|| name.toLowerCase() !== ticket.name
-				|| color !== ticket.color
-			);
-		}
-
-		return (
-			!!name.length
-			|| amount !== 1
-			|| !!color && !!color.length
-		);
-	}
-
-	/**
-	 * Checks if all required fields have been filled in
-	 */
-	private formIsValid = () => {
-		const { name } = this.state;
-
-		return name.length > 0;
-	}
-}
+	return(
+		<Form
+			Title={Title}
+			Content={Content}
+			submitForm={submitMaterial}
+			size={FormSize.small}
+			formHasChangesFn={() => formHasChanges(convertToDbTicket(state), ticket)}
+			openChangesPopup={openChangesPopup}
+			closeForm={closeForm}
+		/>
+	);
+};

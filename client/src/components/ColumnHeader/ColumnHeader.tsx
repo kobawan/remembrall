@@ -1,18 +1,17 @@
-import React, { useCallback } from "react";
+import React from "react";
 import "./columnHeader.less";
-import { ColumnType, TicketData } from "../../types";
+import { ColumnType } from "../../types";
 import { plusSvg } from "../Svg/Svg";
+import { FormManagerState } from "../ColumnsManager/types";
 
 interface ColumnHeaderProps {
 	type: ColumnType;
-	openEditor: (props?: TicketData) => void;
+	openForm: (props: FormManagerState) => void;
 }
 
-export const ColumnHeader = React.memo(({ type, openEditor }: ColumnHeaderProps) => {
-	const openNewTicket = useCallback(() => openEditor(), []);
-
+export const ColumnHeader = React.memo(({ type, openForm }: ColumnHeaderProps) => {
 	return (
-		<div className="columnHeader" onClick={openNewTicket}>
+		<div className="columnHeader" onClick={() => openForm({ formOpened: type })}>
 			<span>{type}</span>
 			{plusSvg}
 		</div>

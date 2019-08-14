@@ -4,27 +4,32 @@ import { Overlay } from "../Overlay/Overlay";
 import { OverlayZIndex } from "../../types";
 import { Checkbox } from "../checkbox/Checkbox";
 import { ReducerContext } from "../ColumnsManager/context";
-import { closeFilterTooltipAction } from "../ColumnsManager/actions";
+import { closeFilterTooltipAction, setFilterAction } from "../ColumnsManager/actions";
 
 const TICKET_TOOLTIP_SIZE = 200;
 
-enum TicketTooltipCheckboxText {
-	linked = "Linked resources",
-	unused = "All available resources",
+export enum FilterType {
+	linked = "linked",
+	unused = "unused",
 }
 
-export enum TicketTooltipPosition {
+const FilterTooltipCheckboxText = {
+	[FilterType.linked]: "Linked resources",
+	[FilterType.unused]: "All available resources",
+};
+
+export enum FilterTooltipPosition {
 	left = "ticketTooltipLeft",
 	right = "ticketTooltipRight",
 }
 
-export interface BasicTicketTooltipProps {
+export interface BasicFilterTooltipProps {
 	top: number;
 	left: number;
 	ticketWidth: number;
 }
 
-export const TicketTooltip: React.FC<BasicTicketTooltipProps> = ({
+export const FilterTooltip: React.FC<BasicFilterTooltipProps> = ({
 	top,
 	left,
 	ticketWidth,
@@ -35,7 +40,7 @@ export const TicketTooltip: React.FC<BasicTicketTooltipProps> = ({
 
 	// @todo handle window resizing
 	const showLeft = document.body.clientWidth - left - ticketWidth < TICKET_TOOLTIP_SIZE;
-	const position = showLeft ? TicketTooltipPosition.left : TicketTooltipPosition.right;
+	const position = showLeft ? FilterTooltipPosition.left : FilterTooltipPosition.right;
 	const style: React.CSSProperties = {
 		top: `${top}px`,
 		left: `${showLeft ? left : left + ticketWidth}px`,
@@ -45,7 +50,11 @@ export const TicketTooltip: React.FC<BasicTicketTooltipProps> = ({
 	const handleOnClick = () => {
 		closeTooltip();
 
-		if(checkboxLinkedChecked || checkboxUnusedChecked) {
+		if(checkboxUnusedChecked) {
+			setFilterAction(dispatch, FilterType.unused);
+		}
+		if(checkboxLinkedChecked) {
+			setFilterAction(dispatch, FilterType.linked);
 		}
 	};
 
@@ -55,12 +64,12 @@ export const TicketTooltip: React.FC<BasicTicketTooltipProps> = ({
 			<div className={`ticketTooltip ${position}`} style={style}>
 				<span className="ticketTooltipTitle">Filter by:</span>
 				<Checkbox
-					text={TicketTooltipCheckboxText.linked}
+					text={FilterTooltipCheckboxText.linked}
 					isChecked={checkboxLinkedChecked}
 					onChange={() => setCheckboxLinkedCheckedState(!checkboxLinkedChecked)}
 				/>
 				<Checkbox
-					text={TicketTooltipCheckboxText.unused}
+					text={FilterTooltipCheckboxText.unused}
 					isChecked={checkboxUnusedChecked}
 					onChange={() => setCheckboxUnusedCheckedState(!checkboxUnusedChecked)}
 				/>

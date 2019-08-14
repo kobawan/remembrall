@@ -5,10 +5,11 @@ import "./ticket.less";
 import { ColumnType, TicketData, CommonFields } from "../../types";
 import { TicketTextArea } from "../TicketTextArea/TicketTextArea";
 import { TicketDisplay, DisplayDirection } from "../TicketDisplay/TicketDisplay";
+import { FormManagerState } from "../ColumnsManager/types";
 
 export interface TicketProps {
 	type: ColumnType;
-	openForm: (props?: TicketData) => void;
+	openForm: (props: FormManagerState) => void;
 	data: TicketData;
 	displayFields: string[];
 	focused: boolean;
@@ -50,11 +51,12 @@ export class Ticket extends React.Component<TicketProps, TicketState> {
 					? (
 						<TicketDisplay
 							data={data}
-							openEditor={openForm}
+							openForm={openForm}
 							deleteTicket={deleteTicket}
 							openTextArea={this.toggleTextArea}
 							displayFields={displayFields}
 							displayDirection={displayDirection}
+							type={type}
 						/>
 					) : (
 						<TicketTextArea

@@ -19,8 +19,11 @@ export enum OverlayZIndex {
 	Form = 96,
 	Tooltip = 94,
 }
+export interface TypenameField {
+	__typename?: string;
+}
 
-export interface CommonFields {
+export interface CommonFields extends TypenameField {
 	id: string;
 	name: string;
 }
@@ -51,8 +54,4 @@ export type AllColumnFields = ProjectFields | CategoryFields | MaterialFields | 
 /**
  * @todo improve typing
  */
-export type TicketData = CommonFields & {
-	[key: string]: any;
-};
-
-export type FormPropsType = ProjectFields | MaterialFields | ToolFields;
+export type TicketData = CommonFields & { [key: string]: any };

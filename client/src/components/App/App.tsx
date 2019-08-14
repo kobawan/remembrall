@@ -4,7 +4,7 @@ import "./app.less";
 import { ColumnsManager } from "../ColumnsManager/ColumnsManager";
 import { Login } from "../Login/Login";
 import { getStorageKey, StorageKeys, clearStorageKey } from "../../utils/localStorage";
-import { exitSvg, removeFilterSvg } from "../Svg/Svg";
+import { exitSvg } from "../Svg/Svg";
 
 const logout = () => {
 	clearStorageKey(StorageKeys.UserId);
@@ -19,11 +19,6 @@ export const App = React.memo(() => {
 	return (
 		<div className="app">
 			<div className="header">
-				{userHasLoggedIn && (
-					<button className="appFilter">
-						{removeFilterSvg}
-					</button>
-				)}
 				<div className="title">Remembrall</div>
 				{userHasLoggedIn && (
 					<button onClick={logout} className="logout">

@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useMemo } from "react";
 import { MutationFn } from "react-apollo";
 import "./columnsManager.less";
 import { ProjectColumn } from "../ProjectColumn/ProjectColumn";
@@ -7,20 +7,19 @@ import { Popup, PopupMessage } from "../Popup/Popup";
 import { CommonFields } from "../../types";
 import { ToolColumn } from "../ToolColumn/ToolColumn";
 import { MaterialColumn } from "../MaterialColumn/MaterialColumn";
-import { TicketTooltip } from "../FilterTooltip/FilterTooltip";
+import { FilterTooltip } from "../FilterTooltip/FilterTooltip";
 import { reducer, initialState, ReducerType } from "./reducer";
 import {
 	closePopupAction,
 	openPopupAction,
-	openFormAction,
 	closeFormAction,
 } from "./actions";
-import { FormManagerProps } from "./types";
-import { ReducerContext } from "./context";
+import { ReducerContextProvider } from "./context";
+import { MainFilterButton } from "../FilterButtonMain/FilterButtonMain";
 
 export const ColumnsManager: React.FC = () => {
 	const [ state, dispatch ] = useReducer<ReducerType>(reducer, initialState);
-	const { filterTooltipState, popupState, formState } = state;
+	const { filterTooltipState, popupState } = state;
 
 	const closePopup = () => closePopupAction(dispatch);
 	const openChangesPopup = () => openPopupAction(dispatch, {
@@ -36,7 +35,6 @@ export const ColumnsManager: React.FC = () => {
 		openPopupAction(dispatch, { text, action });
 	};
 
-	const openForm = (props: FormManagerProps) => openFormAction(dispatch, props);
 	const closeForm = () => closeFormAction(dispatch);
 
 	const safeDeleteTicket = ({ name, id }: CommonFields, deleteFn: MutationFn<any, { id: string }>) => {
@@ -49,16 +47,18 @@ export const ColumnsManager: React.FC = () => {
 	};
 
 	const columnProps = {
-		...formState,
-		openForm,
 		closeForm,
 		openInvalidPopup,
 		openChangesPopup,
 		safeDeleteTicket,
 	};
 
+	// @todo use separate contexts for state and dispatch
+	const contextValue = useMemo(() => ({ state, dispatch }), [state, dispatch]);
+
 	return (
-		<ReducerContext.Provider value={{ state, dispatch }}>
+		<ReducerContextProvider value={contextValue}>
+			<MainFilterButton />
 			<div className="columnsContainer">
 				<ProjectColumn {...columnProps} />
 				<CategoryColumn {...columnProps} />
@@ -67,10 +67,10 @@ export const ColumnsManager: React.FC = () => {
 				{popupState && (
 					<Popup {...popupState} close={closePopup} />
 				)}
-				{filterTooltipState && (
-					<TicketTooltip {...filterTooltipState} />
+				{filterTooltipState.props && (
+					<FilterTooltip {...filterTooltipState.props} />
 				)}
 			</div>
-		</ReducerContext.Provider>
+		</ReducerContextProvider>
 	);
 };

@@ -1,0 +1,38 @@
+@import "../../styles/mixin.less";
+
+.mainFilterButton {
+	.boxMixin(@colourBorder);
+	position: absolute;
+	font-size: 1rem;
+	background-color: white;
+	padding: 0;
+	left: 2em;
+
+	.filter {
+		display: block;
+		width: 2rem;
+		height: 2rem;
+		margin: 0.7rem;
+		fill: @colourSvg;
+		transition: transform 0.3s ease;
+		
+		.filterPath {
+			stroke: @colourSvg;
+		}
+
+		.diagonalPath {
+			stroke: black;
+			stroke-width: 0.4em;
+		}
+	}
+
+	@media (hover: hover) {
+		&:hover {
+			.boxMixinHover();
+
+			> .filter {
+				transform: scale(1.2);
+			}
+		}
+	}
+}

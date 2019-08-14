@@ -7,3 +7,5 @@ interface ReducerContextType {
 }
 
 export const ReducerContext = createContext<ReducerContextType>({ state: initialState, dispatch: () => {} });
+
+export const ReducerContextProvider = ReducerContext.Provider;

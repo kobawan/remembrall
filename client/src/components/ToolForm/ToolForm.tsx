@@ -1,6 +1,5 @@
-import * as React from "react";
+import React, { useReducer } from "react";
 import { MutationFn } from "react-apollo";
-import isEqual from "lodash.isequal";
 import { ToolFields, CommonFields } from "../../types";
 import { AddToolData, UpdateToolData, ToolInput } from "../ToolColumn/ToolWrapper";
 import { OnChangeFn } from "../Form/types";
@@ -8,6 +7,9 @@ import { FormTitle } from "../Form/FormTitle";
 import { Form, FormSize } from "../Form/Form";
 import { RowInput } from "../Form/RowInput";
 import { RowInputWithUnit } from "../Form/RowInputWithUnit";
+import { Measurements, ToolState, ToolReducerType, toolReducer, initialToolState } from "./reducer";
+import { updateToolFieldAction } from "./actions";
+import { formHasChanges, submitForm } from "../Form/formUtils";
 
 interface FormProps {
 	ticket?: ToolFields;
@@ -27,13 +29,7 @@ enum Fields {
 	measurement = "measurement",
 }
 
-enum Measurements {
-	mm = "mm",
-	us = "us",
-	uk = "uk",
-}
-
-type FormState = Omit<ToolFields, "id"> & { measurement: Measurements | null };
+const requiredFields = [Fields.name];
 
 const parseValueAndUnit = (value: string | null) => {
 	const [size, measurement] = (value || "").split(";");
@@ -50,15 +46,14 @@ const joinValueAndUnit = (value: string | null, unit: Measurements | null) => {
 	return `${value || ""};${unit || ""}`;
 };
 
-const defaultState: FormState = {
-	name: "",
-	amount: 1,
-	type: null,
-	size: null,
-	measurement: null,
-};
+const convertToDbTicket = (state: ToolState) => ({
+	amount: state.amount,
+	name: state.name.toLowerCase(),
+	size: joinValueAndUnit(state.size, state.measurement),
+	type: state.type,
+});
 
-const getToolDefaultState = (defaultState: FormState, ticket?: ToolFields) => {
+const getToolDefaultState = (defaultState: ToolState, ticket?: ToolFields) => {
 	if(!ticket) {
 		return defaultState;
 	}
@@ -72,152 +67,87 @@ const getToolDefaultState = (defaultState: FormState, ticket?: ToolFields) => {
 	};
 };
 
-export class ToolForm extends React.Component<FormProps, FormState> {
-	public state: FormState = getToolDefaultState(defaultState, this.props.ticket);
+export const ToolForm: React.FC<FormProps> = ({
+	ticket,
+	openChangesPopup,
+	closeForm,
+	openInvalidPopup,
+	updateTicket,
+	createTicket,
+}) => {
+	const [ state, dispatch ] = useReducer<ToolReducerType>(
+		toolReducer,
+		getToolDefaultState(initialToolState, ticket),
+	);
 
-	public shouldComponentUpdate(nextProps: FormProps, nextState: FormState) {
-		return !isEqual(this.props.ticket, nextProps.ticket) || !isEqual(this.state, nextState);
-	}
+	const updateField: OnChangeFn = (e) => {
+		updateToolFieldAction(dispatch, {
+			key: e.currentTarget.name as keyof ToolState,
+			value: e.currentTarget.value,
+		});
+	};
+	const updateNumberField: OnChangeFn = (e) => {
+		updateToolFieldAction(dispatch, {
+			key: e.currentTarget.name as keyof ToolState,
+			value: +e.currentTarget.value,
+		});
+	};
 
-	public render() {
-		const { openChangesPopup, closeForm } = this.props;
+	const submitTool = () => {
+		submitForm({
+			requiredFields,
+			stateTicket: convertToDbTicket(state),
+			dbTicket: ticket,
+			openInvalidPopup,
+			updateTicket: updateTicket as MutationFn,
+			createTicket: createTicket as MutationFn,
+			closeForm,
+		});
+	};
 
-		return(
-			<Form
-				Title={this.renderTitle()}
-				Content={this.renderContent()}
-				submitForm={this.submitProject}
-				size={FormSize.medium}
-				formHasChangesFn={this.formHasChanges}
-				openChangesPopup={openChangesPopup}
-				closeForm={closeForm}
-			/>
-		);
-	}
-
-	private renderTitle = () => (
+	const Title = (
 		<FormTitle
 			name={Fields.name}
-			value={this.state.name}
-			onChange={this.handleInput}
+			value={state.name}
+			onChange={updateField}
 			placeholder="Tool name"
 		/>
-	)
+	);
 
-	private renderContent = () => (
+	const Content = (
 		<>
 			<RowInput
 				name={Fields.type}
-				value={this.state.type || ""}
-				onChange={this.handleInput}
+				value={state.type || ""}
+				onChange={updateField}
 			/>
 			<RowInputWithUnit
 				name={Fields.size}
-				value={this.state.size || ""}
-				unitValue={this.state.measurement || Measurements.mm}
-				onChange={this.handleInput}
-				onUnitChange={this.handleInput}
+				value={state.size || ""}
+				unitValue={state.measurement || Measurements.mm}
+				onChange={updateField}
+				onUnitChange={updateField}
 				type="number"
 				options={Object.keys(Measurements)}
 			/>
 			<RowInput
 				name={Fields.amount}
-				value={`${this.state.amount}`}
+				value={`${state.amount}`}
 				type="number"
-				onChange={this.handleNumberInput}
+				onChange={updateNumberField}
 			/>
 		</>
-	)
+	);
 
-	private handleNumberInput: OnChangeFn = (e) => {
-		const { value } = e.currentTarget;
-
-		this.setState({ amount: +value });
-	}
-
-	private handleInput: OnChangeFn = (e) => {
-		const { name, value } = e.currentTarget;
-
-		this.setState({ [name]: value } as any);
-	}
-
-	/**
-	 * Checks if inputs are valid and then updates or creates project to db
-	 */
-	private submitProject = () => {
-		const {
-			name,
-			amount,
-			size,
-			type,
-			measurement,
-		} = this.state;
-
-		if(!this.formIsValid()) {
-			this.props.openInvalidPopup();
-			return;
-		}
-
-		if(this.formHasChanges()) {
-			const params = {
-				name: name.toLowerCase(),
-				amount,
-				size: joinValueAndUnit(size, measurement),
-				type,
-			};
-
-			if(this.props.ticket) {
-				this.props.updateTicket({
-					variables: {
-						params,
-						id: this.props.ticket.id,
-					},
-				});
-			} else {
-				this.props.createTicket({ variables: { params } });
-			}
-		}
-
-		this.props.closeForm();
-	}
-
-	/**
-	 * Checks if form contains changes
-	 */
-	private formHasChanges = () => {
-		const {
-			amount,
-			name,
-			size,
-			type,
-			measurement,
-		} = this.state;
-		const ticket = this.props.ticket;
-
-		if(ticket) {
-			return (
-				amount !== ticket.amount
-				|| name.toLowerCase() !== ticket.name
-				|| joinValueAndUnit(size, measurement) !== ticket.size
-				|| type !== ticket.type
-			);
-		}
-
-		return (
-			!!name.length
-			|| amount !== 1
-			|| !!size && !!size.length
-			|| !!type && !!type.length
-			|| measurement !== null
-		);
-	}
-
-	/**
-	 * Checks if all required fields have been filled in
-	 */
-	private formIsValid = () => {
-		const { name } = this.state;
-
-		return name.length > 0;
-	}
-}
+	return (
+		<Form
+			Title={Title}
+			Content={Content}
+			submitForm={submitTool}
+			size={FormSize.medium}
+			formHasChangesFn={() => formHasChanges(convertToDbTicket(state), ticket)}
+			openChangesPopup={openChangesPopup}
+			closeForm={closeForm}
+		/>
+	);
+};

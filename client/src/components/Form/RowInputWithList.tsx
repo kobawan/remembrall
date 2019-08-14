@@ -11,7 +11,7 @@ interface RowInputWithListProps {
 	options: CommonFields[];
 	tags: CommonFields[];
 	addOption: MutationFn<any, { params: any }>;
-	updateTags: (tags: CommonFields[]) => void;
+	updateTags: (field: string, tags: CommonFields[]) => void;
 	isRequired?: boolean;
 }
 
@@ -180,8 +180,8 @@ export class RowInputWithList extends React.Component<RowInputWithListProps, Row
 	 * Adds tags and resets the state
 	 */
 	private addTag = (tag: CommonFields) => {
-		if(this.props.tags.filter(res => res.name === tag.name).length === 0) {
-			this.props.updateTags([tag].concat(this.props.tags));
+		if(!this.props.tags.some(res => res.name === tag.name)) {
+			this.props.updateTags(this.props.name, [tag].concat(this.props.tags));
 		}
 		this.setState({
 			value: "",
@@ -196,6 +196,7 @@ export class RowInputWithList extends React.Component<RowInputWithListProps, Row
 	private removeTag = (e: React.MouseEvent<HTMLDivElement>) => {
 		const tagName = (e.currentTarget.previousSibling as HTMLSpanElement).innerText;
 		this.props.updateTags(
+			this.props.name,
 			this.props.tags.filter(tag => tag.name !== tagName)
 		);
 	}

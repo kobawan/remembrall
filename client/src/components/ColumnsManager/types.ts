@@ -1,12 +1,15 @@
-import { ColumnType, FormPropsType } from "../../types";
-import { BasicTicketTooltipProps } from "../FilterTooltip/FilterTooltip";
+import { ColumnType, AllColumnFields } from "../../types";
+import { BasicFilterTooltipProps } from "../FilterTooltip/FilterTooltip";
 import { BasicPopupProps } from "../Popup/Popup";
 
-export type PopupManagerProps = BasicPopupProps | undefined;
+export type PopupManagerState = BasicPopupProps | undefined;
 
-export interface FormManagerProps {
+export interface FormManagerState {
 	formOpened: ColumnType;
-	formProps?: FormPropsType;
+	formProps?: AllColumnFields;
 }
 
-export type TooltipManagerProps = BasicTicketTooltipProps | undefined;
+export interface TooltipManagerState {
+	activeFilters: string[];
+	props?: BasicFilterTooltipProps;
+}

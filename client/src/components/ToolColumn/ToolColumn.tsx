@@ -1,78 +1,57 @@
-import * as React from "react";
+import React, { useContext } from "react";
 import { MutationFn } from "react-apollo";
-import isEqual from "lodash.isequal";
 import { logErrors } from "../../utils/errorHandling";
 import { Column } from "../Column/Column";
-import { ColumnType, CommonFields, FormPropsType, ToolFields } from "../../types";
+import { ColumnType, CommonFields, ToolFields } from "../../types";
 import { ToolWrapper, DeleteToolData } from "./ToolWrapper";
 import { ToolForm } from "../ToolForm/ToolForm";
 import { DisplayDirection } from "../TicketDisplay/TicketDisplay";
-import { FormManagerProps } from "../ColumnsManager/types";
+import { ReducerContext } from "../ColumnsManager/context";
 
 interface ToolColumnProps {
 	safeDeleteTicket: (data: CommonFields, deleteFn: MutationFn<DeleteToolData, { id: string }>) => void;
 	closeForm: () => void;
 	openInvalidPopup: () => void;
 	openChangesPopup: () => void;
-	openForm: (props: FormManagerProps) => void;
-	formOpened?: ColumnType;
-	formProps?: FormPropsType;
 }
 
-export class ToolColumn extends React.Component<ToolColumnProps> {
-	public shouldComponentUpdate(nextProps: ToolColumnProps) {
-		return (
-			!isEqual(this.props.formProps, nextProps.formProps)
-			|| this.props.formOpened !== nextProps.formOpened
-		);
-	}
+export const ToolColumn: React.FC<ToolColumnProps> = ({
+	safeDeleteTicket,
+	closeForm,
+	openChangesPopup,
+	openInvalidPopup,
+}) => {
+	const { formOpened, formProps } = useContext(ReducerContext).state.formState;
 
-	public render() {
-		const {
-			safeDeleteTicket,
-			openForm,
-			formOpened,
-			formProps,
-			closeForm,
-			openChangesPopup,
-			openInvalidPopup,
-		} = this.props;
+	return (
+		<ToolWrapper>
+			{({ addTool, updateTool, deleteTool, tools: { data, error }}) => {
+				logErrors(error, addTool, updateTool, deleteTool);
 
-		return (
-			<ToolWrapper>
-				{({ addTool, updateTool, deleteTool, tools: { data, error }}) => {
-					logErrors(error, addTool, updateTool, deleteTool);
-
-					const openToolForm = (formProps?: FormPropsType) => {
-						openForm({ formOpened: ColumnType.Tools, formProps });
-					};
-
-					return (
-						<>
-							<Column
-								tickets={data && data.tools ? data.tools : []}
-								type={ColumnType.Tools}
-								updateTicket={updateTool.mutation}
+				return (
+					<>
+						<Column
+							tickets={data && data.tools ? data.tools : []}
+							type={ColumnType.Tools}
+							updateTicket={updateTool.mutation}
+							deleteTicket={(data: CommonFields) => safeDeleteTicket(data, deleteTool.mutation)}
+							displayFields={["name", "type", "size", "amount"]}
+							displayDirection={DisplayDirection.row}
+						/>
+						{formOpened === ColumnType.Tools && (
+							<ToolForm
+								ticket={formProps as ToolFields}
+								closeForm={closeForm}
+								openInvalidPopup={openInvalidPopup}
+								openChangesPopup={openChangesPopup}
+								createTicket={addTool.mutation}
 								deleteTicket={(data: CommonFields) => safeDeleteTicket(data, deleteTool.mutation)}
-								openForm={openToolForm}
-								displayFields={["name", "type", "size", "amount"]}
-								displayDirection={DisplayDirection.row}
+								updateTicket={updateTool.mutation}
 							/>
-							{formOpened === ColumnType.Tools && (
-								<ToolForm
-									ticket={formProps as ToolFields}
-									closeForm={closeForm}
-									openInvalidPopup={openInvalidPopup}
-									openChangesPopup={openChangesPopup}
-									createTicket={addTool.mutation}
-									deleteTicket={(data: CommonFields) => safeDeleteTicket(data, deleteTool.mutation)}
-									updateTicket={updateTool.mutation}
-								/>
-							)}
-						</>
-					);
-				}}
-			</ToolWrapper>
-		);
-	}
-}
+						)}
+					</>
+				);
+			}}
+		</ToolWrapper>
+	);
+};
