@@ -25,7 +25,7 @@ body {
 button {
 	border: solid 1px @colourBorder;
 	border-radius: 1em;
-	box-shadow: 1px 1px 5px 0px @colourShadow;
+	box-shadow: 1px 1px 5px 0 @colourShadow;
 	cursor: pointer;
 	padding: 0.2em 1em;
 	-webkit-tap-highlight-color: transparent;
@@ -37,7 +37,10 @@ button {
 	}
 }
 
-button, input, textarea, select {
+button,
+input,
+textarea,
+select {
 	font: 1em "Quicksand", sans-serif;
 
 	&::-webkit-calendar-picker-indicator {

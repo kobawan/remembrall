@@ -52,7 +52,7 @@ export const removeFilterSvg = (
 		<path d="M 30 15 L 15 1" className="diagonalPath"/>
 		<path d="M 15 15 L 30 1" className="diagonalPath"/>
 	</svg>
-)
+);
 
 export const exitSvg = (
 	<svg className="icon exit" viewBox="0 0 32 32">

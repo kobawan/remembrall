@@ -8,7 +8,11 @@
     },
     "duplicateProperty": true,
     "finalNewline": true,
-    "importantRule": true,
+    "importantRule": false,
+    "importPath": {
+        "enabled": true,
+        "filenameExtension": true
+    },
     "newlineAfterBlock": true,
     "selectorNaming": true,
     "singleLinePerProperty": true,

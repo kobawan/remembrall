@@ -13,7 +13,7 @@
 		@media (orientation: landscape) and (min-height: 451px) {
 			display: none;
 		}
-	
+
 		@media (orientation: portrait) and (min-width: 451px) {
 			display: none;
 		}
@@ -28,11 +28,11 @@
 		@media (orientation: portrait) and (max-width: 450px) {
 			font-size: 0.8rem;
 		}
-	
+
 		@media (orientation: landscape) and (max-height: 450px) {
 			font-size: calc(0.4rem + 1.2vh);
 		}
-		
+
 		.logout {
 			.boxMixin(@colourBorder);
 			right: 1.3333em;
@@ -48,7 +48,7 @@
 				margin: 0.7rem;
 				fill: @colourSvg;
 				transition: transform 0.3s ease;
-				
+
 				.filterPath {
 					stroke: @colourSvg;
 				}
@@ -62,7 +62,7 @@
 			@media (hover: hover) {
 				&:hover {
 					.boxMixinHover();
-		
+
 					> .exit {
 						transform: scale(1.2);
 					}
