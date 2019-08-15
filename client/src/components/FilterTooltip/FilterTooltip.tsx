@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import "./filterTooltip.less";
 import { Overlay } from "../Overlay/Overlay";
 import { OverlayZIndex } from "../../types";
-import { Checkbox } from "../foo/Checkbox";
+import { Checkbox } from "../Checkbox/Checkbox";
 import { ReducerContext } from "../ColumnsManager/context";
 import { closeFilterTooltipAction, setFilterAction } from "../ColumnsManager/actions";
 
