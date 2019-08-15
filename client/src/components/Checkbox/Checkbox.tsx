@@ -1,5 +1,6 @@
-import * as React from "react";
-import "./checkbox.less";
+import React from "react";
+import cx from "classnames";
+import * as styles from "./checkbox.less";
 
 export interface CheckBoxProps {
   text: string;
@@ -11,14 +12,14 @@ export class Checkbox extends React.PureComponent<CheckBoxProps> {
   public render () {
     const { isChecked , text, onChange} = this.props;
     return (
-      <label className={`checkbox-label ${isChecked ? "checked" : ""}`}>
+      <label className={cx(styles.label, isChecked && styles.checked)}>
         <input
-          className="checkbox"
+          className={styles.checkbox}
           type="checkbox"
           checked={isChecked}
           onChange={onChange}
         />
-        <span>{text}</span>
+        <span className={styles.text}>{text}</span>
       </label>
     );
   }

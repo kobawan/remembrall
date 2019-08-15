@@ -9,7 +9,7 @@
 	display: flex;
 	flex-direction: column;
 
-	hr {
+	.hr {
 		@media (orientation: landscape) and (min-height: 451px) {
 			display: none;
 		}
@@ -34,40 +34,8 @@
 		}
 
 		.logout {
-			.boxMixin(@colourBorder);
-			right: 1.3333em;
-			position: absolute;
-			font-size: 1.5em;
-			background-color: white;
-			padding: 0;
-
-			.exit {
-				display: block;
-				width: 2rem;
-				height: 2rem;
-				margin: 0.7rem;
-				fill: @colourSvg;
-				transition: transform 0.3s ease;
-
-				.filterPath {
-					stroke: @colourSvg;
-				}
-
-				.diagonalPath {
-					stroke: black;
-					stroke-width: 0.25em;
-				}
-			}
-
-			@media (hover: hover) {
-				&:hover {
-					.boxMixinHover();
-
-					> .exit {
-						transform: scale(1.2);
-					}
-				}
-			}
+			.mainAppButtonMixin();
+			right: 1.33em;
 		}
 
 		.title {

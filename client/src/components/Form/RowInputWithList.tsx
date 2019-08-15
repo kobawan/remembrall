@@ -1,6 +1,6 @@
-import * as React from "react";
+import React from "react";
 import { MutationFunction } from "react-apollo";
-import "./rowInputWithList.less";
+import * as styles from "./rowInputWithList.less";
 import { CommonFields } from "../../types";
 import { plusSvg } from "../Svg/Svg";
 import { OnChangeFn } from "./types";
@@ -48,12 +48,12 @@ export class RowInputWithList extends React.Component<RowInputWithListProps, Row
             value={value}
             onKeyUp={this.addTagOnEnter}
             onBlur={this.addTagOnEnterOrBlur}
-            className="rowInputListMain"
+            className={styles.input}
           />
         )}
-        <div className="rowInputListTags">
+        <div className={styles.tagContainer}>
           {!editTags && (
-            <div className="open" onClick={this.toggleEditing}>
+            <div className={styles.addTag} onClick={this.toggleEditing}>
               {plusSvg}
             </div>
           )}
@@ -105,9 +105,9 @@ export class RowInputWithList extends React.Component<RowInputWithListProps, Row
 	 */
   private renderTags = (arr: CommonFields[]) => {
     return arr.map(({ name }, key) =>
-      <div className="tag" key={key}>
-        <span>{name}</span>
-        <div className="close" onClick={this.removeTag}>
+      <div className={styles.tag} key={key}>
+        <span className={styles.tagName}>{name}</span>
+        <div className={styles.closeTag} onClick={this.removeTag}>
           {plusSvg}
         </div>
       </div>

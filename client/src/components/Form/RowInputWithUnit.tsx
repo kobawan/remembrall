@@ -1,5 +1,5 @@
 import React from "react";
-import "./rowInputWithUnit.less";
+import * as styles from "./rowInputWithUnit.less";
 import { RowProps, OnChangeFn } from "./types";
 import { FormRow } from "./FormRow";
 
@@ -36,10 +36,10 @@ export const RowInputWithUnit = (({
         onChange={onChange}
         value={value}
         autoFocus={!!autofocus}
-        className="rowInputMain"
+        className={styles.input}
       />
       <select
-        className="rowInputUnit"
+        className={styles.units}
         onChange={onUnitChange}
         name="measurement"
         defaultValue={unitValue}

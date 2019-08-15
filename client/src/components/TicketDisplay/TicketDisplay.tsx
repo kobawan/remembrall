@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
-import "./ticketDisplay.less";
+import cx from "classnames";
+import * as styles from "./ticketDisplay.less";
 import { TicketData, CommonFields, ColumnType } from "../../types";
 import { editSvg, trashSvg, filterSvg } from "../Svg/Svg";
 import { ReducerContext } from "../ColumnsManager/context";
@@ -27,8 +28,8 @@ const formatDisplayFields = (data: TicketData, key: string) => {
 };
 
 export enum DisplayDirection {
-  column = "ticketDisplayColumn",
-  row = "ticketDisplayRow",
+  column = "column",
+  row = "row",
 }
 
 export interface TicketDisplayProps {
@@ -79,24 +80,24 @@ export const TicketDisplay: React.FC<TicketDisplayProps> = ({
 
   const renderDisplayedValues = () => {
     return displayFields.map((key, i) => (
-      <div key={i} className={`ticketDisplayInfoRow ${displayDirection}`}>
-        <small className="ticketDisplayKey">{key}:</small>
+      <div key={i} className={cx(styles.displayRow, displayDirection)}>
+        <small className={styles.key}>{key}:</small>
         <span>{formatDisplayFields(data, key)}</span>
       </div>
     ));
   };
 
   return (
-    <div className="ticketDisplay" onClick={() => openForm({ formOpened: type, formProps: data })} ref={ref}>
+    <div className={styles.container} onClick={() => openForm({ formOpened: type, formProps: data })} ref={ref}>
       {renderDisplayedValues()}
-      <div className="ticketOptions">
-        <div className="ticketIcon" onClick={editName}>
+      <div className={styles.options}>
+        <div className={styles.icon} onClick={editName}>
           {editSvg}
         </div>
-        <div className="ticketIcon" onClick={removeTicket}>
+        <div className={styles.icon} onClick={removeTicket}>
           {trashSvg}
         </div>
-        <div className="ticketIcon" onClick={showFilterOptions}>
+        <div className={styles.icon} onClick={showFilterOptions}>
           {filterSvg}
         </div>
       </div>

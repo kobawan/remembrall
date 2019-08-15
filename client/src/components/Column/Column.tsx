@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { MutationFunction } from "react-apollo";
-import "./column.less";
+import * as styles from "./column.less";
 import { Ticket } from "../Ticket/Ticket";
 import { ColumnType, TicketData, CommonFields } from "../../types";
 import { ColumnHeader } from "../ColumnHeader/ColumnHeader";
@@ -46,9 +46,9 @@ export const Column: React.FC<ColumnProps> = ({
   };
 
   return (
-    <div className="column">
+    <div className={styles.column}>
       <ColumnHeader type={type} openForm={openForm} />
-      <div className="content">
+      <div className={styles.content}>
         {renderTickets()}
       </div>
     </div>

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { Mutation, Query, QueryResult, MutationFunction, MutationResult } from "react-apollo";
 import { MutationUpdaterFn } from "apollo-boost";
 import { adopt } from "react-adopt";

@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from "react";
-import "./formTitle.less";
+import cx from "classnames";
+import * as styles from "./formTitle.less";
 import { RowProps } from "./types";
 
 const TITLE_ERROR_MSG = "Invalid input. Title field is required";
@@ -24,18 +25,18 @@ export const FormTitle = React.memo(({ name, value, onChange, placeholder }: For
   }, [showError]);
 
   return (
-    <div className="formTitle">
+    <div className={styles.title}>
       <input
         type="text"
         name={name}
         onChange={onChange}
         placeholder={placeholder}
         value={value}
-        className={`rowInputTitle ${showError ? "error" : ""}`}
+        className={cx(styles.input, showError && styles.error)}
         onBlur={onBlur}
         onFocus={onFocus}
       />
-      <div className="rowInputTitleError">
+      <div className={styles.inputError}>
         {showError && TITLE_ERROR_MSG}
       </div>
     </div>

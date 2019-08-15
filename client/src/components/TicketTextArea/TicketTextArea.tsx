@@ -1,6 +1,6 @@
-import * as React from "react";
+import React from "react";
 import { MutationFunction } from "react-apollo";
-import "./ticketTextArea.less";
+import * as styles from "./ticketTextArea.less";
 import { TicketData, ColumnType } from "../../types";
 
 interface TicketTextAreaProps {
@@ -29,7 +29,7 @@ export class TicketTextArea extends React.Component<TicketTextAreaProps, TicketT
         onBlur={this.submitChange}
         value={value}
         placeholder="Name"
-        className="ticketEditer"
+        className={styles.editor}
         autoFocus={true}
       />
     );

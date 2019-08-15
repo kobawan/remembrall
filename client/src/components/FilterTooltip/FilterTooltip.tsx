@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
-import "./filterTooltip.less";
+import cx from "classnames";
+import * as styles from "./filterTooltip.less";
 import { Overlay } from "../Overlay/Overlay";
 import { OverlayZIndex } from "../../types";
 import { Checkbox } from "../Checkbox/Checkbox";
@@ -19,8 +20,8 @@ const FilterTooltipCheckboxText = {
 };
 
 export enum FilterTooltipPosition {
-  left = "ticketTooltipLeft",
-  right = "ticketTooltipRight",
+  left = "left",
+  right = "right",
 }
 
 export interface BasicFilterTooltipProps {
@@ -61,8 +62,8 @@ export const FilterTooltip: React.FC<BasicFilterTooltipProps> = ({
   return (
     <div>
       <Overlay zIndex={OverlayZIndex.Tooltip} onClick={closeTooltip} />
-      <div className={`ticketTooltip ${position}`} style={style}>
-        <span className="ticketTooltipTitle">Filter by:</span>
+      <div className={cx(styles.tooltip, position)} style={style}>
+        <span className={styles.title}>Filter by:</span>
         <Checkbox
           text={FilterTooltipCheckboxText.linked}
           isChecked={checkboxLinkedChecked}
@@ -73,7 +74,7 @@ export const FilterTooltip: React.FC<BasicFilterTooltipProps> = ({
           isChecked={checkboxUnusedChecked}
           onChange={() => setCheckboxUnusedCheckedState(!checkboxUnusedChecked)}
         />
-        <button className="ticketTooltipButton" onClick={handleOnClick}>Apply</button>
+        <button className={styles.button} onClick={handleOnClick}>Apply</button>
       </div>
     </div>
   );

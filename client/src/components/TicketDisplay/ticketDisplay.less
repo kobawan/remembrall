@@ -1,25 +1,25 @@
 @import "../../styles/mixin.less";
 @import "../../styles/colours.less";
 
-.ticketDisplay {
+.container {
 	.ticketMixin();
 	word-break: break-word;
 	cursor: pointer;
 
-	.ticketDisplayInfoRow {
+	.displayRow {
 		padding: 0.125em;
 		display: flex;
 
-		&.ticketDisplayColumn {
+		&.column {
 			flex-direction: column;
 		}
 
-		&.ticketDisplayRow {
+		&.row {
 			flex-direction: row;
 			align-items: center;
 		}
 
-		.ticketDisplayKey {
+		.key {
 			text-transform: capitalize;
 			color: @grey;
 			margin-right: 0.45em;
@@ -27,47 +27,24 @@
 		}
 	}
 
-	.ticketOptions {
+	.options {
 		display: none;
 
-		.ticketIcon {
+		.icon {
+			width: 1.25em;
+			height: 1.25em;
 			background-color: fade(@lightGrey, 50%);
 			padding: 0.31em;
 
 			&:hover {
 				background-color: @lightGrey;
 			}
-
-			.edit,
-			.trash,
-			.filter {
-				display: block;
-				width: 1.25em;
-				height: 1.25em;
-				fill: @colourSvg;
-			}
-
-			.edit,
-			.trash {
-				stroke: @colourSvg;
-			}
-
-			.filter {
-				.filterPath {
-					stroke: @colourSvg;
-				}
-
-				.diagonalPath {
-					stroke: black;
-					stroke-width: 0.25em;
-				}
-			}
 		}
 	}
 
 	@media (hover: hover) {
 		&:hover {
-			.ticketOptions {
+			.options {
 				display: block;
 				position: absolute;
 				right: 0;

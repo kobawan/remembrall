@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import "./app.less";
+import * as styles from "./app.less";
 
 import { ColumnsManager } from "../ColumnsManager/ColumnsManager";
 import { Login } from "../Login/Login";
@@ -17,16 +17,16 @@ export const App = React.memo(() => {
   const toggleUserLogin = useCallback(() => setUserHasLoggedIn(!userHasLoggedIn), [userHasLoggedIn]);
 
   return (
-    <div className="app">
-      <div className="header">
-        <div className="title">Remembrall</div>
+    <div className={styles.app}>
+      <div className={styles.header}>
+        <div className={styles.title}>Remembrall</div>
         {userHasLoggedIn && (
-          <button onClick={logout} className="logout">
+          <button onClick={logout} className={styles.logout}>
             {exitSvg}
           </button>
         )}
       </div>
-      {!userHasLoggedIn && <hr />}
+      {!userHasLoggedIn && <hr className="hr" />}
       {userHasLoggedIn
         ? <ColumnsManager />
         : <Login updateLoginState={toggleUserLogin}/>

@@ -42,3 +42,32 @@
 	box-sizing: border-box;
 	position: relative;
 }
+
+.mainAppButtonMixin() {
+	.boxMixin(@colourBorder);
+	position: absolute;
+	font-size: 1.5rem;
+	background-color: white;
+	width: 1.6em;
+	padding: 0.5em;
+	box-sizing: content-box;
+	top: 1rem;
+
+	@media (orientation: portrait) and (max-width: 450px) {
+		font-size: 1.3rem;
+	}
+
+	@media (orientation: landscape) and (max-height: 450px) {
+		font-size: calc(1rem + 1.2vh);
+	}
+
+	@media (hover: hover) {
+		&:hover {
+			.boxMixinHover();
+
+			> svg {
+				transform: scale(1.2);
+			}
+		}
+	}
+}

@@ -1,5 +1,5 @@
 import React from "react";
-import "./rowInput.less";
+import * as styles from "./rowInput.less";
 import { RowProps } from "./types";
 import { FormRow } from "./FormRow";
 
@@ -17,7 +17,7 @@ export const RowInput = React.memo(({ name, value, onChange, type, autofocus }: 
         onChange={onChange}
         value={value}
         autoFocus={!!autofocus}
-        className="rowInputBasic"
+        className={styles.input}
       />
     </FormRow>
   );

@@ -1,5 +1,6 @@
 import React from "react";
-import "./form.less";
+import cx from "classnames";
+import * as styles from "./form.less";
 import { Overlay } from "../Overlay/Overlay";
 import { OverlayZIndex } from "../../types";
 
@@ -32,14 +33,14 @@ export const Form = React.memo(({
 
   return (<>
     <Overlay onClick={safeCloseForm} zIndex={OverlayZIndex.Form} />
-    <div className={`form ${size}`}>
+    <div className={cx(styles.form, size)}>
       {Title}
-      <div className="content">
+      <div className={styles.content}>
         {Content}
       </div>
-      <div className="footer">
-        <button onClick={safeCloseForm}>Cancel</button>
-        <button onClick={submitForm}>Save</button>
+      <div className={styles.footer}>
+        <button className={styles.button} onClick={safeCloseForm}>Cancel</button>
+        <button className={styles.button} onClick={submitForm}>Save</button>
       </div>
     </div>
   </>);

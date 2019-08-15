@@ -1,15 +1,5 @@
 @import "../../styles/colours.less";
 
-@keyframes rotating {
-	from {
-		transform: rotate(0deg);
-	}
-
-	to {
-		transform: rotate(360deg);
-	}
-}
-
 .loading {
 	display: flex;
 	justify-content: center;
@@ -20,7 +10,5 @@
 	.spinner {
 		width: 4em;
 		height: 4em;
-		fill: @colourSvg;
-		animation: rotating 2s ease-out infinite;
 	}
 }

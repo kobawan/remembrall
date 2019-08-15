@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { adopt } from "react-adopt";
 import { Mutation, MutationFunction, MutationResult } from "react-apollo";
 import { MutationRenderProps } from "../../types";

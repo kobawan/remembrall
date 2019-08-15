@@ -1,6 +1,6 @@
 import React, { useReducer, useMemo } from "react";
 import { MutationFunction } from "react-apollo";
-import "./columnsManager.less";
+import * as styles from "./columnsManager.less";
 import { ProjectColumn } from "../ProjectColumn/ProjectColumn";
 import { CategoryColumn } from "../CategoryColumn/CategoryColumn";
 import { Popup, PopupMessage } from "../Popup/Popup";
@@ -59,7 +59,7 @@ export const ColumnsManager: React.FC = () => {
   return (
     <ReducerContextProvider value={contextValue}>
       <MainFilterButton />
-      <div className="columnsContainer">
+      <div className={styles.container}>
         <ProjectColumn {...columnProps} />
         <CategoryColumn {...columnProps} />
         <ToolColumn {...columnProps} />

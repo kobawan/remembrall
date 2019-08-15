@@ -1,6 +1,6 @@
 @import "../../styles/colours.less";
 
-.rowInputListMain {
+.input {
 	border: solid 1px transparent;
 	border-bottom-color: @colourBorder;
 	width: 100%;
@@ -9,30 +9,25 @@
 	padding: 0.3em 0.5em;
 }
 
-.rowInputListTags {
+.tagContainer {
 	display: flex;
 	font-size: 1.4em;
 	flex-wrap: wrap;
 
-	.open {
+	.addTag {
 		margin: 0.35em;
 		padding: 0.21em 0.35em;
 		background-color: fade(@colourBorder, 50%);
+		width: 1.42em;
 		height: 1.42em;
 		cursor: pointer;
 
 		@media (hover: hover) {
 			&:hover {
-				> .plus {
+				> svg {
 					transform: scale(1.3);
 				}
 			}
-		}
-
-		.plus {
-			width: 1.42em;
-			height: 1.42em;
-			fill: @colourSvg;
 		}
 	}
 
@@ -42,27 +37,25 @@
 		padding: 0.21em 0 0.21em 0.35em;
 		background-color: fade(@colourBorder, 50%);
 
-		span {
+		.tagName {
 			cursor: default;
 		}
 
-		.close {
-			height: 1.42em;
+		.closeTag {
 			cursor: pointer;
+			width: 1.42em;
+			height: 1.42em;
+
+			> svg {
+				transform: rotate(45deg);
+			}
 
 			@media (hover: hover) {
 				&:hover {
-					> .plus {
+					> svg {
 						transform: scale(1.3) rotate(45deg);
 					}
 				}
-			}
-
-			.plus {
-				width: 1.42em;
-				height: 1.42em;
-				fill: @colourSvg;
-				transform: rotate(45deg);
 			}
 		}
 	}

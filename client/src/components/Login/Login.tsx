@@ -1,6 +1,7 @@
-import * as React from "react";
+import React from "react";
 import { MutationFunction } from "react-apollo";
-import "./login.less";
+import cx from "classnames";
+import * as styles from "./login.less";
 import { RowInput } from "../Form/RowInput";
 import { OnChangeFn } from "../Form/types";
 import { LoginWrapper, LoginUserData, UserInput, AddUserData } from "./LoginWrapper";
@@ -44,7 +45,7 @@ export class Login extends React.PureComponent<LoginProps, LoginState> {
           const isLoading = loginUser.res.loading || addUser.res.loading;
 
           return (
-            <div className="login">
+            <div className={styles.login}>
               <RowInput
                 name="Email:"
                 type="email"
@@ -66,23 +67,23 @@ export class Login extends React.PureComponent<LoginProps, LoginState> {
                   onChange={this.onChangeConfirmPassword}
                 />
               )}
-              <div className="footer">
+              <div className={styles.footer}>
                 <button
                   onClick={isLogin
                     ? () => this.login(loginUser.mutation)
                     : () => this.register(addUser.mutation)
                   }
-                  className={isLoading ? "loading" : ""}
+                  className={cx(isLoading && styles.loading)}
                   disabled={isLoading}
                 >
                   {isLogin ? "Login" : "Register"}
                 </button>
-                <div className={`msg error ${errorMessage ? "" : "hide"}`}>
+                <div className={cx(styles.msg, styles.error, !errorMessage && styles.hide)}>
                   {errorMessage}
                 </div>
-                <div className="msg">
+                <div className={styles.msg}>
                   {isLogin ? REGISTER_MSG : LOGIN_MSG}
-                  <span className="link" onClick={this.toggleLoginRegister}>here</span>
+                  <span className={styles.link} onClick={this.toggleLoginRegister}>here</span>
                 </div>
               </div>
             </div>

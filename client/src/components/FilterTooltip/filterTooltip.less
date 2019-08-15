@@ -1,6 +1,6 @@
 @import "../../styles/mixin.less";
 
-.ticketTooltip {
+.tooltip {
 	.boxMixin();
 	position: absolute;
 	width: 12.5em;
@@ -11,15 +11,15 @@
 	display: flex;
 	flex-direction: column;
 
-	&.ticketTooltipLeft {
+	&.left {
 		transform: translateX(-14.28em);
 	}
 
-	.ticketTooltipTitle {
+	.title {
     margin-bottom: 0.35em;
 	}
 
-	.ticketTooltipButton {
+	.button {
 		align-self: center;
 	}
 }

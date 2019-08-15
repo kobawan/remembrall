@@ -27,18 +27,21 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(png|svg|jpg|gif)$/,
-        loader: "file-loader?name=[name].[ext]",
-      },
-      {
-        test: /\.(eot|svg|ttf|woff|woff2)$/,
+        test: /\.(png|svg|jpg|gif|eot|ttf|woff|woff2)$/,
         loader: "file-loader?name=[name].[ext]",
       },
       {
         test: /\.less$/,
         use: [
-          devMode ? "style-loader" : MiniCssExtractPlugin.loader,
-          "css-loader",
+          MiniCssExtractPlugin.loader,
+          {
+            loader: "css-loader",
+            options: {
+              modules: {
+                localIdentName: devMode ? "[name]__[local]" : "[name]__[local]-[hash:base64:5]",
+              },
+            }
+          },
           "less-loader",
         ],
       },

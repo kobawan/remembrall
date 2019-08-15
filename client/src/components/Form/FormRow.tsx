@@ -1,5 +1,6 @@
 import React from "react";
-import "./formRow.less";
+import cx from "classnames";
+import * as styles from "./formRow.less";
 
 interface FormRowProps {
   name: string;
@@ -19,9 +20,9 @@ export const FormRow: React.FC<FormRowProps> = (({
   children,
 }) => {
   return (
-    <div className="formRow">
-      <label className="formRowLabel">{`${name}${isRequired ? " *" : ""}`}</label>
-      <div className={`formRowContent ${direction}`}>
+    <div className={styles.row}>
+      <label className={styles.label}>{`${name}${isRequired ? " *" : ""}`}</label>
+      <div className={cx(styles.content, direction)}>
         {children}
       </div>
     </div>

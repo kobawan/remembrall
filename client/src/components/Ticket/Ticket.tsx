@@ -1,7 +1,8 @@
-import * as React from "react";
+import React from "react";
 import { MutationFunction } from "react-apollo";
 import isEqual from "lodash.isequal";
-import "./ticket.less";
+import cx from "classnames";
+import * as styles from "./ticket.less";
 import { ColumnType, TicketData, CommonFields } from "../../types";
 import { TicketTextArea } from "../TicketTextArea/TicketTextArea";
 import { TicketDisplay, DisplayDirection } from "../TicketDisplay/TicketDisplay";
@@ -46,7 +47,7 @@ export class Ticket extends React.Component<TicketProps, TicketState> {
     } = this.props;
 
     return (<>
-      <div className={`ticket ${withError ? "ticketError" : "" }`}>
+      <div className={cx(styles.ticket, withError && styles.error)}>
         {!focused && data
           ? (
             <TicketDisplay

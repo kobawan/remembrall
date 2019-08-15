@@ -1,5 +1,5 @@
-import * as React from "react";
-import "./popup.less";
+import React from "react";
+import * as styles from "./popup.less";
 import { Overlay } from "../Overlay/Overlay";
 import { OverlayZIndex } from "../../types";
 
@@ -24,8 +24,8 @@ export class Popup extends React.PureComponent<PopupProps> {
     return (
       <div>
         <Overlay zIndex={OverlayZIndex.Popup}/>
-        <div className="popup">
-          <div className="message">
+        <div className={styles.popup}>
+          <div className={styles.message}>
             {text}
           </div>
           <div>
@@ -41,11 +41,11 @@ export class Popup extends React.PureComponent<PopupProps> {
 
     if(text === PopupMessage.changes || text.includes(PopupMessage.delete)) {
       return <>
-        <button className="popupButton" onClick={close}>No</button>
-        <button className="popupButton" onClick={action} autoFocus={true}>Yes</button>
+        <button className={styles.button} onClick={close}>No</button>
+        <button className={styles.button} onClick={action} autoFocus={true}>Yes</button>
       </>;
     }
 
-    return <button className="popupButton" onClick={close} autoFocus={true}>Ok</button>;
+    return <button className={styles.button} onClick={close} autoFocus={true}>Ok</button>;
   }
 }
