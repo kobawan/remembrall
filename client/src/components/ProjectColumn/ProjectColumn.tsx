@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { MutationFn } from "react-apollo";
+import { MutationFunction } from "react-apollo";
 import { Column } from "../Column/Column";
 import { ColumnType, CommonFields } from "../../types";
 import { logErrors } from "../../utils/errorHandling";
@@ -12,7 +12,7 @@ interface ProjectColumnProps {
   closeForm: () => void;
   openInvalidPopup: () => void;
   openChangesPopup: () => void;
-  safeDeleteTicket: (data: CommonFields, deleteFn: MutationFn<DeleteProjectData, { id: string }>) => void;
+  safeDeleteTicket: (data: CommonFields, deleteFn: MutationFunction<DeleteProjectData, { id: string }>) => void;
 }
 
 export const ProjectColumn: React.FC<ProjectColumnProps> = ({

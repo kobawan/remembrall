@@ -1,5 +1,5 @@
 import isEqual from "lodash.isequal";
-import { MutationFn } from "react-apollo";
+import { MutationFunction } from "react-apollo";
 import { AllColumnFields } from "../../types";
 
 export const formHasChanges = (stateTicket: {}, dbTicket?: { [key: string]: any }) => {
@@ -40,8 +40,8 @@ interface SubmitFormProps {
   stateTicket: {};
   dbTicket?: AllColumnFields;
   openInvalidPopup: () => void;
-  updateTicket: MutationFn;
-  createTicket: MutationFn;
+  updateTicket: MutationFunction;
+  createTicket: MutationFunction;
   closeForm: () => void;
 }
 

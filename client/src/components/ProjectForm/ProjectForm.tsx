@@ -1,5 +1,5 @@
 import React, { useReducer } from "react";
-import { MutationFn } from "react-apollo";
+import { MutationFunction } from "react-apollo";
 import { CommonFields, ProjectFields } from "../../types";
 import { getInitialState } from "../../utils/getInitialState";
 import { RowInputWithList } from "../Form/RowInputWithList";
@@ -21,9 +21,9 @@ interface FormProps {
   closeForm: () => void;
   openInvalidPopup: () => void;
   openChangesPopup: () => void;
-  createTicket: MutationFn<AddProjectData, ProjectInput>;
+  createTicket: MutationFunction<AddProjectData, ProjectInput>;
   deleteTicket: (data: CommonFields) => void; // @todo add delete button to form
-  updateTicket: MutationFn<UpdateProjectData, ProjectInput & { id: string }>;
+  updateTicket: MutationFunction<UpdateProjectData, ProjectInput & { id: string }>;
 }
 
 enum Fields {
@@ -71,8 +71,8 @@ export const ProjectForm: React.FC<FormProps> = ({
       stateTicket: state,
       dbTicket: ticket,
       openInvalidPopup,
-      updateTicket: updateTicket as MutationFn,
-      createTicket: createTicket as MutationFn,
+      updateTicket: updateTicket as MutationFunction,
+      createTicket: createTicket as MutationFunction,
       closeForm,
     });
   };

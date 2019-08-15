@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { MutationFn } from "react-apollo";
+import { MutationFunction } from "react-apollo";
 import { CommonFields, CategoryFields } from "../../types";
 import { FormTitle } from "../Form/FormTitle";
 import { Form, FormSize } from "../Form/Form";
@@ -11,9 +11,9 @@ interface FormProps {
   closeForm: () => void;
   openInvalidPopup: () => void;
   openChangesPopup: () => void;
-  createTicket: MutationFn<AddCategoryData, CategoryInput>;
+  createTicket: MutationFunction<AddCategoryData, CategoryInput>;
   deleteTicket: (data: CommonFields) => void;
-  updateTicket: MutationFn<UpdateCategoryData, CategoryInput & { id: string }>;
+  updateTicket: MutationFunction<UpdateCategoryData, CategoryInput & { id: string }>;
 }
 
 enum Fields {
@@ -38,8 +38,8 @@ export const CategoryForm: React.FC<FormProps> = ({
       stateTicket: { name: name.toLowerCase() },
       dbTicket: ticket,
       openInvalidPopup,
-      updateTicket: updateTicket as MutationFn,
-      createTicket: createTicket as MutationFn,
+      updateTicket: updateTicket as MutationFunction,
+      createTicket: createTicket as MutationFunction,
       closeForm,
     });
   };

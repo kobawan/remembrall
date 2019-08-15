@@ -1,6 +1,6 @@
 import * as React from "react";
 import { adopt } from "react-adopt";
-import { Mutation, MutationFn, MutationResult } from "react-apollo";
+import { Mutation, MutationFunction, MutationResult } from "react-apollo";
 import { MutationRenderProps } from "../../types";
 import { LOGIN_USER, ADD_USER } from "./loginQueries";
 import { setStorageKey, StorageKeys } from "../../utils/localStorage";
@@ -36,14 +36,14 @@ const onRegisterCompleted = ({ addUser }: AddUserData) => {
 export const LoginWrapper = adopt<LoginRenderProps, {}>({
   loginUser: ({ render }) => (
     <Mutation mutation={LOGIN_USER} onCompleted={onLoginCompleted}>
-      {(mutation: MutationFn<LoginUserData, UserInput>, res: MutationResult<LoginUserData>) => {
+      {(mutation: MutationFunction<LoginUserData, UserInput>, res: MutationResult<LoginUserData>) => {
         return render!({ mutation, res });
       }}
     </Mutation>
   ),
   addUser: ({ render }) => (
     <Mutation mutation={ADD_USER} onCompleted={onRegisterCompleted}>
-      {(mutation: MutationFn<AddUserData, UserInput>, res: MutationResult<AddUserData>) => {
+      {(mutation: MutationFunction<AddUserData, UserInput>, res: MutationResult<AddUserData>) => {
         return render!({ mutation, res });
       }}
     </Mutation>

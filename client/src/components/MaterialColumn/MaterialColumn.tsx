@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { MutationFn } from "react-apollo";
+import { MutationFunction } from "react-apollo";
 import { logErrors } from "../../utils/errorHandling";
 import { Column } from "../Column/Column";
 import { ColumnType, CommonFields, MaterialFields } from "../../types";
@@ -9,7 +9,7 @@ import { DisplayDirection } from "../TicketDisplay/TicketDisplay";
 import { ReducerContext } from "../ColumnsManager/context";
 
 interface MaterialColumnProps {
-  safeDeleteTicket: (data: CommonFields, deleteFn: MutationFn<DeleteMaterialData, { id: string }>) => void;
+  safeDeleteTicket: (data: CommonFields, deleteFn: MutationFunction<DeleteMaterialData, { id: string }>) => void;
   closeForm: () => void;
   openInvalidPopup: () => void;
   openChangesPopup: () => void;

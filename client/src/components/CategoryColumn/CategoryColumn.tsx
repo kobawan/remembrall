@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { MutationFn } from "react-apollo";
+import { MutationFunction } from "react-apollo";
 import { CategoryWrapper, DeleteCategoryData } from "./CategoryWrapper";
 import { logErrors } from "../../utils/errorHandling";
 import { Column } from "../Column/Column";
@@ -9,7 +9,7 @@ import { DisplayDirection } from "../TicketDisplay/TicketDisplay";
 import { ReducerContext } from "../ColumnsManager/context";
 
 interface CategoryColumnProps {
-  safeDeleteTicket: (data: CommonFields, deleteFn: MutationFn<DeleteCategoryData, { id: string }>) => void;
+  safeDeleteTicket: (data: CommonFields, deleteFn: MutationFunction<DeleteCategoryData, { id: string }>) => void;
   closeForm: () => void;
   openInvalidPopup: () => void;
   openChangesPopup: () => void;

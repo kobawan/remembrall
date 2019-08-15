@@ -1,8 +1,8 @@
-import { MutationFn, MutationResult, OperationVariables } from "react-apollo";
+import { MutationFunction, MutationResult, OperationVariables } from "react-apollo";
 
 // GRAPHQL TYPES
 export interface MutationRenderProps<TData = any, TVariables = OperationVariables> {
-  mutation: MutationFn<TData, TVariables>;
+  mutation: MutationFunction<TData, TVariables>;
   res: MutationResult<TData>;
 }
 

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { MutationFn } from "react-apollo";
+import { MutationFunction } from "react-apollo";
 import "./login.less";
 import { RowInput } from "../Form/RowInput";
 import { OnChangeFn } from "../Form/types";
@@ -108,7 +108,7 @@ export class Login extends React.PureComponent<LoginProps, LoginState> {
     this.setState({ confirmPassword: e.currentTarget.value });
   }
 
-  private login = async (loginMutation: MutationFn<LoginUserData, UserInput>) => {
+  private login = async (loginMutation: MutationFunction<LoginUserData, UserInput>) => {
     const { email, password } = this.state;
     if(!this.verifyFields()) {
       return;
@@ -127,7 +127,7 @@ export class Login extends React.PureComponent<LoginProps, LoginState> {
     this.props.updateLoginState();
   }
 
-  private register = async (registerMutation: MutationFn<AddUserData, UserInput>) => {
+  private register = async (registerMutation: MutationFunction<AddUserData, UserInput>) => {
     const { email, password } = this.state;
     if(!this.verifyFields()) {
       return;

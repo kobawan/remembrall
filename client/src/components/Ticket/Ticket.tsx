@@ -1,5 +1,5 @@
 import * as React from "react";
-import { MutationFn } from "react-apollo";
+import { MutationFunction } from "react-apollo";
 import isEqual from "lodash.isequal";
 import "./ticket.less";
 import { ColumnType, TicketData, CommonFields } from "../../types";
@@ -13,7 +13,7 @@ export interface TicketProps {
   data: TicketData;
   displayFields: string[];
   focused: boolean;
-  updateTicket: MutationFn<any, { id: string, params: any }>;
+  updateTicket: MutationFunction<any, { id: string, params: any }>;
   deleteTicket: (data: CommonFields) => void;
   displayDirection: DisplayDirection;
 }

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { adopt } from "react-adopt";
-import { QueryResult, Mutation, Query, MutationFn, MutationResult } from "react-apollo";
+import { QueryResult, Mutation, Query, MutationFunction, MutationResult } from "react-apollo";
 import { MutationUpdaterFn } from "apollo-boost";
 import { MutationRenderProps, CategoryFields } from "../../types";
 import { initHandleCache } from "../../utils/cacheHandling";
@@ -79,14 +79,14 @@ export const CategoryWrapper = adopt<CategoryRenderProps, {}>({
   ),
   addCategory: ({ render }) => (
     <Mutation mutation={ADD_CATEGORY} update={addToCache}>
-      {(mutation: MutationFn<AddCategoryData, CategoryInput>, res: MutationResult<AddCategoryData>) => {
+      {(mutation: MutationFunction<AddCategoryData, CategoryInput>, res: MutationResult<AddCategoryData>) => {
         return render!({ mutation, res });
       }}
     </Mutation>
   ),
   deleteCategory: ({ render }) => (
     <Mutation mutation={DELETE_CATEGORY} update={removeFromCache} refetchQueries={[{ query: GET_PROJECTS }]}>
-      {(mutation: MutationFn<DeleteCategoryData, { id: string }>, res: MutationResult<DeleteCategoryData>) => {
+      {(mutation: MutationFunction<DeleteCategoryData, { id: string }>, res: MutationResult<DeleteCategoryData>) => {
         return render!({ mutation, res });
       }}
     </Mutation>
@@ -95,7 +95,7 @@ export const CategoryWrapper = adopt<CategoryRenderProps, {}>({
     <Mutation mutation={UPDATE_CATEGORY} update={updateCache}>
       {
         (
-          mutation: MutationFn<UpdateCategoryData, CategoryInput & { id: string }>,
+          mutation: MutationFunction<UpdateCategoryData, CategoryInput & { id: string }>,
           res: MutationResult<UpdateCategoryData>
         ) => render!({ mutation, res })
       }

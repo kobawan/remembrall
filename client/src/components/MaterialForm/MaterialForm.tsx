@@ -1,5 +1,5 @@
 import React, { useReducer } from "react";
-import { MutationFn } from "react-apollo";
+import { MutationFunction } from "react-apollo";
 import { CommonFields, MaterialFields } from "../../types";
 import { OnChangeFn } from "../Form/types";
 import { FormTitle } from "../Form/FormTitle";
@@ -16,9 +16,9 @@ interface FormProps {
   closeForm: () => void;
   openInvalidPopup: () => void;
   openChangesPopup: () => void;
-  createTicket: MutationFn<AddMaterialData, MaterialInput>;
+  createTicket: MutationFunction<AddMaterialData, MaterialInput>;
   deleteTicket: (data: CommonFields) => void;
-  updateTicket: MutationFn<UpdateMaterialData, MaterialInput & { id: string }>;
+  updateTicket: MutationFunction<UpdateMaterialData, MaterialInput & { id: string }>;
 }
 
 enum Fields {
@@ -67,8 +67,8 @@ export const MaterialForm: React.FC<FormProps> = ({
       stateTicket: convertToDbTicket(state),
       dbTicket: ticket,
       openInvalidPopup,
-      updateTicket: updateTicket as MutationFn,
-      createTicket: createTicket as MutationFn,
+      updateTicket: updateTicket as MutationFunction,
+      createTicket: createTicket as MutationFunction,
       closeForm,
     });
   };

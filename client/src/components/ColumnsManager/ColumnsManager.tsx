@@ -1,5 +1,5 @@
 import React, { useReducer, useMemo } from "react";
-import { MutationFn } from "react-apollo";
+import { MutationFunction } from "react-apollo";
 import "./columnsManager.less";
 import { ProjectColumn } from "../ProjectColumn/ProjectColumn";
 import { CategoryColumn } from "../CategoryColumn/CategoryColumn";
@@ -27,7 +27,7 @@ export const ColumnsManager: React.FC = () => {
     action: closeAll,
   });
   const openInvalidPopup = () => openPopupAction(dispatch, { text: PopupMessage.invalid });
-  const openDeletePopup = (text: string, id: string, deleteFn: MutationFn<any, { id: string }>) => {
+  const openDeletePopup = (text: string, id: string, deleteFn: MutationFunction<any, { id: string }>) => {
     const action = () => {
       closeAll();
       deleteFn({ variables: { id } });
@@ -37,7 +37,7 @@ export const ColumnsManager: React.FC = () => {
 
   const closeForm = () => closeFormAction(dispatch);
 
-  const safeDeleteTicket = ({ name, id }: CommonFields, deleteFn: MutationFn<any, { id: string }>) => {
+  const safeDeleteTicket = ({ name, id }: CommonFields, deleteFn: MutationFunction<any, { id: string }>) => {
     openDeletePopup(`${PopupMessage.delete} "${name}"?`, id, deleteFn);
   };
 

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { adopt } from "react-adopt";
-import { QueryResult, Mutation, Query, MutationFn, MutationResult } from "react-apollo";
+import { QueryResult, Mutation, Query, MutationFunction, MutationResult } from "react-apollo";
 import { MutationUpdaterFn } from "apollo-boost";
 import { MutationRenderProps, MaterialFields } from "../../types";
 import { initHandleCache } from "../../utils/cacheHandling";
@@ -78,14 +78,14 @@ export const MaterialWrapper = adopt<MaterialRenderProps, {}>({
   ),
   addMaterial: ({ render }) => (
     <Mutation mutation={ADD_MATERIAL} update={addToCache}>
-      {(mutation: MutationFn<AddMaterialData, MaterialInput>, res: MutationResult<AddMaterialData>) => {
+      {(mutation: MutationFunction<AddMaterialData, MaterialInput>, res: MutationResult<AddMaterialData>) => {
         return render!({ mutation, res });
       }}
     </Mutation>
   ),
   deleteMaterial: ({ render }) => (
     <Mutation mutation={DELETE_MATERIAL} update={removeFromCache} refetchQueries={[{ query: GET_PROJECTS }]}>
-      {(mutation: MutationFn<DeleteMaterialData, { id: string }>, res: MutationResult<DeleteMaterialData>) => {
+      {(mutation: MutationFunction<DeleteMaterialData, { id: string }>, res: MutationResult<DeleteMaterialData>) => {
         return render!({ mutation, res });
       }}
     </Mutation>
@@ -94,7 +94,7 @@ export const MaterialWrapper = adopt<MaterialRenderProps, {}>({
     <Mutation mutation={UPDATE_MATERIAL} update={updateCache}>
       {
         (
-          mutation: MutationFn<UpdateMaterialData, MaterialInput & { id: string }>,
+          mutation: MutationFunction<UpdateMaterialData, MaterialInput & { id: string }>,
           res: MutationResult<UpdateMaterialData>
         ) => render!({ mutation, res })
       }

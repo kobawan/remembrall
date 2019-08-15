@@ -1,4 +1,4 @@
-import { MutationUpdaterFn } from "react-apollo";
+import { MutationUpdaterFn } from "apollo-boost";
 
 export const initHandleCache =
 <Add, Get>(query: any, changeCb: (res: Get, data: Add) => Get): MutationUpdaterFn<Add> =>

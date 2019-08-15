@@ -1,12 +1,12 @@
 import * as React from "react";
-import { MutationFn } from "react-apollo";
+import { MutationFunction } from "react-apollo";
 import "./ticketTextArea.less";
 import { TicketData, ColumnType } from "../../types";
 
 interface TicketTextAreaProps {
   data: TicketData;
   type: ColumnType;
-  updateTicket: MutationFn<any, { id: string, params: any }>;
+  updateTicket: MutationFunction<any, { id: string, params: any }>;
   close: () => void;
   toggleError: (toggleError: boolean) => void;
 }

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { adopt } from "react-adopt";
-import { QueryResult, Mutation, Query, MutationFn, MutationResult } from "react-apollo";
+import { QueryResult, Mutation, Query, MutationFunction, MutationResult } from "react-apollo";
 import { MutationUpdaterFn } from "apollo-boost";
 import { MutationRenderProps, ToolFields } from "../../types";
 import { initHandleCache } from "../../utils/cacheHandling";
@@ -80,14 +80,14 @@ export const ToolWrapper = adopt<ToolRenderProps, {}>({
   ),
   addTool: ({ render }) => (
     <Mutation mutation={ADD_TOOL} update={addToCache}>
-      {(mutation: MutationFn<AddToolData, ToolInput>, res: MutationResult<AddToolData>) => {
+      {(mutation: MutationFunction<AddToolData, ToolInput>, res: MutationResult<AddToolData>) => {
         return render!({ mutation, res });
       }}
     </Mutation>
   ),
   deleteTool: ({ render }) => (
     <Mutation mutation={DELETE_TOOL} update={removeFromCache} refetchQueries={[{ query: GET_PROJECTS }]}>
-      {(mutation: MutationFn<DeleteToolData, { id: string }>, res: MutationResult<DeleteToolData>) => {
+      {(mutation: MutationFunction<DeleteToolData, { id: string }>, res: MutationResult<DeleteToolData>) => {
         return render!({ mutation, res });
       }}
     </Mutation>
@@ -96,7 +96,7 @@ export const ToolWrapper = adopt<ToolRenderProps, {}>({
     <Mutation mutation={UPDATE_TOOL} update={updateCache}>
       {
         (
-          mutation: MutationFn<UpdateToolData, ToolInput & { id: string }>,
+          mutation: MutationFunction<UpdateToolData, ToolInput & { id: string }>,
           res: MutationResult<UpdateToolData>
         ) => render!({ mutation, res })
       }

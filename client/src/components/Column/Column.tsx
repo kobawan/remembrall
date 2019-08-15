@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { MutationFn } from "react-apollo";
+import { MutationFunction } from "react-apollo";
 import "./column.less";
 import { Ticket } from "../Ticket/Ticket";
 import { ColumnType, TicketData, CommonFields } from "../../types";
@@ -13,7 +13,7 @@ interface ColumnProps {
   type: ColumnType;
   tickets: TicketData[];
   displayFields: string[];
-  updateTicket: MutationFn<any, { id: string, params: any }>;
+  updateTicket: MutationFunction<any, { id: string, params: any }>;
   deleteTicket: (data: CommonFields) => void;
   displayDirection: DisplayDirection;
 }

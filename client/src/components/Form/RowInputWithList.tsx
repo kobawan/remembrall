@@ -1,5 +1,5 @@
 import * as React from "react";
-import { MutationFn } from "react-apollo";
+import { MutationFunction } from "react-apollo";
 import "./rowInputWithList.less";
 import { CommonFields } from "../../types";
 import { plusSvg } from "../Svg/Svg";
@@ -10,7 +10,7 @@ interface RowInputWithListProps {
   name: string;
   options: CommonFields[];
   tags: CommonFields[];
-  addOption: MutationFn<any, { params: any }>;
+  addOption: MutationFunction<any, { params: any }>;
   updateTags: (field: string, tags: CommonFields[]) => void;
   isRequired?: boolean;
 }

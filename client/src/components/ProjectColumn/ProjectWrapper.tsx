@@ -1,5 +1,6 @@
 import * as React from "react";
-import { Mutation, MutationUpdaterFn, Query, QueryResult, MutationFn, MutationResult } from "react-apollo";
+import { Mutation, Query, QueryResult, MutationFunction, MutationResult } from "react-apollo";
+import { MutationUpdaterFn } from "apollo-boost";
 import { adopt } from "react-adopt";
 import { MutationRenderProps, ProjectFields } from "../../types";
 import { ADD_PROJECT, GET_PROJECTS, DELETE_PROJECT, UPDATE_PROJECT } from "./projectQueries";
@@ -88,14 +89,14 @@ export const ProjectWrapper = adopt<ProjectRenderProps, {}>({
   ),
   addProject: ({ render }) => (
     <Mutation mutation={ADD_PROJECT} update={addToCache}>
-      {(mutation: MutationFn<AddProjectData, ProjectInput>, res: MutationResult<AddProjectData>) => {
+      {(mutation: MutationFunction<AddProjectData, ProjectInput>, res: MutationResult<AddProjectData>) => {
         return render!({ mutation, res });
       }}
     </Mutation>
   ),
   deleteProject: ({ render }) => (
     <Mutation mutation={DELETE_PROJECT} update={removeFromCache}>
-      {(mutation: MutationFn<DeleteProjectData, { id: string }>, res: MutationResult<DeleteProjectData>) => {
+      {(mutation: MutationFunction<DeleteProjectData, { id: string }>, res: MutationResult<DeleteProjectData>) => {
         return render!({ mutation, res });
       }}
     </Mutation>
@@ -104,7 +105,7 @@ export const ProjectWrapper = adopt<ProjectRenderProps, {}>({
     <Mutation mutation={UPDATE_PROJECT} update={updateCache}>
       {
         (
-          mutation: MutationFn<UpdateProjectData, ProjectInput & { id: string }>,
+          mutation: MutationFunction<UpdateProjectData, ProjectInput & { id: string }>,
           res: MutationResult<UpdateProjectData>
         ) => render!({ mutation, res })
       }
