@@ -1,12 +1,12 @@
 import { ProjectState } from "./reducer";
 
 export enum ProjectActionType {
-	updateField = "updateField",
+  updateField = "updateField",
 }
 
 interface UpdateProjectFieldPayload {
-	key: keyof ProjectState;
-	value: ProjectState[keyof ProjectState];
+  key: keyof ProjectState;
+  value: ProjectState[keyof ProjectState];
 }
 
 export interface UpdateProjectFieldAction {
@@ -15,8 +15,8 @@ export interface UpdateProjectFieldAction {
 }
 
 export const updateProjectFieldAction = (
-	dispatch: React.Dispatch<UpdateProjectFieldAction>,
-	payload: UpdateProjectFieldPayload,
+  dispatch: React.Dispatch<UpdateProjectFieldAction>,
+  payload: UpdateProjectFieldPayload,
 ) => {
-	dispatch({ type: ProjectActionType.updateField, payload });
+  dispatch({ type: ProjectActionType.updateField, payload });
 };

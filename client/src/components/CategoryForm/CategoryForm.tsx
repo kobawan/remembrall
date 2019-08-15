@@ -7,61 +7,61 @@ import { AddCategoryData, CategoryInput, UpdateCategoryData } from "../CategoryC
 import { formHasChanges, submitForm } from "../Form/formUtils";
 
 interface FormProps {
-	ticket?: CategoryFields;
-	closeForm: () => void;
-	openInvalidPopup: () => void;
-	openChangesPopup: () => void;
-	createTicket: MutationFn<AddCategoryData, CategoryInput>;
-	deleteTicket: (data: CommonFields) => void;
-	updateTicket: MutationFn<UpdateCategoryData, CategoryInput & { id: string }>;
+  ticket?: CategoryFields;
+  closeForm: () => void;
+  openInvalidPopup: () => void;
+  openChangesPopup: () => void;
+  createTicket: MutationFn<AddCategoryData, CategoryInput>;
+  deleteTicket: (data: CommonFields) => void;
+  updateTicket: MutationFn<UpdateCategoryData, CategoryInput & { id: string }>;
 }
 
 enum Fields {
-	name = "name",
+  name = "name",
 }
 
 const requiredFields = [Fields.name];
 
 export const CategoryForm: React.FC<FormProps> = ({
-	closeForm,
-	openInvalidPopup,
-	openChangesPopup,
-	createTicket,
-	updateTicket,
-	ticket,
+  closeForm,
+  openInvalidPopup,
+  openChangesPopup,
+  createTicket,
+  updateTicket,
+  ticket,
 }) => {
-	const [name, setName] = useState(ticket ? ticket.name : "");
+  const [name, setName] = useState(ticket ? ticket.name : "");
 
-	const submitCategory = () => {
-		submitForm({
-			requiredFields,
-			stateTicket: { name: name.toLowerCase() },
-			dbTicket: ticket,
-			openInvalidPopup,
-			updateTicket: updateTicket as MutationFn,
-			createTicket: createTicket as MutationFn,
-			closeForm,
-		});
-	};
+  const submitCategory = () => {
+    submitForm({
+      requiredFields,
+      stateTicket: { name: name.toLowerCase() },
+      dbTicket: ticket,
+      openInvalidPopup,
+      updateTicket: updateTicket as MutationFn,
+      createTicket: createTicket as MutationFn,
+      closeForm,
+    });
+  };
 
-	const Title = (
-		<FormTitle
-			name={Fields.name}
-			value={name}
-			onChange={(e) => setName(e.currentTarget.value)}
-			placeholder="Category name"
-		/>
-	);
+  const Title = (
+    <FormTitle
+      name={Fields.name}
+      value={name}
+      onChange={(e) => setName(e.currentTarget.value)}
+      placeholder="Category name"
+    />
+  );
 
-	return (
-		<Form
-			Title={Title}
-			Content={null}
-			submitForm={submitCategory}
-			size={FormSize.small}
-			formHasChangesFn={() => formHasChanges({ name: name.toLowerCase() }, ticket)}
-			openChangesPopup={openChangesPopup}
-			closeForm={closeForm}
-		/>
-	);
+  return (
+    <Form
+      Title={Title}
+      Content={null}
+      submitForm={submitCategory}
+      size={FormSize.small}
+      formHasChangesFn={() => formHasChanges({ name: name.toLowerCase() }, ticket)}
+      openChangesPopup={openChangesPopup}
+      closeForm={closeForm}
+    />
+  );
 };

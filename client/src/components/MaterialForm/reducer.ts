@@ -3,26 +3,26 @@ import { MaterialFields } from "../../types";
 import { UpdateMaterialFieldAction, MaterialActionType } from "./actions";
 
 type MaterialActions = (
-	UpdateMaterialFieldAction
+  UpdateMaterialFieldAction
 );
 
 export type MaterialState = Omit<MaterialFields, "id"|"__typename">;
 
 export const initialMaterialState: MaterialState = {
-	name: "",
-	amount: 1,
-	color: null,
+  name: "",
+  amount: 1,
+  color: null,
 };
 
 export type MaterialReducerType = React.Reducer<MaterialState, MaterialActions>;
 
 export const materialReducer: MaterialReducerType = (state, action) => {
   switch (action.type) {
-		case MaterialActionType.updateField:
-			return {
-				...state,
-				[action.payload.key]: action.payload.value,
-			};
+    case MaterialActionType.updateField:
+      return {
+        ...state,
+        [action.payload.key]: action.payload.value,
+      };
     default:
       return state;
   }

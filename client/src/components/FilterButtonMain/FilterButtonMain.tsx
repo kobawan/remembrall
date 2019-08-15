@@ -5,12 +5,12 @@ import { ReducerContext } from "../ColumnsManager/context";
 import { removeFilterAction } from "../ColumnsManager/actions";
 
 export const MainFilterButton: React.FC = () => {
-	const { state: { filterTooltipState }, dispatch } = useContext(ReducerContext);
+  const { state: { filterTooltipState }, dispatch } = useContext(ReducerContext);
 
-	// @todo add logic
-	return (
-		<button className="mainFilterButton" onClick={() => removeFilterAction(dispatch)}>
-			{filterTooltipState.activeFilters.length ? removeFilterSvg: filterSvg}
-		</button>
-	);
+  // @todo add logic
+  return (
+    <button className="mainFilterButton" onClick={() => removeFilterAction(dispatch)}>
+      {filterTooltipState.activeFilters.length ? removeFilterSvg: filterSvg}
+    </button>
+  );
 };

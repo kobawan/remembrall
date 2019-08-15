@@ -1,12 +1,12 @@
 import { ToolState } from "./reducer";
 
 export enum ToolActionType {
-	updateField = "updateField",
+  updateField = "updateField",
 }
 
 interface UpdateToolFieldPayload {
-	key: keyof ToolState;
-	value: ToolState[keyof ToolState];
+  key: keyof ToolState;
+  value: ToolState[keyof ToolState];
 }
 
 export interface UpdateToolFieldAction {
@@ -15,8 +15,8 @@ export interface UpdateToolFieldAction {
 }
 
 export const updateToolFieldAction = (
-	dispatch: React.Dispatch<UpdateToolFieldAction>,
-	payload: UpdateToolFieldPayload,
+  dispatch: React.Dispatch<UpdateToolFieldAction>,
+  payload: UpdateToolFieldPayload,
 ) => {
-	dispatch({ type: ToolActionType.updateField, payload });
+  dispatch({ type: ToolActionType.updateField, payload });
 };

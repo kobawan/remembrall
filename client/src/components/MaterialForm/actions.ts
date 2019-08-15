@@ -1,12 +1,12 @@
 import { MaterialState } from "./reducer";
 
 export enum MaterialActionType {
-	updateField = "updateField",
+  updateField = "updateField",
 }
 
 interface UpdateMaterialFieldPayload {
-	key: keyof MaterialState;
-	value: MaterialState[keyof MaterialState];
+  key: keyof MaterialState;
+  value: MaterialState[keyof MaterialState];
 }
 
 export interface UpdateMaterialFieldAction {
@@ -15,8 +15,8 @@ export interface UpdateMaterialFieldAction {
 }
 
 export const updateMaterialFieldAction = (
-	dispatch: React.Dispatch<UpdateMaterialFieldAction>,
-	payload: UpdateMaterialFieldPayload,
+  dispatch: React.Dispatch<UpdateMaterialFieldAction>,
+  payload: UpdateMaterialFieldPayload,
 ) => {
-	dispatch({ type: MaterialActionType.updateField, payload });
+  dispatch({ type: MaterialActionType.updateField, payload });
 };
