@@ -1,8 +1,7 @@
-import React from "react";
-import { adopt } from "react-adopt";
-import { QueryResult, Mutation, Query, MutationFunction, MutationResult } from "react-apollo";
+import { QueryResult, MutationTuple } from "react-apollo";
+import { useQuery, useMutation } from "@apollo/react-hooks";
 import { MutationUpdaterFn } from "apollo-boost";
-import { MutationRenderProps, CategoryFields } from "../../types";
+import { CategoryFields } from "../../types";
 import { initHandleCache } from "../../utils/cacheHandling";
 import { GET_CATEGORIES, ADD_CATEGORY, DELETE_CATEGORY, UPDATE_CATEGORY } from "./categoryQueries";
 import { GET_PROJECTS } from "../ProjectColumn/projectQueries";
@@ -27,12 +26,18 @@ export interface CategoryInput {
   params: Omit<CategoryFields, "id">;
 }
 
-export interface CategoryRenderProps {
-  categories: QueryResult<GetCategoryData>;
-  addCategory: MutationRenderProps<AddCategoryData, CategoryInput>;
-  deleteCategory: MutationRenderProps<DeleteCategoryData, { id: string }>;
-  updateCategory: MutationRenderProps<UpdateCategoryData, CategoryInput & { id: string }>;
-}
+type UseCategoryQueryAndMutationsRes = [
+  QueryResult<GetCategoryData, undefined>,
+  MutationTuple<AddCategoryData, CategoryInput>,
+  MutationTuple<UpdateCategoryData, CategoryInput & { id: string }>,
+  MutationTuple<DeleteCategoryData, { id: string }>,
+];
+
+type UseCategoryQueryAndAddMutationRes = [
+  QueryResult<GetCategoryData, undefined>,
+  MutationTuple<AddCategoryData, CategoryInput>,
+];
+
 const addToCache: MutationUpdaterFn<AddCategoryData> =
   initHandleCache<AddCategoryData, GetCategoryData>(GET_CATEGORIES, (res, data) => {
     if(!res.categories) {
@@ -73,32 +78,18 @@ initHandleCache<UpdateCategoryData, GetCategoryData>(GET_CATEGORIES, (res, data)
   return res;
 });
 
-export const CategoryWrapper = adopt<CategoryRenderProps, {}>({
-  categories: ({ render }) => (
-    <Query query={GET_CATEGORIES} children={render!} />
-  ),
-  addCategory: ({ render }) => (
-    <Mutation mutation={ADD_CATEGORY} update={addToCache}>
-      {(mutation: MutationFunction<AddCategoryData, CategoryInput>, res: MutationResult<AddCategoryData>) => {
-        return render!({ mutation, res });
-      }}
-    </Mutation>
-  ),
-  deleteCategory: ({ render }) => (
-    <Mutation mutation={DELETE_CATEGORY} update={removeFromCache} refetchQueries={[{ query: GET_PROJECTS }]}>
-      {(mutation: MutationFunction<DeleteCategoryData, { id: string }>, res: MutationResult<DeleteCategoryData>) => {
-        return render!({ mutation, res });
-      }}
-    </Mutation>
-  ),
-  updateCategory: ({ render }) => (
-    <Mutation mutation={UPDATE_CATEGORY} update={updateCache}>
-      {
-        (
-          mutation: MutationFunction<UpdateCategoryData, CategoryInput & { id: string }>,
-          res: MutationResult<UpdateCategoryData>
-        ) => render!({ mutation, res })
-      }
-    </Mutation>
-  )
-});
+export const useCategoryQueryAndMutations = (): UseCategoryQueryAndMutationsRes => {
+  return [
+    useQuery(GET_CATEGORIES),
+    useMutation(ADD_CATEGORY, { update: addToCache }),
+    useMutation(UPDATE_CATEGORY, { update: updateCache }),
+    useMutation(DELETE_CATEGORY, { update: removeFromCache, refetchQueries: [{ query: GET_PROJECTS }] }),
+  ];
+};
+
+export const useCategoryQueryAndAddMutation = (): UseCategoryQueryAndAddMutationRes => {
+  return [
+    useQuery(GET_CATEGORIES),
+    useMutation(ADD_CATEGORY, { update: addToCache }),
+  ];
+};

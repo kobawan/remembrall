@@ -1,8 +1,7 @@
-import React from "react";
-import { adopt } from "react-adopt";
-import { QueryResult, Mutation, Query, MutationFunction, MutationResult } from "react-apollo";
+import { QueryResult, MutationTuple } from "react-apollo";
+import { useQuery, useMutation } from "@apollo/react-hooks";
 import { MutationUpdaterFn } from "apollo-boost";
-import { MutationRenderProps, ToolFields } from "../../types";
+import { ToolFields } from "../../types";
 import { initHandleCache } from "../../utils/cacheHandling";
 import { GET_TOOLS, ADD_TOOL, DELETE_TOOL, UPDATE_TOOL } from "./toolQueries";
 import { GET_PROJECTS } from "../ProjectColumn/projectQueries";
@@ -27,12 +26,17 @@ export interface ToolInput {
   params: Omit<ToolFields, "id">;
 }
 
-export interface ToolRenderProps {
-  tools: QueryResult<GetToolData>;
-  addTool: MutationRenderProps<AddToolData, ToolInput>;
-  updateTool: MutationRenderProps<UpdateToolData, ToolInput & { id: string }>;
-  deleteTool: MutationRenderProps<DeleteToolData, { id: string }>;
-}
+type UseToolQueryAndMutationsRes = [
+  QueryResult<GetToolData, undefined>,
+  MutationTuple<AddToolData, ToolInput>,
+  MutationTuple<UpdateToolData, ToolInput & { id: string }>,
+  MutationTuple<DeleteToolData, { id: string }>,
+];
+
+type UseToolQueryAndAddMutationRes = [
+  QueryResult<GetToolData, undefined>,
+  MutationTuple<AddToolData, ToolInput>,
+];
 
 const addToCache: MutationUpdaterFn<AddToolData> =
   initHandleCache<AddToolData, GetToolData>(GET_TOOLS, (res, data) => {
@@ -74,32 +78,18 @@ initHandleCache<UpdateToolData, GetToolData>(GET_TOOLS, (res, data) => {
   return res;
 });
 
-export const ToolWrapper = adopt<ToolRenderProps, {}>({
-  tools: ({ render }) => (
-    <Query query={GET_TOOLS} children={render!} />
-  ),
-  addTool: ({ render }) => (
-    <Mutation mutation={ADD_TOOL} update={addToCache}>
-      {(mutation: MutationFunction<AddToolData, ToolInput>, res: MutationResult<AddToolData>) => {
-        return render!({ mutation, res });
-      }}
-    </Mutation>
-  ),
-  deleteTool: ({ render }) => (
-    <Mutation mutation={DELETE_TOOL} update={removeFromCache} refetchQueries={[{ query: GET_PROJECTS }]}>
-      {(mutation: MutationFunction<DeleteToolData, { id: string }>, res: MutationResult<DeleteToolData>) => {
-        return render!({ mutation, res });
-      }}
-    </Mutation>
-  ),
-  updateTool: ({ render }) => (
-    <Mutation mutation={UPDATE_TOOL} update={updateCache}>
-      {
-        (
-          mutation: MutationFunction<UpdateToolData, ToolInput & { id: string }>,
-          res: MutationResult<UpdateToolData>
-        ) => render!({ mutation, res })
-      }
-    </Mutation>
-  )
-});
+export const useToolQueryAndMutations = (): UseToolQueryAndMutationsRes => {
+  return [
+    useQuery(GET_TOOLS),
+    useMutation(ADD_TOOL, { update: addToCache }),
+    useMutation(UPDATE_TOOL, { update: updateCache }),
+    useMutation(DELETE_TOOL, { update: removeFromCache, refetchQueries: [{ query: GET_PROJECTS }] }),
+  ];
+};
+
+export const useToolQueryAndAddMutation = (): UseToolQueryAndAddMutationRes => {
+  return [
+    useQuery(GET_TOOLS),
+    useMutation(ADD_TOOL, { update: addToCache }),
+  ];
+};

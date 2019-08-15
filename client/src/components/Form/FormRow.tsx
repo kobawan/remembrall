@@ -13,6 +13,11 @@ export enum FormRowDirection {
   column = "column",
 }
 
+const formRowDirectionMap = {
+  [FormRowDirection.row]: styles.row,
+  [FormRowDirection.column]: styles.column,
+};
+
 export const FormRow: React.FC<FormRowProps> = (({
   name,
   isRequired,
@@ -22,7 +27,7 @@ export const FormRow: React.FC<FormRowProps> = (({
   return (
     <div className={styles.row}>
       <label className={styles.label}>{`${name}${isRequired ? " *" : ""}`}</label>
-      <div className={cx(styles.content, direction)}>
+      <div className={cx(styles.content, formRowDirectionMap[direction])}>
         {children}
       </div>
     </div>

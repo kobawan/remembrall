@@ -3,7 +3,7 @@ import { MutationFunction } from "react-apollo";
 import { logErrors } from "../../utils/errorHandling";
 import { Column } from "../Column/Column";
 import { ColumnType, CommonFields, MaterialFields } from "../../types";
-import { MaterialWrapper, DeleteMaterialData } from "./MaterialWrapper";
+import { DeleteMaterialData, useMaterialQueryAndMutations } from "./MaterialWrapper";
 import { MaterialForm } from "../MaterialForm/MaterialForm";
 import { DisplayDirection } from "../TicketDisplay/TicketDisplay";
 import { ReducerContext } from "../ColumnsManager/context";
@@ -22,36 +22,41 @@ export const MaterialColumn: React.FC<MaterialColumnProps> = ({
   openInvalidPopup,
 }) => {
   const { formOpened, formProps } = useContext(ReducerContext).state.formState;
+  const [
+    { data, error, loading },
+    [addMaterial, addRes],
+    [updateMaterial, updateRes],
+    [deleteMaterial, deleteRes],
+  ] = useMaterialQueryAndMutations();
+
+  logErrors(error, addRes.error, updateRes.error, deleteRes.error);
+  // @todo handle loading
+  const isLoading = loading || addRes.loading || updateRes.loading || deleteRes.loading;
+
+  const deleteTicket = (data: CommonFields) => safeDeleteTicket(data, deleteMaterial);
 
   return (
-    <MaterialWrapper>
-      {({ addMaterial, updateMaterial, deleteMaterial, materials: { data, error }}) => {
-        logErrors(error, addMaterial, updateMaterial, deleteMaterial);
-
-        return (
-          <>
-            <Column
-              tickets={data && data.materials ? data.materials : []}
-              type={ColumnType.Materials}
-              updateTicket={updateMaterial.mutation}
-              deleteTicket={(data: CommonFields) => safeDeleteTicket(data, deleteMaterial.mutation)}
-              displayFields={["name", "color", "amount"]}
-              displayDirection={DisplayDirection.row}
-            />
-            {formOpened === ColumnType.Materials && (
-              <MaterialForm
-                ticket={formProps as MaterialFields}
-                closeForm={closeForm}
-                openInvalidPopup={openInvalidPopup}
-                openChangesPopup={openChangesPopup}
-                createTicket={addMaterial.mutation}
-                deleteTicket={(data: CommonFields) => safeDeleteTicket(data, deleteMaterial.mutation)}
-                updateTicket={updateMaterial.mutation}
-              />
-            )}
-          </>
-        );
-      }}
-    </MaterialWrapper>
+    <>
+      <Column
+        tickets={data && data.materials ? data.materials : []}
+        type={ColumnType.Materials}
+        updateTicket={updateMaterial}
+        deleteTicket={deleteTicket}
+        displayFields={["name", "color", "amount"]}
+        displayDirection={DisplayDirection.row}
+        isLoading={isLoading}
+      />
+      {formOpened === ColumnType.Materials && (
+        <MaterialForm
+          ticket={formProps as MaterialFields}
+          closeForm={closeForm}
+          openInvalidPopup={openInvalidPopup}
+          openChangesPopup={openChangesPopup}
+          createTicket={addMaterial}
+          deleteTicket={deleteTicket}
+          updateTicket={updateMaterial}
+        />
+      )}
+    </>
   );
 };

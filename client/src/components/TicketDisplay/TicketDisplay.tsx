@@ -32,6 +32,11 @@ export enum DisplayDirection {
   row = "row",
 }
 
+const displayDirectionMap = {
+  [DisplayDirection.column]: styles.column,
+  [DisplayDirection.row]: styles.row
+};
+
 export interface TicketDisplayProps {
   openForm: (props: FormManagerState) => void;
   data: TicketData;
@@ -80,7 +85,7 @@ export const TicketDisplay: React.FC<TicketDisplayProps> = ({
 
   const renderDisplayedValues = () => {
     return displayFields.map((key, i) => (
-      <div key={i} className={cx(styles.displayRow, displayDirection)}>
+      <div key={i} className={cx(styles.displayRow, displayDirectionMap[displayDirection])}>
         <small className={styles.key}>{key}:</small>
         <span>{formatDisplayFields(data, key)}</span>
       </div>

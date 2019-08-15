@@ -1,8 +1,7 @@
-import React from "react";
-import { adopt } from "react-adopt";
-import { QueryResult, Mutation, Query, MutationFunction, MutationResult } from "react-apollo";
+import { QueryResult, MutationTuple } from "react-apollo";
+import { useQuery, useMutation } from "@apollo/react-hooks";
 import { MutationUpdaterFn } from "apollo-boost";
-import { MutationRenderProps, MaterialFields } from "../../types";
+import { MaterialFields } from "../../types";
 import { initHandleCache } from "../../utils/cacheHandling";
 import { GET_MATERIALS, ADD_MATERIAL, DELETE_MATERIAL, UPDATE_MATERIAL } from "./materialQueries";
 import { GET_PROJECTS } from "../ProjectColumn/projectQueries";
@@ -26,12 +25,19 @@ export interface DeleteMaterialData {
 export interface MaterialInput {
   params: Omit<MaterialFields, "id">;
 }
-export interface MaterialRenderProps {
-  materials: QueryResult<GetMaterialData>;
-  addMaterial: MutationRenderProps<AddMaterialData, MaterialInput>;
-  updateMaterial: MutationRenderProps<UpdateMaterialData, MaterialInput & { id: string }>;
-  deleteMaterial: MutationRenderProps<DeleteMaterialData, { id: string }>;
-}
+
+type UseMaterialQueryAndMutationsRes = [
+  QueryResult<GetMaterialData, undefined>,
+  MutationTuple<AddMaterialData, MaterialInput>,
+  MutationTuple<UpdateMaterialData, MaterialInput & { id: string }>,
+  MutationTuple<DeleteMaterialData, { id: string }>,
+];
+
+type UseMaterialQueryAndAddMutationsRes = [
+  QueryResult<GetMaterialData, undefined>,
+  MutationTuple<AddMaterialData, MaterialInput>,
+];
+
 const addToCache: MutationUpdaterFn<AddMaterialData> =
   initHandleCache<AddMaterialData, GetMaterialData>(GET_MATERIALS, (res, data) => {
     if(!res.materials) {
@@ -72,32 +78,18 @@ const updateCache: MutationUpdaterFn<UpdateMaterialData> =
     return res;
   });
 
-export const MaterialWrapper = adopt<MaterialRenderProps, {}>({
-  materials: ({ render }) => (
-    <Query query={GET_MATERIALS} children={render!} />
-  ),
-  addMaterial: ({ render }) => (
-    <Mutation mutation={ADD_MATERIAL} update={addToCache}>
-      {(mutation: MutationFunction<AddMaterialData, MaterialInput>, res: MutationResult<AddMaterialData>) => {
-        return render!({ mutation, res });
-      }}
-    </Mutation>
-  ),
-  deleteMaterial: ({ render }) => (
-    <Mutation mutation={DELETE_MATERIAL} update={removeFromCache} refetchQueries={[{ query: GET_PROJECTS }]}>
-      {(mutation: MutationFunction<DeleteMaterialData, { id: string }>, res: MutationResult<DeleteMaterialData>) => {
-        return render!({ mutation, res });
-      }}
-    </Mutation>
-  ),
-  updateMaterial: ({ render }) => (
-    <Mutation mutation={UPDATE_MATERIAL} update={updateCache}>
-      {
-        (
-          mutation: MutationFunction<UpdateMaterialData, MaterialInput & { id: string }>,
-          res: MutationResult<UpdateMaterialData>
-        ) => render!({ mutation, res })
-      }
-    </Mutation>
-  )
-});
+export const useMaterialQueryAndMutations = (): UseMaterialQueryAndMutationsRes => {
+  return [
+    useQuery(GET_MATERIALS),
+    useMutation(ADD_MATERIAL, { update: addToCache }),
+    useMutation(UPDATE_MATERIAL, { update: updateCache }),
+    useMutation(DELETE_MATERIAL, { update: removeFromCache, refetchQueries: [{ query: GET_PROJECTS }] }),
+  ];
+};
+
+export const useMaterialQueryAndAddMutation = (): UseMaterialQueryAndAddMutationsRes => {
+  return [
+    useQuery(GET_MATERIALS),
+    useMutation(ADD_MATERIAL, { update: addToCache }),
+  ];
+};

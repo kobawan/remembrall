@@ -19,18 +19,19 @@ export const formHasChanges = (stateTicket: {}, dbTicket?: { [key: string]: any 
 };
 
 /**
- * Checks that the required fields are filled in
+ * Checks if the required fields are filled in
  */
-export const formIsValid = (requiredFields: string[], stateTicket: { [key: string]: any }) => {
+export const formIsInvalid = (requiredFields: string[], stateTicket: { [key: string]: any }) => {
   return requiredFields.some((field) => {
     if(!stateTicket.hasOwnProperty(field)) {
-      return false;
+      throw new Error(`${field} is not a property of state.`);
     }
 
     const value = stateTicket[field];
     return (
-      (typeof value === "string" || Array.isArray(value))
-      && !!value.length
+      (typeof value === "string" || Array.isArray(value)) && !value.length
+      || value === undefined
+      || value === null
     );
   });
 };
@@ -54,7 +55,7 @@ export const submitForm = ({
   createTicket,
   closeForm,
 }: SubmitFormProps) => {
-  if(!formIsValid(requiredFields, stateTicket)) {
+  if(formIsInvalid(requiredFields, stateTicket)) {
     openInvalidPopup();
     return;
   }

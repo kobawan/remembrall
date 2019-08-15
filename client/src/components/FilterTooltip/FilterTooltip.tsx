@@ -24,6 +24,11 @@ export enum FilterTooltipPosition {
   right = "right",
 }
 
+const filterTooltipPositionMap = {
+  [FilterTooltipPosition.left]: styles.left,
+  [FilterTooltipPosition.right]: styles.right,
+};
+
 export interface BasicFilterTooltipProps {
   top: number;
   left: number;
@@ -62,7 +67,7 @@ export const FilterTooltip: React.FC<BasicFilterTooltipProps> = ({
   return (
     <div>
       <Overlay zIndex={OverlayZIndex.Tooltip} onClick={closeTooltip} />
-      <div className={cx(styles.tooltip, position)} style={style}>
+      <div className={cx(styles.tooltip, filterTooltipPositionMap[position])} style={style}>
         <span className={styles.title}>Filter by:</span>
         <Checkbox
           text={FilterTooltipCheckboxText.linked}

@@ -10,6 +10,12 @@ export enum FormSize {
   large = "large",
 }
 
+const formSizeMap = {
+  [FormSize.small]: styles.small,
+  [FormSize.medium]: styles.medium,
+  [FormSize.large]: styles.large,
+};
+
 interface FormProps {
   Title: React.ReactNode;
   Content: React.ReactNode;
@@ -33,7 +39,7 @@ export const Form = React.memo(({
 
   return (<>
     <Overlay onClick={safeCloseForm} zIndex={OverlayZIndex.Form} />
-    <div className={cx(styles.form, size)}>
+    <div className={cx(styles.form, formSizeMap[size])}>
       {Title}
       <div className={styles.content}>
         {Content}

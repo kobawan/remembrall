@@ -4,9 +4,9 @@ import { CommonFields, ProjectFields } from "../../types";
 import { getInitialState } from "../../utils/getInitialState";
 import { RowInputWithList } from "../Form/RowInputWithList";
 import { logErrors } from "../../utils/errorHandling";
-import { CategoryWrapper, CategoryRenderProps } from "../CategoryColumn/CategoryWrapper";
-import { ToolWrapper, ToolRenderProps } from "../ToolColumn/ToolWrapper";
-import { MaterialWrapper, MaterialRenderProps } from "../MaterialColumn/MaterialWrapper";
+import { useCategoryQueryAndAddMutation } from "../CategoryColumn/CategoryWrapper";
+import { useToolQueryAndAddMutation } from "../ToolColumn/ToolWrapper";
+import { useMaterialQueryAndAddMutation } from "../MaterialColumn/MaterialWrapper";
 import { OnChangeFn } from "../Form/types";
 import { FormTitle } from "../Form/FormTitle";
 import { RowTextArea } from "../Form/RowTextArea";
@@ -42,6 +42,8 @@ const requiredFields = [
   Fields.materials,
 ];
 
+export const displayedFields = requiredFields;
+
 export const ProjectForm: React.FC<FormProps> = ({
   closeForm,
   openInvalidPopup,
@@ -53,6 +55,22 @@ export const ProjectForm: React.FC<FormProps> = ({
   const [ state, dispatch ] = useReducer<ProjectReducerType>(
     projectReducer,
     getInitialState(initialProjectState, ticket),
+  );
+  const [categoryRes, [addCategory, addCategoryRes]] = useCategoryQueryAndAddMutation();
+  const [toolRes, [addTool, addToolRes]] = useToolQueryAndAddMutation();
+  const [materialRes, [addMaterial, addMaterialRes]] = useMaterialQueryAndAddMutation();
+
+  const categories = categoryRes.data && categoryRes.data.categories ? categoryRes.data.categories : [];
+  const materials = materialRes.data && materialRes.data.materials ? materialRes.data.materials : [];
+  const tools = toolRes.data && toolRes.data.tools ? toolRes.data.tools : [];
+
+  logErrors(
+    materialRes.error,
+    addMaterialRes.error,
+    categoryRes.error,
+    addCategoryRes.error,
+    toolRes.error,
+    addToolRes.error,
   );
 
   const updateField: OnChangeFn = (e) => {
@@ -88,51 +106,30 @@ export const ProjectForm: React.FC<FormProps> = ({
 
   const Content = (
     <>
-      <CategoryWrapper>
-        {({ addCategory, categories: { data, error }}: CategoryRenderProps) => {
-          logErrors(error, addCategory);
-          return (
-            <RowInputWithList
-              name={Fields.categories}
-              tags={state.categories}
-              options={data && data.categories ? data.categories : []}
-              addOption={addCategory.mutation}
-              isRequired={true}
-              updateTags={updateTags}
-            />
-          );
-        }}
-      </CategoryWrapper>
-      <ToolWrapper>
-        {({ addTool, tools: { data, error }}: ToolRenderProps) => {
-          logErrors(error, addTool);
-          return (
-            <RowInputWithList
-              name={Fields.tools}
-              tags={state.tools}
-              options={data && data.tools ? data.tools : []}
-              addOption={addTool.mutation}
-              isRequired={true}
-              updateTags={updateTags}
-            />
-          );
-        }}
-      </ToolWrapper>
-      <MaterialWrapper>
-        {({ addMaterial, materials: { data, error }}: MaterialRenderProps) => {
-          logErrors(error, addMaterial);
-          return (
-            <RowInputWithList
-              name={Fields.materials}
-              tags={state.materials}
-              options={data && data.materials ? data.materials : []}
-              addOption={addMaterial.mutation}
-              isRequired={true}
-              updateTags={updateTags}
-            />
-          );
-        }}
-      </MaterialWrapper>
+      <RowInputWithList
+        name={Fields.categories}
+        tags={state.categories}
+        options={categories}
+        addOption={addCategory}
+        isRequired={true}
+        updateTags={updateTags}
+      />
+      <RowInputWithList
+        name={Fields.tools}
+        tags={state.tools}
+        options={tools}
+        addOption={addTool}
+        isRequired={true}
+        updateTags={updateTags}
+      />
+      <RowInputWithList
+        name={Fields.materials}
+        tags={state.materials}
+        options={materials}
+        addOption={addMaterial}
+        isRequired={true}
+        updateTags={updateTags}
+      />
       <RowTextArea
         name={Fields.instructions}
         value={state.instructions}

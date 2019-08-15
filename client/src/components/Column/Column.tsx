@@ -16,6 +16,7 @@ interface ColumnProps {
   updateTicket: MutationFunction<any, { id: string, params: any }>;
   deleteTicket: (data: CommonFields) => void;
   displayDirection: DisplayDirection;
+  isLoading: boolean; // @todo handle loading
 }
 
 export const Column: React.FC<ColumnProps> = ({

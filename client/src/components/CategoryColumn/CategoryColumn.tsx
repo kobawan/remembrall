@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { MutationFunction } from "react-apollo";
-import { CategoryWrapper, DeleteCategoryData } from "./CategoryWrapper";
+import { DeleteCategoryData, useCategoryQueryAndMutations } from "./CategoryWrapper";
 import { logErrors } from "../../utils/errorHandling";
 import { Column } from "../Column/Column";
 import { ColumnType, CommonFields } from "../../types";
@@ -22,36 +22,41 @@ export const CategoryColumn: React.FC<CategoryColumnProps> = ({
   openChangesPopup,
 }) => {
   const { formOpened, formProps } = useContext(ReducerContext).state.formState;
+  const [
+    { data, error, loading },
+    [addCategory, addRes],
+    [updateCategory, updateRes],
+    [deleteCategory, deleteRes],
+  ] = useCategoryQueryAndMutations();
+
+  logErrors(error, addRes.error, updateRes.error, deleteRes.error);
+  // @todo handle loading
+  const isLoading = loading || addRes.loading || updateRes.loading || deleteRes.loading;
+
+  const deleteTicket = (data: CommonFields) => safeDeleteTicket(data, deleteCategory);
 
   return (
-    <CategoryWrapper>
-      {({ addCategory, updateCategory, deleteCategory, categories: { data, error }}) => {
-        logErrors(error, addCategory, updateCategory, deleteCategory);
-
-        return (
-          <>
-            <Column
-              tickets={data && data.categories ? data.categories : []}
-              type={ColumnType.Categories}
-              updateTicket={updateCategory.mutation}
-              deleteTicket={(data: CommonFields) => safeDeleteTicket(data, deleteCategory.mutation)}
-              displayFields={["name"]}
-              displayDirection={DisplayDirection.row}
-            />
-            {formOpened === ColumnType.Categories && (
-              <CategoryForm
-                ticket={formProps}
-                closeForm={closeForm}
-                openInvalidPopup={openInvalidPopup}
-                openChangesPopup={openChangesPopup}
-                createTicket={addCategory.mutation}
-                deleteTicket={(data: CommonFields) => safeDeleteTicket(data, deleteCategory.mutation)}
-                updateTicket={updateCategory.mutation}
-              />
-            )}
-          </>
-        );
-      }}
-    </CategoryWrapper>
+    <>
+      <Column
+        tickets={data && data.categories ? data.categories : []}
+        type={ColumnType.Categories}
+        updateTicket={updateCategory}
+        deleteTicket={deleteTicket}
+        displayFields={["name"]}
+        displayDirection={DisplayDirection.row}
+        isLoading={isLoading}
+      />
+      {formOpened === ColumnType.Categories && (
+        <CategoryForm
+          ticket={formProps}
+          closeForm={closeForm}
+          openInvalidPopup={openInvalidPopup}
+          openChangesPopup={openChangesPopup}
+          createTicket={addCategory}
+          deleteTicket={deleteTicket}
+          updateTicket={updateCategory}
+        />
+      )}
+    </>
   );
 };

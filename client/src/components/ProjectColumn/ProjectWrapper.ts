@@ -1,8 +1,7 @@
-import React from "react";
-import { Mutation, Query, QueryResult, MutationFunction, MutationResult } from "react-apollo";
+import { MutationTuple, QueryResult } from "react-apollo";
 import { MutationUpdaterFn } from "apollo-boost";
-import { adopt } from "react-adopt";
-import { MutationRenderProps, ProjectFields } from "../../types";
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import { ProjectFields } from "../../types";
 import { ADD_PROJECT, GET_PROJECTS, DELETE_PROJECT, UPDATE_PROJECT } from "./projectQueries";
 import { initHandleCache } from "../../utils/cacheHandling";
 
@@ -33,12 +32,12 @@ export interface UpdateProjectData {
   updateProject: ProjectFields;
 }
 
-export interface ProjectRenderProps {
-  addProject: MutationRenderProps<AddProjectData, ProjectInput>;
-  deleteProject: MutationRenderProps<DeleteProjectData, { id: string }>;
-  updateProject: MutationRenderProps<UpdateProjectData, ProjectInput & { id: string }>;
-  projects: QueryResult<GetProjectData>;
-}
+type UseProjectQueryAndMutationsRes = [
+  QueryResult<GetProjectData, undefined>,
+  MutationTuple<AddProjectData, ProjectInput>,
+  MutationTuple<UpdateProjectData, ProjectInput & { id: string }>,
+  MutationTuple<DeleteProjectData, { id: string }>,
+];
 
 const addToCache: MutationUpdaterFn<AddProjectData> =
   initHandleCache<AddProjectData, GetProjectData>(GET_PROJECTS, (res, data) => {
@@ -83,32 +82,11 @@ initHandleCache<UpdateProjectData, GetProjectData>(GET_PROJECTS, (res, data) => 
   return res;
 });
 
-export const ProjectWrapper = adopt<ProjectRenderProps, {}>({
-  projects: ({ render }) => (
-    <Query query={GET_PROJECTS} children={render!} />
-  ),
-  addProject: ({ render }) => (
-    <Mutation mutation={ADD_PROJECT} update={addToCache}>
-      {(mutation: MutationFunction<AddProjectData, ProjectInput>, res: MutationResult<AddProjectData>) => {
-        return render!({ mutation, res });
-      }}
-    </Mutation>
-  ),
-  deleteProject: ({ render }) => (
-    <Mutation mutation={DELETE_PROJECT} update={removeFromCache}>
-      {(mutation: MutationFunction<DeleteProjectData, { id: string }>, res: MutationResult<DeleteProjectData>) => {
-        return render!({ mutation, res });
-      }}
-    </Mutation>
-  ),
-  updateProject: ({ render }) => (
-    <Mutation mutation={UPDATE_PROJECT} update={updateCache}>
-      {
-        (
-          mutation: MutationFunction<UpdateProjectData, ProjectInput & { id: string }>,
-          res: MutationResult<UpdateProjectData>
-        ) => render!({ mutation, res })
-      }
-    </Mutation>
-  )
-});
+export const useProjectQueryAndMutations = (): UseProjectQueryAndMutationsRes => {
+  return [
+    useQuery(GET_PROJECTS),
+    useMutation(ADD_PROJECT, { update: addToCache }),
+    useMutation(UPDATE_PROJECT, { update: updateCache }),
+    useMutation(DELETE_PROJECT, { update: removeFromCache }),
+  ];
+};

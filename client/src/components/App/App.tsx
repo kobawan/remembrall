@@ -26,7 +26,7 @@ export const App = React.memo(() => {
           </button>
         )}
       </div>
-      {!userHasLoggedIn && <hr className="hr" />}
+      {!userHasLoggedIn && <hr className={styles.hr} />}
       {userHasLoggedIn
         ? <ColumnsManager />
         : <Login updateLoginState={toggleUserLogin}/>

@@ -41,7 +41,6 @@
     "lodash.isequal": "^4.5.0",
     "mini-css-extract-plugin": "^0.8.0",
     "react": "^16.9.0",
-    "react-adopt": "^0.6.0",
     "react-apollo": "^3.0.1",
     "react-dom": "^16.9.0",
     "source-map-loader": "^0.2.4",
