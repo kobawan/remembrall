@@ -6,6 +6,7 @@ import { editSvg, trashSvg, filterSvg } from "../Svg/Svg";
 import { ReducerContext } from "../ColumnsManager/context";
 import { openFilterTooltipAction } from "../ColumnsManager/actions";
 import { FormManagerState } from "../ColumnsManager/types";
+import { FilterType } from "../FilterTooltip/FilterTooltip";
 
 const formatDisplayFields = (data: TicketData, key: string) => {
   if(!data.hasOwnProperty(key)) {
@@ -69,6 +70,8 @@ export const TicketDisplay: React.FC<TicketDisplayProps> = ({
       top,
       left,
       ticketWidth: width,
+      filters: [FilterType.linked],
+      withRemoveAllButton: false,
     });
   };
 

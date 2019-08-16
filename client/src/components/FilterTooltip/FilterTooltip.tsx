@@ -6,6 +6,7 @@ import { OverlayZIndex } from "../../types";
 import { Checkbox } from "../Checkbox/Checkbox";
 import { ReducerContext } from "../ColumnsManager/context";
 import { closeFilterTooltipAction, setFilterAction, removeFilterAction } from "../ColumnsManager/actions";
+import { Actions } from "../ColumnsManager/reducer";
 
 const TICKET_TOOLTIP_SIZE = 200;
 
@@ -29,28 +30,56 @@ const filterTooltipPositionMap = {
   [FilterTooltipPosition.right]: styles.right,
 };
 
+const useFilter = (
+  filter: FilterType,
+  activeFilters: FilterType[],
+  dispatch: React.Dispatch<Actions>
+) => {
+  const isStateFilterActive = activeFilters.includes(filter);
+  const [ checkboxChecked, setCheckboxCheckedState ] = useState(isStateFilterActive);
+  const Component = (
+    <Checkbox
+      text={FilterTooltipCheckboxText[filter]}
+      isChecked={checkboxChecked}
+      onChange={() => setCheckboxCheckedState(!checkboxChecked)}
+    />
+  );
+
+  const handleFilter = () => {
+    if (isStateFilterActive !== checkboxChecked) {
+      checkboxChecked
+      ? setFilterAction(dispatch, filter)
+      : removeFilterAction(dispatch, filter);
+    }
+  };
+  return {
+    handleFilter,
+    Component,
+  };
+};
+
 export interface BasicFilterTooltipProps {
   top: number;
   left: number;
   ticketWidth: number;
+  filters: FilterType[];
+  withRemoveAllButton: boolean;
 }
 
 export const FilterTooltip: React.FC<BasicFilterTooltipProps> = ({
   top,
   left,
   ticketWidth,
+  filters,
+  withRemoveAllButton,
 }) => {
-  const { state: { filterTooltipState: { activeFilters} }, dispatch } = useContext(ReducerContext);
-  const isStateLinkedFilterActive = activeFilters.includes(FilterType.linked);
-  const isStateUnusedFilterActive = activeFilters.includes(FilterType.unused);
-  const [
-    checkboxLinkedChecked,
-    setCheckboxLinkedCheckedState,
-  ] = useState(isStateLinkedFilterActive);
-  const [
-    checkboxUnusedChecked,
-    setCheckboxUnusedCheckedState,
-  ] = useState(isStateUnusedFilterActive);
+  const { state: { filterTooltipState: { activeFilters } }, dispatch } = useContext(ReducerContext);
+  const linkedFilter = filters.includes(FilterType.linked)
+    ? useFilter(FilterType.linked, activeFilters, dispatch)
+    : undefined;
+  const unusedFilter = filters.includes(FilterType.unused)
+    ? useFilter(FilterType.unused, activeFilters, dispatch)
+    : undefined;
 
   // @todo handle window resizing
   const showLeft = document.body.clientWidth - left - ticketWidth < TICKET_TOOLTIP_SIZE;
@@ -61,19 +90,21 @@ export const FilterTooltip: React.FC<BasicFilterTooltipProps> = ({
   };
 
   const closeTooltip = () => closeFilterTooltipAction(dispatch);
-  const handleOnClick = () => {
+
+  const applyFilters = () => {
     closeTooltip();
 
-    if(isStateUnusedFilterActive !== checkboxUnusedChecked) {
-      checkboxUnusedChecked
-        ? setFilterAction(dispatch, FilterType.unused)
-        : removeFilterAction(dispatch, FilterType.unused);
+    if(unusedFilter) {
+      unusedFilter.handleFilter();
     }
-    if(isStateLinkedFilterActive !== checkboxLinkedChecked) {
-      checkboxLinkedChecked
-        ? setFilterAction(dispatch, FilterType.linked)
-        : removeFilterAction(dispatch, FilterType.linked);
+    if(linkedFilter) {
+      linkedFilter.handleFilter();
     }
+  };
+
+  const removeAllFilters = () => {
+    closeTooltip();
+    removeFilterAction(dispatch);
   };
 
   return (
@@ -81,17 +112,14 @@ export const FilterTooltip: React.FC<BasicFilterTooltipProps> = ({
       <Overlay zIndex={OverlayZIndex.Tooltip} onClick={closeTooltip} />
       <div className={cx(styles.tooltip, filterTooltipPositionMap[position])} style={style}>
         <span className={styles.title}>Filter by:</span>
-        <Checkbox
-          text={FilterTooltipCheckboxText.linked}
-          isChecked={checkboxLinkedChecked}
-          onChange={() => setCheckboxLinkedCheckedState(!checkboxLinkedChecked)}
-        />
-        <Checkbox
-          text={FilterTooltipCheckboxText.unused}
-          isChecked={checkboxUnusedChecked}
-          onChange={() => setCheckboxUnusedCheckedState(!checkboxUnusedChecked)}
-        />
-        <button className={styles.button} onClick={handleOnClick}>Apply</button>
+        {linkedFilter && linkedFilter.Component}
+        {unusedFilter && unusedFilter.Component}
+        <div className={styles.footer}>
+          {withRemoveAllButton && (
+            <button onClick={removeAllFilters}>Remove all</button>
+          )}
+          <button onClick={applyFilters}>Apply</button>
+        </div>
       </div>
     </div>
   );

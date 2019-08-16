@@ -4,6 +4,7 @@ import * as styles from "./filterButtonMain.less";
 import { filterSvg, filterActiveSvg } from "../Svg/Svg";
 import { ReducerContext } from "../ColumnsManager/context";
 import { openFilterTooltipAction } from "../ColumnsManager/actions";
+import { FilterType } from "../FilterTooltip/FilterTooltip";
 
 export const MainFilterButton: React.FC = () => {
   const { state: { filterTooltipState: { activeFilters} }, dispatch } = useContext(ReducerContext);
@@ -18,6 +19,8 @@ export const MainFilterButton: React.FC = () => {
       top,
       left,
       ticketWidth: width,
+      filters: [FilterType.unused],
+      withRemoveAllButton: true,
     });
   };
 
