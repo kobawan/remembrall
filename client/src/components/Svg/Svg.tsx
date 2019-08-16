@@ -48,11 +48,10 @@ export const filterSvg = (
   </svg>
 );
 
-export const removeFilterSvg = (
-  <svg className={cx(styles.icon, styles.filter)} viewBox="0 0 32 32">
+export const filterActiveSvg = (
+  <svg className={cx(styles.icon, styles.filter)} viewBox="0 0 44 32">
     <path className={styles.path} d="M16 0c-8.837 0-16 2.239-16 5v3l12 12v10c0 1.105 1.791 2 4 2s4-0.895 4-2v-10l12-12v-3c0-2.761-7.163-5-16-5zM2.95 4.338c0.748-0.427 1.799-0.832 3.040-1.171 2.748-0.752 6.303-1.167 10.011-1.167s7.262 0.414 10.011 1.167c1.241 0.34 2.292 0.745 3.040 1.171 0.494 0.281 0.76 0.519 0.884 0.662-0.124 0.142-0.391 0.38-0.884 0.662-0.748 0.427-1.8 0.832-3.040 1.171-2.748 0.752-6.303 1.167-10.011 1.167s-7.262-0.414-10.011-1.167c-1.24-0.34-2.292-0.745-3.040-1.171-0.494-0.282-0.76-0.519-0.884-0.662 0.124-0.142 0.391-0.38 0.884-0.662z"></path>
-    <path d="M 30 15 L 15 1" className={styles.diagonalPath}/>
-    <path d="M 15 15 L 30 1" className={styles.diagonalPath}/>
+    <path d="M31 14l6 6 6-6z"></path>
   </svg>
 );
 

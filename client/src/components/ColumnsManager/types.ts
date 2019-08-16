@@ -1,5 +1,5 @@
 import { ColumnType, AllColumnFields } from "../../types";
-import { BasicFilterTooltipProps } from "../FilterTooltip/FilterTooltip";
+import { BasicFilterTooltipProps, FilterType } from "../FilterTooltip/FilterTooltip";
 import { BasicPopupProps } from "../Popup/Popup";
 
 export type PopupManagerState = BasicPopupProps | undefined;
@@ -10,6 +10,6 @@ export interface FormManagerState {
 }
 
 export interface TooltipManagerState {
-  activeFilters: string[];
+  activeFilters: FilterType[];
   props?: BasicFilterTooltipProps;
 }

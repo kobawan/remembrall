@@ -7,6 +7,7 @@ import { DeleteMaterialData, useMaterialQueryAndMutations } from "./MaterialWrap
 import { MaterialForm } from "../MaterialForm/MaterialForm";
 import { DisplayDirection } from "../TicketDisplay/TicketDisplay";
 import { ReducerContext } from "../ColumnsManager/context";
+import { getFilteredItems } from "../../utils/getFilteredItems";
 
 interface MaterialColumnProps {
   safeDeleteTicket: (data: CommonFields, deleteFn: MutationFunction<DeleteMaterialData, { id: string }>) => void;
@@ -21,7 +22,12 @@ export const MaterialColumn: React.FC<MaterialColumnProps> = ({
   openChangesPopup,
   openInvalidPopup,
 }) => {
-  const { formOpened, formProps } = useContext(ReducerContext).state.formState;
+  const {
+    state: {
+      filterTooltipState,
+      formState: { formOpened, formProps }
+    },
+  } = useContext(ReducerContext);
   const [
     { data, error, loading },
     [addMaterial, addRes],
@@ -35,10 +41,14 @@ export const MaterialColumn: React.FC<MaterialColumnProps> = ({
 
   const deleteTicket = (data: CommonFields) => safeDeleteTicket(data, deleteMaterial);
 
+  const materials = data && data.materials
+    ? getFilteredItems(filterTooltipState.activeFilters, data.materials)
+    : [];
+
   return (
     <>
       <Column
-        tickets={data && data.materials ? data.materials : []}
+        tickets={materials}
         type={ColumnType.Materials}
         updateTicket={updateMaterial}
         deleteTicket={deleteTicket}

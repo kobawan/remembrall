@@ -7,6 +7,7 @@ import { DeleteToolData, useToolQueryAndMutations } from "./ToolWrapper";
 import { ToolForm } from "../ToolForm/ToolForm";
 import { DisplayDirection } from "../TicketDisplay/TicketDisplay";
 import { ReducerContext } from "../ColumnsManager/context";
+import { getFilteredItems } from "../../utils/getFilteredItems";
 
 interface ToolColumnProps {
   safeDeleteTicket: (data: CommonFields, deleteFn: MutationFunction<DeleteToolData, { id: string }>) => void;
@@ -21,7 +22,12 @@ export const ToolColumn: React.FC<ToolColumnProps> = ({
   openChangesPopup,
   openInvalidPopup,
 }) => {
-  const { formOpened, formProps } = useContext(ReducerContext).state.formState;
+  const {
+    state: {
+      filterTooltipState,
+      formState: { formOpened, formProps }
+    },
+  } = useContext(ReducerContext);
   const [
     { data, error, loading },
     [addTool, addRes],
@@ -35,10 +41,14 @@ export const ToolColumn: React.FC<ToolColumnProps> = ({
 
   const deleteTicket = (data: CommonFields) => safeDeleteTicket(data, deleteTool);
 
+  const tools = data && data.tools
+    ? getFilteredItems(filterTooltipState.activeFilters, data.tools)
+    : [];
+
   return (
     <>
       <Column
-        tickets={data && data.tools ? data.tools : []}
+        tickets={tools}
         type={ColumnType.Tools}
         updateTicket={updateTool}
         deleteTicket={deleteTicket}

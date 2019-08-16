@@ -5,7 +5,7 @@ import { Overlay } from "../Overlay/Overlay";
 import { OverlayZIndex } from "../../types";
 import { Checkbox } from "../Checkbox/Checkbox";
 import { ReducerContext } from "../ColumnsManager/context";
-import { closeFilterTooltipAction, setFilterAction } from "../ColumnsManager/actions";
+import { closeFilterTooltipAction, setFilterAction, removeFilterAction } from "../ColumnsManager/actions";
 
 const TICKET_TOOLTIP_SIZE = 200;
 
@@ -40,9 +40,17 @@ export const FilterTooltip: React.FC<BasicFilterTooltipProps> = ({
   left,
   ticketWidth,
 }) => {
-  const [checkboxLinkedChecked, setCheckboxLinkedCheckedState] = useState(false);
-  const [checkboxUnusedChecked, setCheckboxUnusedCheckedState] = useState(false);
-  const { dispatch } = useContext(ReducerContext);
+  const { state: { filterTooltipState: { activeFilters} }, dispatch } = useContext(ReducerContext);
+  const isStateLinkedFilterActive = activeFilters.includes(FilterType.linked);
+  const isStateUnusedFilterActive = activeFilters.includes(FilterType.unused);
+  const [
+    checkboxLinkedChecked,
+    setCheckboxLinkedCheckedState,
+  ] = useState(isStateLinkedFilterActive);
+  const [
+    checkboxUnusedChecked,
+    setCheckboxUnusedCheckedState,
+  ] = useState(isStateUnusedFilterActive);
 
   // @todo handle window resizing
   const showLeft = document.body.clientWidth - left - ticketWidth < TICKET_TOOLTIP_SIZE;
@@ -56,11 +64,15 @@ export const FilterTooltip: React.FC<BasicFilterTooltipProps> = ({
   const handleOnClick = () => {
     closeTooltip();
 
-    if(checkboxUnusedChecked) {
-      setFilterAction(dispatch, FilterType.unused);
+    if(isStateUnusedFilterActive !== checkboxUnusedChecked) {
+      checkboxUnusedChecked
+        ? setFilterAction(dispatch, FilterType.unused)
+        : removeFilterAction(dispatch, FilterType.unused);
     }
-    if(checkboxLinkedChecked) {
-      setFilterAction(dispatch, FilterType.linked);
+    if(isStateLinkedFilterActive !== checkboxLinkedChecked) {
+      checkboxLinkedChecked
+        ? setFilterAction(dispatch, FilterType.linked)
+        : removeFilterAction(dispatch, FilterType.linked);
     }
   };
 
