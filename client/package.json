@@ -22,6 +22,7 @@
   "devDependencies": {
     "@types/classnames": "^2.2.9",
     "@types/graphql": "^14.2.3",
+    "@types/lodash.flow": "^3.5.6",
     "@types/lodash.isequal": "^4.5.5",
     "@types/react": "^16.9.1",
     "@types/react-dom": "^16.8.5",
@@ -38,6 +39,7 @@
     "less": "^3.9.0",
     "less-loader": "^5.0.0",
     "lesshint": "^5.3.1",
+    "lodash.flow": "^3.5.0",
     "lodash.isequal": "^4.5.0",
     "mini-css-extract-plugin": "^0.8.0",
     "react": "^16.9.0",

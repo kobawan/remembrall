@@ -1,4 +1,4 @@
-import { ColumnType, AllColumnFields } from "../../types";
+import { ColumnType, AllColumnFields, CommonFields, InProjectField } from "../../types";
 import { BasicFilterTooltipProps, FilterType } from "../FilterTooltip/FilterTooltip";
 import { BasicPopupProps } from "../Popup/Popup";
 
@@ -9,7 +9,12 @@ export interface FormManagerState {
   formProps?: AllColumnFields;
 }
 
+export interface Filter {
+  type: FilterType;
+  ticket?: CommonFields & InProjectField;
+}
+
 export interface TooltipManagerState {
-  activeFilters: FilterType[];
+  activeFilters: Filter[];
   props?: BasicFilterTooltipProps;
 }

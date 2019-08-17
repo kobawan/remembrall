@@ -64,13 +64,13 @@ export const ColumnsManager: React.FC = () => {
         <CategoryColumn {...columnProps} />
         <ToolColumn {...columnProps} />
         <MaterialColumn {...columnProps} />
-        {popupState && (
+      </div>
+      {popupState && (
           <Popup {...popupState} close={closePopup} />
         )}
-        {filterTooltipState.props && (
-          <FilterTooltip {...filterTooltipState.props} />
-        )}
-      </div>
+      {filterTooltipState.props && (
+        <FilterTooltip {...filterTooltipState.props} />
+      )}
     </ReducerContextProvider>
   );
 };

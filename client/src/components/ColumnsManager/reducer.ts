@@ -56,7 +56,7 @@ export const reducer: ReducerType = (state, action) => {
         },
       };
     case ActionType.setFilter:
-      if (state.filterTooltipState.activeFilters.includes(action.payload)) {
+      if (state.filterTooltipState.activeFilters.some(filter => filter.type === action.payload.type)) {
         return state;
       }
       return {
@@ -76,14 +76,13 @@ export const reducer: ReducerType = (state, action) => {
           },
         };
       }
-      if (!state.filterTooltipState.activeFilters.includes(action.payload)) {
-        return state;
-      }
       return {
         ...state,
         filterTooltipState: {
           ...state.filterTooltipState,
-          activeFilters: state.filterTooltipState.activeFilters.filter(filter => filter !== action.payload),
+          activeFilters: state.filterTooltipState.activeFilters.filter(filter => {
+            return filter.type !== action.payload!.type;
+          }),
         },
       };
     case ActionType.openPopup:

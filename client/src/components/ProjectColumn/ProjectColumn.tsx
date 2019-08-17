@@ -24,7 +24,7 @@ export const ProjectColumn: React.FC<ProjectColumnProps> = ({
 }) => {
   const {
     state: {
-      filterTooltipState,
+      filterTooltipState: { activeFilters },
       formState: { formOpened, formProps }
     },
   } = useContext(ReducerContext);
@@ -42,7 +42,7 @@ export const ProjectColumn: React.FC<ProjectColumnProps> = ({
   const deleteTicket = (data: CommonFields) => safeDeleteTicket(data, deleteProject);
 
   const projects = data && data.projects
-    ? getFilteredItems(filterTooltipState.activeFilters, data.projects)
+    ? getFilteredItems({ activeFilters, items: data.projects })
     : [];
 
   return (

@@ -2,11 +2,12 @@ import React, { useState, useContext } from "react";
 import cx from "classnames";
 import * as styles from "./filterTooltip.less";
 import { Overlay } from "../Overlay/Overlay";
-import { OverlayZIndex } from "../../types";
+import { OverlayZIndex, CommonFields, InProjectField } from "../../types";
 import { Checkbox } from "../Checkbox/Checkbox";
 import { ReducerContext } from "../ColumnsManager/context";
 import { closeFilterTooltipAction, setFilterAction, removeFilterAction } from "../ColumnsManager/actions";
 import { Actions } from "../ColumnsManager/reducer";
+import { Filter } from "../ColumnsManager/types";
 
 const TICKET_TOOLTIP_SIZE = 200;
 
@@ -32,10 +33,10 @@ const filterTooltipPositionMap = {
 
 const useFilter = (
   filter: FilterType,
-  activeFilters: FilterType[],
+  activeFilters: Filter[],
   dispatch: React.Dispatch<Actions>
 ) => {
-  const isStateFilterActive = activeFilters.includes(filter);
+  const isStateFilterActive = activeFilters.some(({ type }) => type === filter);
   const [ checkboxChecked, setCheckboxCheckedState ] = useState(isStateFilterActive);
   const Component = (
     <Checkbox
@@ -45,11 +46,12 @@ const useFilter = (
     />
   );
 
-  const handleFilter = () => {
+  const handleFilter = (ticket?: CommonFields & InProjectField) => {
     if (isStateFilterActive !== checkboxChecked) {
+      const payload = { type: filter, ticket };
       checkboxChecked
-      ? setFilterAction(dispatch, filter)
-      : removeFilterAction(dispatch, filter);
+      ? setFilterAction(dispatch, payload)
+      : removeFilterAction(dispatch, payload);
     }
   };
   return {
@@ -62,6 +64,7 @@ export interface BasicFilterTooltipProps {
   top: number;
   left: number;
   ticketWidth: number;
+  ticket?: CommonFields & InProjectField;
   filters: FilterType[];
   withRemoveAllButton: boolean;
 }
@@ -71,6 +74,7 @@ export const FilterTooltip: React.FC<BasicFilterTooltipProps> = ({
   left,
   ticketWidth,
   filters,
+  ticket,
   withRemoveAllButton,
 }) => {
   const { state: { filterTooltipState: { activeFilters } }, dispatch } = useContext(ReducerContext);
@@ -98,7 +102,7 @@ export const FilterTooltip: React.FC<BasicFilterTooltipProps> = ({
       unusedFilter.handleFilter();
     }
     if(linkedFilter) {
-      linkedFilter.handleFilter();
+      linkedFilter.handleFilter(ticket);
     }
   };
 

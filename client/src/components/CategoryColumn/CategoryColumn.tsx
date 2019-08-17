@@ -24,7 +24,7 @@ export const CategoryColumn: React.FC<CategoryColumnProps> = ({
 }) => {
   const {
     state: {
-      filterTooltipState,
+      filterTooltipState: { activeFilters },
       formState: { formOpened, formProps }
     },
   } = useContext(ReducerContext);
@@ -42,7 +42,7 @@ export const CategoryColumn: React.FC<CategoryColumnProps> = ({
   const deleteTicket = (data: CommonFields) => safeDeleteTicket(data, deleteCategory);
 
   const categories = data && data.categories
-    ? getFilteredItems(filterTooltipState.activeFilters, data.categories)
+    ? getFilteredItems({ activeFilters, items: data.categories })
     : [];
 
   return (

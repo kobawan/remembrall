@@ -1,5 +1,5 @@
-import { PopupManagerState, FormManagerState } from "./types";
-import { BasicFilterTooltipProps, FilterType } from "../FilterTooltip/FilterTooltip";
+import { PopupManagerState, FormManagerState, Filter } from "./types";
+import { BasicFilterTooltipProps } from "../FilterTooltip/FilterTooltip";
 
 export enum ActionType {
   openFilterTooltip = "openFilterTooltip",
@@ -34,19 +34,19 @@ export const closeFilterTooltipAction = (dispatch: React.Dispatch<CloseFilterToo
 
 export interface SetFilterAction {
   type: ActionType.setFilter;
-  payload: FilterType;
+  payload: Filter;
 }
 
-export const setFilterAction = (dispatch: React.Dispatch<SetFilterAction>, payload: FilterType) => {
+export const setFilterAction = (dispatch: React.Dispatch<SetFilterAction>, payload: Filter) => {
   dispatch({ type: ActionType.setFilter, payload });
 };
 
 export interface RemoveFilterAction {
   type: ActionType.removeFilter;
-  payload?: FilterType;
+  payload?: Filter;
 }
 
-export const removeFilterAction = (dispatch: React.Dispatch<RemoveFilterAction>, payload?: FilterType) => {
+export const removeFilterAction = (dispatch: React.Dispatch<RemoveFilterAction>, payload?: Filter) => {
   dispatch({ type: ActionType.removeFilter, payload });
 };
 

@@ -70,6 +70,7 @@ export const TicketDisplay: React.FC<TicketDisplayProps> = ({
       top,
       left,
       ticketWidth: width,
+      ticket: data,
       filters: [FilterType.linked],
       withRemoveAllButton: false,
     });

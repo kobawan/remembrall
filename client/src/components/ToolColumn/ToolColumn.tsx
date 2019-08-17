@@ -24,7 +24,7 @@ export const ToolColumn: React.FC<ToolColumnProps> = ({
 }) => {
   const {
     state: {
-      filterTooltipState,
+      filterTooltipState: { activeFilters },
       formState: { formOpened, formProps }
     },
   } = useContext(ReducerContext);
@@ -42,7 +42,7 @@ export const ToolColumn: React.FC<ToolColumnProps> = ({
   const deleteTicket = (data: CommonFields) => safeDeleteTicket(data, deleteTool);
 
   const tools = data && data.tools
-    ? getFilteredItems(filterTooltipState.activeFilters, data.tools)
+    ? getFilteredItems({ activeFilters, items: data.tools })
     : [];
 
   return (
