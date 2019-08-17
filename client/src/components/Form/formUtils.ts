@@ -4,7 +4,7 @@ import { AllColumnFields, TempAnyObject } from "../../types";
 
 export const formHasChanges = (stateTicket: TempAnyObject, dbTicket?: TempAnyObject) => {
   const defaultTicket = { id: undefined, __typename: undefined };
-  const { id, __typename, ...ticket} = dbTicket || defaultTicket;
+  const { id, __typename, inProjects, ...ticket} = dbTicket || defaultTicket;
 
   if (!Object.keys(ticket).length) {
     return Object.entries<any>(stateTicket).some(([ _, value ]) => {
