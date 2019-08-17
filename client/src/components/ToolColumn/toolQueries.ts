@@ -7,6 +7,9 @@ const ToolsFragment = gql`
 		amount
 		type
 		size
+    inProjects @client {
+			id
+		}
 	}
 `;
 

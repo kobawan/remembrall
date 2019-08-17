@@ -4,8 +4,11 @@ import { useQuery, useMutation } from "@apollo/react-hooks";
 import { ProjectFields } from "../../types";
 import { ADD_PROJECT, GET_PROJECTS, DELETE_PROJECT, UPDATE_PROJECT } from "./projectQueries";
 import { initHandleCache } from "../../utils/cacheHandling";
+import { GET_CATEGORIES } from "../CategoryColumn/categoryQueries";
+import { GET_TOOLS } from "../ToolColumn/toolQueries";
+import { GET_MATERIALS } from "../MaterialColumn/materialQueries";
 
-interface GetProjectData {
+export interface GetProjectData {
   projects?: ProjectFields[];
 }
 
@@ -85,8 +88,22 @@ initHandleCache<UpdateProjectData, GetProjectData>(GET_PROJECTS, (res, data) => 
 export const useProjectQueryAndMutations = (): UseProjectQueryAndMutationsRes => {
   return [
     useQuery(GET_PROJECTS),
-    useMutation(ADD_PROJECT, { update: addToCache }),
-    useMutation(UPDATE_PROJECT, { update: updateCache }),
+    useMutation(ADD_PROJECT, {
+      update: addToCache,
+      refetchQueries: [
+        { query: GET_CATEGORIES },
+        { query: GET_TOOLS },
+        { query: GET_MATERIALS }
+      ]
+    }),
+    useMutation(UPDATE_PROJECT, {
+      update: updateCache,
+      refetchQueries: [
+        { query: GET_CATEGORIES },
+        { query: GET_TOOLS },
+        { query: GET_MATERIALS }
+      ]
+    }),
     useMutation(DELETE_PROJECT, { update: removeFromCache }),
   ];
 };

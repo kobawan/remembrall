@@ -93,8 +93,8 @@ export const ToolForm: React.FC<FormProps> = ({
     });
   };
 
-  const submitTool = () => {
-    submitForm({
+  const submitTool = async () => {
+    await submitForm({
       requiredFields,
       stateTicket: convertToDbTicket(state),
       dbTicket: ticket,

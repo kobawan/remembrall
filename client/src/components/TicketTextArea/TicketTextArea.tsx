@@ -1,10 +1,10 @@
 import React from "react";
 import { MutationFunction } from "react-apollo";
 import * as styles from "./ticketTextArea.less";
-import { TicketData, ColumnType } from "../../types";
+import { AllColumnFields, ColumnType } from "../../types";
 
 interface TicketTextAreaProps {
-  data: TicketData;
+  data: AllColumnFields;
   type: ColumnType;
   updateTicket: MutationFunction<any, { id: string, params: any }>;
   close: () => void;

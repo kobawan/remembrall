@@ -6,7 +6,7 @@ type ProjectActions = (
   UpdateProjectFieldAction
 );
 
-export type ProjectState = Required<Omit<ProjectFields, "id"|"__typename">>;
+export type ProjectState = Required<Omit<ProjectFields, "id">>;
 
 export const initialProjectState: ProjectState = {
   name: "",

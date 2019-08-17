@@ -3,7 +3,7 @@ import { MutationFunction } from "react-apollo";
 import isEqual from "lodash.isequal";
 import cx from "classnames";
 import * as styles from "./ticket.less";
-import { ColumnType, TicketData, CommonFields } from "../../types";
+import { ColumnType, AllColumnFields, CommonFields } from "../../types";
 import { TicketTextArea } from "../TicketTextArea/TicketTextArea";
 import { TicketDisplay, DisplayDirection } from "../TicketDisplay/TicketDisplay";
 import { FormManagerState } from "../ColumnsManager/types";
@@ -11,7 +11,7 @@ import { FormManagerState } from "../ColumnsManager/types";
 export interface TicketProps {
   type: ColumnType;
   openForm: (props: FormManagerState) => void;
-  data: TicketData;
+  data: AllColumnFields;
   displayFields: string[];
   focused: boolean;
   updateTicket: MutationFunction<any, { id: string, params: any }>;

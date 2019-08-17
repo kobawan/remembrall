@@ -18,6 +18,7 @@ export const RowInput = React.memo(({ name, value, onChange, type, autofocus }: 
         value={value}
         autoFocus={!!autofocus}
         className={styles.input}
+        min={type === "number" ? 0 : undefined}
       />
     </FormRow>
   );

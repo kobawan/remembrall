@@ -1,14 +1,14 @@
 import React, { useContext } from "react";
 import cx from "classnames";
 import * as styles from "./ticketDisplay.less";
-import { TicketData, CommonFields, ColumnType } from "../../types";
+import { AllColumnFields, CommonFields, ColumnType, TempAnyObject } from "../../types";
 import { editSvg, trashSvg, filterSvg } from "../Svg/Svg";
 import { ReducerContext } from "../ColumnsManager/context";
 import { openFilterTooltipAction } from "../ColumnsManager/actions";
 import { FormManagerState } from "../ColumnsManager/types";
 import { FilterType } from "../FilterTooltip/FilterTooltip";
 
-const formatDisplayFields = (data: TicketData, key: string) => {
+const formatDisplayFields = (data: TempAnyObject, key: string) => {
   if(!data.hasOwnProperty(key)) {
     return null;
   }
@@ -40,7 +40,7 @@ const displayDirectionMap = {
 
 export interface TicketDisplayProps {
   openForm: (props: FormManagerState) => void;
-  data: TicketData;
+  data: AllColumnFields;
   deleteTicket: (data: CommonFields) => void;
   openTextArea: () => void;
   displayFields: string[];

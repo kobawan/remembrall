@@ -4,6 +4,9 @@ const CategoriesFragment = gql`
 	fragment CategoriesFragment on Category {
 		name
 		id
+    inProjects @client {
+			id
+		}
 	}
 `;
 

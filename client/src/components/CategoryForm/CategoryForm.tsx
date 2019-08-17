@@ -32,8 +32,8 @@ export const CategoryForm: React.FC<FormProps> = ({
 }) => {
   const [name, setName] = useState(ticket ? ticket.name : "");
 
-  const submitCategory = () => {
-    submitForm({
+  const submitCategory = async () => {
+    await submitForm({
       requiredFields,
       stateTicket: { name: name.toLowerCase() },
       dbTicket: ticket,

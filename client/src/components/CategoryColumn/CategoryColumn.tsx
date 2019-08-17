@@ -7,6 +7,7 @@ import { ColumnType, CommonFields } from "../../types";
 import { CategoryForm } from "../CategoryForm/CategoryForm";
 import { DisplayDirection } from "../TicketDisplay/TicketDisplay";
 import { ReducerContext } from "../ColumnsManager/context";
+import { getFilteredItems } from "../../utils/getFilteredItems";
 
 interface CategoryColumnProps {
   safeDeleteTicket: (data: CommonFields, deleteFn: MutationFunction<DeleteCategoryData, { id: string }>) => void;
@@ -21,7 +22,12 @@ export const CategoryColumn: React.FC<CategoryColumnProps> = ({
   openInvalidPopup,
   openChangesPopup,
 }) => {
-  const { formOpened, formProps } = useContext(ReducerContext).state.formState;
+  const {
+    state: {
+      filterTooltipState,
+      formState: { formOpened, formProps }
+    },
+  } = useContext(ReducerContext);
   const [
     { data, error, loading },
     [addCategory, addRes],
@@ -35,10 +41,14 @@ export const CategoryColumn: React.FC<CategoryColumnProps> = ({
 
   const deleteTicket = (data: CommonFields) => safeDeleteTicket(data, deleteCategory);
 
+  const categories = data && data.categories
+    ? getFilteredItems(filterTooltipState.activeFilters, data.categories)
+    : [];
+
   return (
     <>
       <Column
-        tickets={data && data.categories ? data.categories : []}
+        tickets={categories}
         type={ColumnType.Categories}
         updateTicket={updateCategory}
         deleteTicket={deleteTicket}

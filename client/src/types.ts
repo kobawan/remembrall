@@ -10,27 +10,37 @@ export enum OverlayZIndex {
   Form = 96,
   Tooltip = 94,
 }
-export interface TypenameField {
-  __typename?: string;
+
+interface TypenameField {
+  __typename: string;
 }
 
-export interface CommonFields extends TypenameField {
+export interface InProjectField {
+  // @todo fix optional field
+  inProjects?: CommonFields[];
+}
+
+export interface AmountField {
+  amount: number;
+}
+
+export interface CommonFields {
   id: string;
   name: string;
 }
 
-export interface MaterialFields extends CommonFields {
-  amount: number;
+export type CommonFieldsWithTypename = CommonFields & TypenameField;
+
+export interface MaterialFields extends CommonFields, InProjectField, AmountField {
   color: string | null;
 }
 
-export interface ToolFields extends CommonFields {
-  amount: number;
+export interface ToolFields extends CommonFields, InProjectField, AmountField {
   type: string | null;
   size: string | null;
 }
 
-export interface CategoryFields extends CommonFields {}
+export type CategoryFields = CommonFields & InProjectField;
 
 export interface ProjectFields extends CommonFields {
   instructions?: string;
@@ -42,7 +52,5 @@ export interface ProjectFields extends CommonFields {
 
 export type AllColumnFields = ProjectFields | CategoryFields | MaterialFields | ToolFields;
 
-/**
- * @todo improve typing
- */
-export type TicketData = CommonFields & { [key: string]: any };
+// @todo fix type
+export type TempAnyObject = { [key: string]: any };

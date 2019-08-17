@@ -37,6 +37,7 @@ export const RowInputWithUnit = (({
         value={value}
         autoFocus={!!autofocus}
         className={styles.input}
+        min={type === "number" ? 0 : undefined}
       />
       <select
         className={styles.units}

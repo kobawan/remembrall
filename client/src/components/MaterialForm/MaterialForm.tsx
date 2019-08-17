@@ -61,8 +61,8 @@ export const MaterialForm: React.FC<FormProps> = ({
     });
   };
 
-  const submitMaterial = () => {
-    submitForm({
+  const submitMaterial = async () => {
+    await submitForm({
       requiredFields,
       stateTicket: convertToDbTicket(state),
       dbTicket: ticket,

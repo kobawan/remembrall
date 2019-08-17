@@ -10,7 +10,11 @@ import { useMaterialQueryAndAddMutation } from "../MaterialColumn/MaterialWrappe
 import { OnChangeFn } from "../Form/types";
 import { FormTitle } from "../Form/FormTitle";
 import { RowTextArea } from "../Form/RowTextArea";
-import { UpdateProjectData, AddProjectData, ProjectInput } from "../ProjectColumn/ProjectWrapper";
+import {
+  UpdateProjectData,
+  AddProjectData,
+  ProjectInput,
+} from "../ProjectColumn/ProjectWrapper";
 import { Form, FormSize } from "../Form/Form";
 import { formHasChanges, submitForm } from "../Form/formUtils";
 import { ProjectReducerType, projectReducer, initialProjectState, ProjectState } from "./reducer";
@@ -83,8 +87,8 @@ export const ProjectForm: React.FC<FormProps> = ({
     updateProjectFieldAction(dispatch, { key: field as keyof ProjectState, value: tags });
   };
 
-  const submitProject = () => {
-    submitForm({
+  const submitProject = async () => {
+    await submitForm({
       requiredFields,
       stateTicket: state,
       dbTicket: ticket,

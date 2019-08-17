@@ -1,8 +1,8 @@
 import isEqual from "lodash.isequal";
 import { MutationFunction } from "react-apollo";
-import { AllColumnFields } from "../../types";
+import { AllColumnFields, TempAnyObject } from "../../types";
 
-export const formHasChanges = (stateTicket: {}, dbTicket?: { [key: string]: any }) => {
+export const formHasChanges = (stateTicket: TempAnyObject, dbTicket?: TempAnyObject) => {
   const defaultTicket = { id: undefined, __typename: undefined };
   const { id, __typename, ...ticket} = dbTicket || defaultTicket;
 
@@ -21,7 +21,7 @@ export const formHasChanges = (stateTicket: {}, dbTicket?: { [key: string]: any 
 /**
  * Checks if the required fields are filled in
  */
-export const formIsInvalid = (requiredFields: string[], stateTicket: { [key: string]: any }) => {
+export const formIsInvalid = (requiredFields: string[], stateTicket: TempAnyObject) => {
   return requiredFields.some((field) => {
     if(!stateTicket.hasOwnProperty(field)) {
       throw new Error(`${field} is not a property of state.`);
@@ -38,7 +38,7 @@ export const formIsInvalid = (requiredFields: string[], stateTicket: { [key: str
 
 interface SubmitFormProps {
   requiredFields: string[];
-  stateTicket: {};
+  stateTicket: TempAnyObject;
   dbTicket?: AllColumnFields;
   openInvalidPopup: () => void;
   updateTicket: MutationFunction;
@@ -46,7 +46,7 @@ interface SubmitFormProps {
   closeForm: () => void;
 }
 
-export const submitForm = ({
+export const submitForm = async ({
   requiredFields,
   stateTicket,
   dbTicket,
@@ -70,9 +70,9 @@ export const submitForm = ({
     const params = Object.fromEntries(paramEntries);
 
     if(dbTicket) {
-      updateTicket({ variables: { params, id: dbTicket.id } });
+      await updateTicket({ variables: { params, id: dbTicket.id } });
     } else {
-      createTicket({ variables: { params } });
+      await createTicket({ variables: { params } });
     }
   }
 

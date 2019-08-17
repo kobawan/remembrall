@@ -7,6 +7,7 @@ import { ProjectForm, displayedFields } from "../ProjectForm/ProjectForm";
 import { useProjectQueryAndMutations, DeleteProjectData } from "./ProjectWrapper";
 import { DisplayDirection } from "../TicketDisplay/TicketDisplay";
 import { ReducerContext } from "../ColumnsManager/context";
+import { getFilteredItems } from "../../utils/getFilteredItems";
 
 interface ProjectColumnProps {
   closeForm: () => void;
@@ -21,7 +22,12 @@ export const ProjectColumn: React.FC<ProjectColumnProps> = ({
   openChangesPopup,
   openInvalidPopup,
 }) => {
-  const { formOpened, formProps } = useContext(ReducerContext).state.formState;
+  const {
+    state: {
+      filterTooltipState,
+      formState: { formOpened, formProps }
+    },
+  } = useContext(ReducerContext);
   const [
     { data, error, loading },
     [addProject, addRes],
@@ -35,10 +41,14 @@ export const ProjectColumn: React.FC<ProjectColumnProps> = ({
 
   const deleteTicket = (data: CommonFields) => safeDeleteTicket(data, deleteProject);
 
+  const projects = data && data.projects
+    ? getFilteredItems(filterTooltipState.activeFilters, data.projects)
+    : [];
+
   return (
     <>
       <Column
-        tickets={data && data.projects ? data.projects : []}
+        tickets={projects}
         type={ColumnType.Projects}
         updateTicket={updateProject}
         deleteTicket={deleteTicket}

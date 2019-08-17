@@ -6,6 +6,9 @@ const MaterialsFragment = gql`
 		id
 		color
 		amount
+    inProjects @client {
+			id
+		}
 	}
 `;
 

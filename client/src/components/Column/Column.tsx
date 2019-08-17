@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { MutationFunction } from "react-apollo";
 import * as styles from "./column.less";
 import { Ticket } from "../Ticket/Ticket";
-import { ColumnType, TicketData, CommonFields } from "../../types";
+import { ColumnType, CommonFields, AllColumnFields } from "../../types";
 import { ColumnHeader } from "../ColumnHeader/ColumnHeader";
 import { DisplayDirection } from "../TicketDisplay/TicketDisplay";
 import { ReducerContext } from "../ColumnsManager/context";
@@ -11,7 +11,7 @@ import { openFormAction } from "../ColumnsManager/actions";
 
 interface ColumnProps {
   type: ColumnType;
-  tickets: TicketData[];
+  tickets: AllColumnFields[];
   displayFields: string[];
   updateTicket: MutationFunction<any, { id: string, params: any }>;
   deleteTicket: (data: CommonFields) => void;

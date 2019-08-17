@@ -12,7 +12,7 @@ type ToolActions = (
   UpdateToolFieldAction
 );
 
-export type ToolState = Omit<ToolFields, "id"|"__typename"> & { measurement: Measurements | null };
+export type ToolState = Omit<ToolFields, "id"> & { measurement: Measurements | null };
 
 export const initialToolState: ToolState = {
   name: "",

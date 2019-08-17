@@ -6,7 +6,7 @@ type MaterialActions = (
   UpdateMaterialFieldAction
 );
 
-export type MaterialState = Omit<MaterialFields, "id"|"__typename">;
+export type MaterialState = Omit<MaterialFields, "id">;
 
 export const initialMaterialState: MaterialState = {
   name: "",

@@ -1,11 +1,21 @@
 import { FilterType } from "../components/FilterTooltip/FilterTooltip";
+import { AmountField, InProjectField, CommonFields } from "../types";
 
-export const getFilteredItems = <D extends { amount: number }>(activeFilters: FilterType[], items: D[]) => {
+export const getFilteredItems = <D extends CommonFields & Partial<AmountField & InProjectField>>(
+  activeFilters: FilterType[],
+  items: D[],
+) => {
   const hasActiveUnusedFilter = activeFilters.includes(FilterType.unused);
   if(!hasActiveUnusedFilter) {
     return items;
   }
 
-  // @todo deduct items being used in projects
-  return items.filter(item => item.amount);
+  const filteredItemsByUnused = items.filter(item => {
+    if(typeof item.amount !== "number" || !Array.isArray(item.inProjects)) {
+      return true;
+    }
+    return item.amount - item.inProjects.length > 0;
+  });
+
+  return filteredItemsByUnused;
 };
