@@ -111,6 +111,7 @@ export const ToolForm: React.FC<FormProps> = ({
       value={state.name}
       onChange={updateField}
       placeholder="Tool name"
+      size={FormSize.medium}
     />
   );
 

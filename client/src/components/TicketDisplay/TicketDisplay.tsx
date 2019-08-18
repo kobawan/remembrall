@@ -58,7 +58,8 @@ export const TicketDisplay: React.FC<TicketDisplayProps> = ({
   type,
 }) => {
   const ref = React.createRef<HTMLDivElement>();
-  const { dispatch } = useContext(ReducerContext);
+  const { state: { filterTooltipState: { activeFilters } }, dispatch } = useContext(ReducerContext);
+  const isLocalFilterActive = activeFilters.some(({ type }) => type === FilterType.linked);
 
   const showFilterOptions = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
@@ -99,15 +100,15 @@ export const TicketDisplay: React.FC<TicketDisplayProps> = ({
   return (
     <div className={styles.container} onClick={() => openForm({ formOpened: type, formProps: data })} ref={ref}>
       {renderDisplayedValues()}
-      <div className={styles.options}>
+      <div className={cx(styles.options, isLocalFilterActive && styles.active)}>
+        <div className={cx(styles.icon, styles.filter)} onClick={showFilterOptions}>
+          {filterSvg}
+        </div>
         <div className={styles.icon} onClick={editName}>
           {editSvg}
         </div>
         <div className={styles.icon} onClick={removeTicket}>
           {trashSvg}
-        </div>
-        <div className={styles.icon} onClick={showFilterOptions}>
-          {filterSvg}
         </div>
       </div>
     </div>

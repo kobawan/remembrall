@@ -50,6 +50,7 @@ export const CategoryForm: React.FC<FormProps> = ({
       value={name}
       onChange={(e) => setName(e.currentTarget.value)}
       placeholder="Category name"
+      size={FormSize.small}
     />
   );
 

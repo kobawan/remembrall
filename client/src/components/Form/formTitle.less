@@ -2,7 +2,7 @@
 
 .title {
 	width: 100%;
-	text-align: center;
+  text-align: center;
 
 	.input {
 		font-size: 2em;
@@ -10,11 +10,20 @@
 		border: solid 1px transparent;
 		border-bottom-color: @colourBorder;
 		width: 60%;
-		text-align: center;
+    text-align: center;
 
 		&.error {
 			border: solid 1px @colourError;
-		}
+    }
+
+    .small& {
+      width: 100%;
+      box-sizing: border-box;
+
+      @media (max-width: 465px) {
+        font-size: 1.8em;
+      }
+    }
 	}
 
 	.inputError {

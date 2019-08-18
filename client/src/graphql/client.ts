@@ -11,16 +11,22 @@ const typeDefs = gql`
   extend type Category {
     inProjects: [Project]
   }
+  extend type Tool {
+    inProjects: [Project]
+  }
+  extend type Material {
+    inProjects: [Project]
+  }
 `;
 
 const resolvers = {
   Category: {
     inProjects: (parent: CategoryFields, _: any, { cache }: { cache: DataProxy }) => {
       const res = cache.readQuery<GetProjectData>({ query: GET_PROJECTS });
-      if(!res) {
+      if(!res || !res.projects) {
         return [];
       }
-      return (res.projects || []).filter(({ categories }) => {
+      return res.projects.filter(({ categories }) => {
         return (categories || [])
           .map(({ id }) => id)
           .includes(parent.id);
@@ -30,10 +36,10 @@ const resolvers = {
   Tool: {
     inProjects: (parent: ToolFields, _: any, { cache }: { cache: DataProxy }) => {
       const res = cache.readQuery<GetProjectData>({ query: GET_PROJECTS });
-      if(!res) {
+      if(!res || !res.projects) {
         return [];
       }
-      return (res.projects || []).filter(({ tools }) => {
+      return res.projects.filter(({ tools }) => {
         return (tools || [])
           .map(({ id }) => id)
           .includes(parent.id);
@@ -43,10 +49,10 @@ const resolvers = {
   Material: {
     inProjects: (parent: MaterialFields, _: any, { cache }: { cache: DataProxy }) => {
       const res = cache.readQuery<GetProjectData>({ query: GET_PROJECTS });
-      if(!res) {
+      if(!res || !res.projects) {
         return [];
       }
-      return (res.projects || []).filter(({ materials }) => {
+      return res.projects.filter(({ materials }) => {
         return (materials || [])
           .map(({ id }) => id)
           .includes(parent.id);
@@ -54,6 +60,8 @@ const resolvers = {
     },
   }
 };
+
+const cache = new InMemoryCache();
 
 const link = ApolloLink.from([
   setContext((_, { headers }) => ({
@@ -66,8 +74,8 @@ const link = ApolloLink.from([
 ]);
 
 export const client = new ApolloClient({
+  cache,
   link,
-  cache: new InMemoryCache(),
   typeDefs,
   resolvers,
 });

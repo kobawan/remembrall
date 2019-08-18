@@ -40,7 +40,9 @@ export const Form = React.memo(({
   return (<>
     <Overlay onClick={safeCloseForm} zIndex={OverlayZIndex.Form} />
     <div className={cx(styles.form, formSizeMap[size])}>
-      {Title}
+      <div className={styles.title}>
+        {Title}
+      </div>
       <div className={styles.content}>
         {Content}
       </div>

@@ -2,14 +2,28 @@ import React, { useState, useCallback } from "react";
 import cx from "classnames";
 import * as styles from "./formTitle.less";
 import { RowProps } from "./types";
+import { FormSize } from "./Form";
 
 const TITLE_ERROR_MSG = "Invalid input. Title field is required";
 
 interface FormTitleProps extends RowProps {
   placeholder?: string;
+  size: FormSize;
 }
 
-export const FormTitle = React.memo(({ name, value, onChange, placeholder }: FormTitleProps) => {
+const formSizeMap = {
+  [FormSize.small]: styles.small,
+  [FormSize.medium]: styles.medium,
+  [FormSize.large]: styles.large,
+};
+
+export const FormTitle = React.memo(({
+  name,
+  value,
+  onChange,
+  placeholder,
+  size,
+}: FormTitleProps) => {
   const [ showError, setShowError ] = useState(false);
 
   const onBlur = useCallback(() => {
@@ -25,7 +39,7 @@ export const FormTitle = React.memo(({ name, value, onChange, placeholder }: For
   }, [showError]);
 
   return (
-    <div className={styles.title}>
+    <div className={cx(styles.title, formSizeMap[size])}>
       <input
         type="text"
         name={name}

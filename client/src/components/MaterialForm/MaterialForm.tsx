@@ -79,6 +79,7 @@ export const MaterialForm: React.FC<FormProps> = ({
       value={state.name}
       onChange={updateField}
       placeholder="Material name"
+      size={FormSize.medium}
     />
   );
 
@@ -103,7 +104,7 @@ export const MaterialForm: React.FC<FormProps> = ({
       Title={Title}
       Content={Content}
       submitForm={submitMaterial}
-      size={FormSize.small}
+      size={FormSize.medium}
       formHasChangesFn={() => formHasChanges(convertToDbTicket(state), ticket)}
       openChangesPopup={openChangesPopup}
       closeForm={closeForm}

@@ -105,6 +105,7 @@ export const ProjectForm: React.FC<FormProps> = ({
       value={state.name}
       onChange={updateField}
       placeholder="Project name"
+      size={FormSize.large}
     />
   );
 

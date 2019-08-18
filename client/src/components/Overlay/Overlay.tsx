@@ -6,9 +6,15 @@ interface OverlayProps {
   zIndex: number;
 }
 
-export class Overlay extends React.PureComponent<OverlayProps> {
-  public render() {
-    const { onClick, zIndex } = this.props;
-    return <div className={styles.overlay} style={{ zIndex }} onClick={onClick} />;
-  }
-}
+export const Overlay: React.FC<OverlayProps> = ({
+  onClick,
+  zIndex,
+}) => {
+  return (
+    <div
+      className={styles.overlay}
+      style={{ zIndex }}
+      onClick={onClick}
+    />
+  );
+};

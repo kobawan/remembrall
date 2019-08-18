@@ -6,45 +6,82 @@
 	max-height: 90%;
 	z-index: 97;
 	font-size: 1rem;
-	box-sizing: border-box;
+  box-sizing: border-box;
+  align-items: stretch;
 
-	&.small,
-	&.medium {
-		width: 40em;
+	&.small {
+    @media (max-width: 360px) {
+      width: 100%;
+    }
 
-		@media (max-width: 465px) {
+    @media (min-width: 361px) and (max-width: 465px) {
 			width: 90%;
-		}
+    }
 
-		@media (orientation: portrait) and (max-width: 440px) {
-			font-size: calc(0.3rem + 1.2vw);
-		}
+    @media (mix-width: 466px) {
+      width: 30em;
+    }
+  }
+
+	&.medium {
+    @media (max-width: 465px) {
+      width: 100%;
+      max-height: initial;
+      height: 100%;
+      border: 0;
+    }
+
+    @media (min-width: 466px) and (max-width: 645px) {
+			width: 90%;
+    }
+    
+    @media (min-width: 646px) {
+			width: 40em;
+    }
+
+		@media (orientation: portrait) and (max-width: 420px) {
+			font-size: calc(0.4rem + 1.2vw);
+    }
 	}
 
 	&.large {
-		width: 60em;
+    @media (max-width: 465px) {
+      width: 100%;
+      max-height: initial;
+      height: 100%;
+      border: 0;
+    }
 
-		@media (max-width: 645px) {
+		@media (min-width: 466px) and (max-width: 645px) {
 			width: 90%;
-		}
+    }
+    
+    @media (min-width: 646px) {
+			width: 60em;
+    }
 
-		@media (orientation: portrait) and (max-width: 465px) {
-			font-size: calc(0.3rem + 1.2vw);
-		}
-	}
+		@media (orientation: portrait) and (max-width: 420px) {
+			font-size: calc(0.4rem + 1.2vw);
+    }
+  }
 
 	.content {
-		width: 100%;
 		overflow-y: scroll;
 		flex-grow: 1;
 	}
 
 	.footer {
-		display: flex;
+    display: flex;
+    justify-content: center;
+    margin-top: 2.3em;
 
 		.button {
-			font-size: 1.6em;
-			margin: 1em 1em 0 1em;
+      font-size: 1.6em;
+      margin: 0 1em;
+
+      @media (max-width: 465px) {
+        font-size: 2rem;
+      }
 		}
 	}
 }
