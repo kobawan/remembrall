@@ -29,6 +29,7 @@ export const CategoryForm: React.FC<FormProps> = ({
   createTicket,
   updateTicket,
   ticket,
+  deleteTicket,
 }) => {
   const [name, setName] = useState(ticket ? ticket.name : "");
 
@@ -63,6 +64,8 @@ export const CategoryForm: React.FC<FormProps> = ({
       formHasChangesFn={() => formHasChanges({ name: name.toLowerCase() }, ticket)}
       openChangesPopup={openChangesPopup}
       closeForm={closeForm}
+      deleteTicket={deleteTicket}
+      ticket={ticket}
     />
   );
 };

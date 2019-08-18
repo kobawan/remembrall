@@ -4,7 +4,7 @@
 .form {
 	.containerCenter();
 	max-height: 90%;
-	z-index: 97;
+	z-index: 93;
 	font-size: 1rem;
   box-sizing: border-box;
   align-items: stretch;
@@ -18,8 +18,8 @@
 			width: 90%;
     }
 
-    @media (mix-width: 466px) {
-      width: 30em;
+    @media (min-width: 466px) {
+      width: 40em;
     }
   }
 
@@ -83,5 +83,38 @@
         font-size: 2rem;
       }
 		}
-	}
+  }
+
+  .iconRight {
+    right: 1.5rem;
+  }
+
+  .iconLeft {
+    left: 1.5rem;
+  }
+
+  .iconLeft,
+  .iconRight {
+    .boxMixin(@colourBorder);
+    position: absolute;
+    top: 1.5rem;
+    display: block;
+    width: 4em;
+    height: 4em;
+    padding: 0.7em;
+
+    @media (min-width: 466px) {
+      font-size: 0.8em;
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        .boxMixinHover();
+
+        > svg {
+          transform: scale(1.2);
+        }
+      }
+    }
+  }
 }

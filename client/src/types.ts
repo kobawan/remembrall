@@ -7,7 +7,7 @@ export enum ColumnType {
 
 export enum OverlayZIndex {
   Popup = 98,
-  Form = 96,
+  Form = 92,
   Tooltip = 94,
 }
 

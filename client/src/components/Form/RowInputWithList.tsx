@@ -49,6 +49,7 @@ export class RowInputWithList extends React.Component<RowInputWithListProps, Row
             onKeyUp={this.addTagOnEnter}
             onBlur={this.addTagOnEnterOrBlur}
             className={styles.input}
+            autoComplete="off"
           />
         )}
         <div className={styles.tagContainer}>

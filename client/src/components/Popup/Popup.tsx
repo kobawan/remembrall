@@ -18,34 +18,29 @@ export interface PopupProps extends BasicPopupProps {
   close: () => void;
 }
 
-export class Popup extends React.PureComponent<PopupProps> {
-  public render () {
-    const { text } = this.props;
-    return (
-      <div>
-        <Overlay zIndex={OverlayZIndex.Popup}/>
-        <div className={styles.popup}>
-          <div className={styles.message}>
-            {text}
-          </div>
-          <div>
-            {this.renderButtons()}
-          </div>
+export const Popup: React.FC<PopupProps> = ({
+  text,
+  close,
+  action,
+}) => {
+  return (
+    <div>
+      <Overlay zIndex={OverlayZIndex.Popup} onClick={close} />
+      <div className={styles.popup}>
+        <div className={styles.message}>
+          {text}
+        </div>
+        <div>
+          {text === PopupMessage.changes || text.includes(PopupMessage.delete)
+            ? (
+              <>
+                <button className={styles.button} onClick={close}>No</button>
+                <button className={styles.button} onClick={action} autoFocus={true}>Yes</button>
+              </>
+            ) : <button className={styles.button} onClick={close} autoFocus={true}>Ok</button>
+          }
         </div>
       </div>
-    );
-  }
-
-  private renderButtons = () => {
-    const { text, close, action } = this.props;
-
-    if(text === PopupMessage.changes || text.includes(PopupMessage.delete)) {
-      return <>
-        <button className={styles.button} onClick={close}>No</button>
-        <button className={styles.button} onClick={action} autoFocus={true}>Yes</button>
-      </>;
-    }
-
-    return <button className={styles.button} onClick={close} autoFocus={true}>Ok</button>;
-  }
-}
+    </div>
+  );
+};

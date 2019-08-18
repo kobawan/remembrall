@@ -26,7 +26,7 @@ interface FormProps {
   openInvalidPopup: () => void;
   openChangesPopup: () => void;
   createTicket: MutationFunction<AddProjectData, ProjectInput>;
-  deleteTicket: (data: CommonFields) => void; // @todo add delete button to form
+  deleteTicket: (data: CommonFields) => void;
   updateTicket: MutationFunction<UpdateProjectData, ProjectInput & { id: string }>;
 }
 
@@ -55,6 +55,7 @@ export const ProjectForm: React.FC<FormProps> = ({
   createTicket,
   updateTicket,
   ticket,
+  deleteTicket,
 }) => {
   const [ state, dispatch ] = useReducer<ProjectReducerType>(
     projectReducer,
@@ -157,6 +158,8 @@ export const ProjectForm: React.FC<FormProps> = ({
       formHasChangesFn={() => formHasChanges(state, ticket)}
       openChangesPopup={openChangesPopup}
       closeForm={closeForm}
+      deleteTicket={deleteTicket}
+      ticket={ticket}
     />
   );
 };

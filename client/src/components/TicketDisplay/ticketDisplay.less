@@ -47,9 +47,11 @@
 			background-color: fade(@lightGrey, 50%);
       padding: 0.31em;
 
-			&:hover {
-				background-color: @lightGrey;
-			}
+      @media (hover: hover) {
+        &:hover {
+          background-color: @lightGrey;
+        }
+      }
 		}
 	}
 

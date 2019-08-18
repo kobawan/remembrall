@@ -74,6 +74,7 @@ export const ToolForm: React.FC<FormProps> = ({
   openInvalidPopup,
   updateTicket,
   createTicket,
+  deleteTicket,
 }) => {
   const [ state, dispatch ] = useReducer<ToolReducerType>(
     toolReducer,
@@ -149,6 +150,8 @@ export const ToolForm: React.FC<FormProps> = ({
       formHasChangesFn={() => formHasChanges(convertToDbTicket(state), ticket)}
       openChangesPopup={openChangesPopup}
       closeForm={closeForm}
+      deleteTicket={deleteTicket}
+      ticket={ticket}
     />
   );
 };

@@ -118,7 +118,7 @@ export const FilterTooltip: React.FC<BasicFilterTooltipProps> = ({
         <span className={styles.title}>Filter by:</span>
         {linkedFilter && linkedFilter.Component}
         {unusedFilter && unusedFilter.Component}
-        <div className={styles.footer}>
+        <div className={cx(styles.footer, withRemoveAllButton && styles.spaced)}>
           {withRemoveAllButton && (
             <button onClick={removeAllFilters}>Remove all</button>
           )}
