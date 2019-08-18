@@ -4,7 +4,8 @@ const PRECACHE_URLS = [
   '/index.html',
 	"/main.bundle.js",
 	"/remembrall.png",
-	"/vendors~main.bundle.js"
+  "/vendors~main.bundle.js",
+  "/main.css",
 ];
 
 self.addEventListener('install', function(e) {

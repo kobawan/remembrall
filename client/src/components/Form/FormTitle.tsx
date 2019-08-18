@@ -49,6 +49,7 @@ export const FormTitle = React.memo(({
         className={cx(styles.input, showError && styles.error)}
         onBlur={onBlur}
         onFocus={onFocus}
+        autoFocus={true}
       />
       <div className={styles.inputError}>
         {showError && TITLE_ERROR_MSG}

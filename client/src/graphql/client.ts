@@ -21,16 +21,18 @@ const typeDefs = gql`
 
 const resolvers = {
   Category: {
-    inProjects: (parent: CategoryFields, _: any, { cache }: { cache: DataProxy }) => {
-      const res = cache.readQuery<GetProjectData>({ query: GET_PROJECTS });
-      if(!res || !res.projects) {
-        return [];
-      }
-      return res.projects.filter(({ categories }) => {
-        return (categories || [])
-          .map(({ id }) => id)
-          .includes(parent.id);
-      });
+    inProjects: (_: CategoryFields, __: any, ___: { cache: DataProxy }) => {
+      // @todo FIXME
+      return [];
+      // const res = cache.readQuery<GetProjectData>({ query: GET_PROJECTS });
+      // if(!res || !res.projects) {
+      //   return [];
+      // }
+      // return res.projects.filter(({ categories }) => {
+      //   return (categories || [])
+      //     .map(({ id }) => id)
+      //     .includes(parent.id);
+      // });
     },
   },
   Tool: {
