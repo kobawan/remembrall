@@ -9,17 +9,27 @@
   box-sizing: border-box;
   align-items: stretch;
 
-	&.small {
-    @media (max-width: 360px) {
-      width: 100%;
-    }
+  &.centered {
+    justify-content: center;
+  }
 
-    @media (min-width: 361px) and (max-width: 465px) {
-			width: 90%;
+	&.small {
+    @media (max-width: 465px) {
+      width: 100%;
+      max-height: initial;
+      height: 100%;
+      border: 0;
     }
 
     @media (min-width: 466px) {
       width: 40em;
+    }
+
+    @media (max-height: 475px) {
+      width: 100%;
+      max-height: initial;
+      height: 100%;
+      border: 0;
     }
   }
 
@@ -42,6 +52,13 @@
 		@media (orientation: portrait) and (max-width: 420px) {
 			font-size: calc(0.4rem + 1.2vw);
     }
+
+    @media (max-height: 475px) {
+      width: 100%;
+      max-height: initial;
+      height: 100%;
+      border: 0;
+    }
 	}
 
 	&.large {
@@ -63,6 +80,13 @@
 		@media (orientation: portrait) and (max-width: 420px) {
 			font-size: calc(0.4rem + 1.2vw);
     }
+
+    @media (max-height: 475px) {
+      width: 100%;
+      max-height: initial;
+      height: 100%;
+      border: 0;
+    }
   }
 
 	.content {
@@ -80,6 +104,10 @@
       margin: 0 1em;
 
       @media (max-width: 465px) {
+        font-size: 2rem;
+      }
+
+      @media (max-height: 475px) {
         font-size: 2rem;
       }
 		}
@@ -103,7 +131,11 @@
     height: 4em;
     padding: 0.7em;
 
-    @media (min-width: 466px) {
+    @media (orientation: portrait) and (min-width: 466px) {
+      font-size: 0.8em;
+    }
+
+    @media (orientation: landscape) and (min-height: 476px) {
       font-size: 0.8em;
     }
 

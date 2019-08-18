@@ -65,7 +65,7 @@ export const Form = ({
 
   return (<>
     <Overlay onClick={safeCloseForm} zIndex={OverlayZIndex.Form} />
-    <div className={cx(styles.form, formSizeMap[size])}>
+    <div className={cx(styles.form, formSizeMap[size], !Content && styles.centered)}>
       {ticket && <>
         <button className={styles.iconLeft} onClick={showFilterOptions} ref={ref}>
           {filterSvg}
@@ -77,9 +77,11 @@ export const Form = ({
       <div className={styles.title}>
         {Title}
       </div>
-      <div className={styles.content}>
-        {Content}
-      </div>
+      {!!Content && (
+        <div className={styles.content}>
+          {Content}
+        </div>
+      )}
       <div className={styles.footer}>
         <button className={styles.button} onClick={safeCloseForm}>Cancel</button>
         <button className={styles.button} onClick={submitForm}>Save</button>
