@@ -33,10 +33,7 @@ type UseToolQueryAndMutationsRes = [
   MutationTuple<DeleteToolData, { id: string }>,
 ];
 
-type UseToolQueryAndAddMutationRes = [
-  QueryResult<GetToolData, undefined>,
-  MutationTuple<AddToolData, ToolInput>,
-];
+type UseToolQueryRes = QueryResult<GetToolData, undefined>;
 
 const addToCache: MutationUpdaterFn<AddToolData> =
   initHandleCache<AddToolData, GetToolData>(GET_TOOLS, (res, data) => {
@@ -87,9 +84,6 @@ export const useToolQueryAndMutations = (): UseToolQueryAndMutationsRes => {
   ];
 };
 
-export const useToolQueryAndAddMutation = (): UseToolQueryAndAddMutationRes => {
-  return [
-    useQuery(GET_TOOLS),
-    useMutation(ADD_TOOL, { update: addToCache }),
-  ];
+export const useToolQuery = (): UseToolQueryRes => {
+  return useQuery(GET_TOOLS);
 };

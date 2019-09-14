@@ -33,10 +33,7 @@ type UseCategoryQueryAndMutationsRes = [
   MutationTuple<DeleteCategoryData, { id: string }>,
 ];
 
-type UseCategoryQueryAndAddMutationRes = [
-  QueryResult<GetCategoryData, undefined>,
-  MutationTuple<AddCategoryData, CategoryInput>,
-];
+type UseCategoryQueryRes = QueryResult<GetCategoryData, undefined>;
 
 const addToCache: MutationUpdaterFn<AddCategoryData> =
   initHandleCache<AddCategoryData, GetCategoryData>(GET_CATEGORIES, (res, data) => {
@@ -87,9 +84,6 @@ export const useCategoryQueryAndMutations = (): UseCategoryQueryAndMutationsRes 
   ];
 };
 
-export const useCategoryQueryAndAddMutation = (): UseCategoryQueryAndAddMutationRes => {
-  return [
-    useQuery(GET_CATEGORIES),
-    useMutation(ADD_CATEGORY, { update: addToCache }),
-  ];
+export const useCategoryQuery = (): UseCategoryQueryRes => {
+  return useQuery(GET_CATEGORIES);
 };

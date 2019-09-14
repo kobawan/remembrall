@@ -33,10 +33,7 @@ type UseMaterialQueryAndMutationsRes = [
   MutationTuple<DeleteMaterialData, { id: string }>,
 ];
 
-type UseMaterialQueryAndAddMutationsRes = [
-  QueryResult<GetMaterialData, undefined>,
-  MutationTuple<AddMaterialData, MaterialInput>,
-];
+type UseMaterialQueryRes = QueryResult<GetMaterialData, undefined>;
 
 const addToCache: MutationUpdaterFn<AddMaterialData> =
   initHandleCache<AddMaterialData, GetMaterialData>(GET_MATERIALS, (res, data) => {
@@ -87,9 +84,6 @@ export const useMaterialQueryAndMutations = (): UseMaterialQueryAndMutationsRes 
   ];
 };
 
-export const useMaterialQueryAndAddMutation = (): UseMaterialQueryAndAddMutationsRes => {
-  return [
-    useQuery(GET_MATERIALS),
-    useMutation(ADD_MATERIAL, { update: addToCache }),
-  ];
+export const useMaterialQuery = (): UseMaterialQueryRes => {
+  return useQuery(GET_MATERIALS);
 };

@@ -2,11 +2,11 @@ import React, { useReducer } from "react";
 import { MutationFunction } from "react-apollo";
 import { CommonFields, ProjectFields } from "../../types";
 import { getInitialState } from "../../utils/getInitialState";
-import { RowInputWithList } from "../Form/RowInputWithList";
+import { RowList } from "../Form/RowList";
 import { logErrors } from "../../utils/errorHandling";
-import { useCategoryQueryAndAddMutation } from "../CategoryColumn/CategoryWrapper";
-import { useToolQueryAndAddMutation } from "../ToolColumn/ToolWrapper";
-import { useMaterialQueryAndAddMutation } from "../MaterialColumn/MaterialWrapper";
+import { useCategoryQuery } from "../CategoryColumn/CategoryWrapper";
+import { useToolQuery } from "../ToolColumn/ToolWrapper";
+import { useMaterialQuery } from "../MaterialColumn/MaterialWrapper";
 import { OnChangeFn } from "../Form/types";
 import { FormTitle } from "../Form/FormTitle";
 import { RowTextArea } from "../Form/RowTextArea";
@@ -61,9 +61,9 @@ export const ProjectForm: React.FC<FormProps> = ({
     projectReducer,
     getInitialState(initialProjectState, ticket),
   );
-  const [categoryRes, [addCategory, addCategoryRes]] = useCategoryQueryAndAddMutation();
-  const [toolRes, [addTool, addToolRes]] = useToolQueryAndAddMutation();
-  const [materialRes, [addMaterial, addMaterialRes]] = useMaterialQueryAndAddMutation();
+  const categoryRes = useCategoryQuery();
+  const toolRes = useToolQuery();
+  const materialRes = useMaterialQuery();
 
   const categories = categoryRes.data && categoryRes.data.categories ? categoryRes.data.categories : [];
   const materials = materialRes.data && materialRes.data.materials ? materialRes.data.materials : [];
@@ -71,11 +71,8 @@ export const ProjectForm: React.FC<FormProps> = ({
 
   logErrors(
     materialRes.error,
-    addMaterialRes.error,
     categoryRes.error,
-    addCategoryRes.error,
     toolRes.error,
-    addToolRes.error,
   );
 
   const updateField: OnChangeFn = (e) => {
@@ -84,7 +81,7 @@ export const ProjectForm: React.FC<FormProps> = ({
       value: e.currentTarget.value,
     });
   };
-  const updateTags = (field: string, tags: CommonFields[]) => {
+  const updateTags = <F extends CommonFields>(field: string, tags: F[]) => {
     updateProjectFieldAction(dispatch, { key: field as keyof ProjectState, value: tags });
   };
 
@@ -112,29 +109,31 @@ export const ProjectForm: React.FC<FormProps> = ({
 
   const Content = (
     <>
-      <RowInputWithList
+      <RowList
         name={Fields.categories}
         tags={state.categories}
         options={categories}
-        addOption={addCategory}
         isRequired={true}
         updateTags={updateTags}
+        displayedFields={["name"]}
       />
-      <RowInputWithList
+      <RowList
         name={Fields.tools}
         tags={state.tools}
         options={tools}
-        addOption={addTool}
         isRequired={true}
         updateTags={updateTags}
+        displayedFields={["name", "type", "size"]}
+        withAmount={true}
       />
-      <RowInputWithList
+      <RowList
         name={Fields.materials}
         tags={state.materials}
         options={materials}
-        addOption={addMaterial}
         isRequired={true}
         updateTags={updateTags}
+        displayedFields={["name", "color"]}
+        withAmount={true}
       />
       <RowTextArea
         name={Fields.instructions}
