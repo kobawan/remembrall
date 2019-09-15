@@ -11,17 +11,23 @@ const ProjectsFragment = gql`
 			name
 		}
 		materials {
-			id
-			name
-			color
-			amount
+			entry {
+				id
+				name
+				color
+				amount
+			}
+			amountUsed
 		}
 		tools {
-			id
-			name
-			amount
-			type
-			size
+			entry {
+				id
+				name
+				amount
+				type
+				size
+			}
+			amountUsed
 		}
 	}
 `;

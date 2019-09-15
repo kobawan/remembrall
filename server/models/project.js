@@ -5,8 +5,8 @@ const ProjectSchema = new mongoose.Schema({
 	instructions: String,
 	notes: String,
 	categories: [String],
-	materials: [String],
-	tools: [String],
+	materials: [{ id: String, amountUsed: Number }],
+	tools: [{ id: String, amountUsed: Number }],
 });
 
 const ProjectModel = mongoose.model("Project", ProjectSchema);

@@ -4,7 +4,8 @@ import { AllColumnFields, TempAnyObject } from "../../types";
 
 export const formHasChanges = (stateTicket: TempAnyObject, dbTicket?: TempAnyObject) => {
   const defaultTicket = { id: undefined, __typename: undefined };
-  const { id, __typename, inProjects, ...ticket} = dbTicket || defaultTicket;
+  // @todo fix easy bug maker
+  const { id, __typename, inProjects, availableAmount, ...ticket} = dbTicket || defaultTicket;
 
   if (!Object.keys(ticket).length) {
     return Object.entries<any>(stateTicket).some(([ _, value ]) => {
@@ -63,7 +64,11 @@ export const submitForm = async ({
   if(formHasChanges(stateTicket, dbTicket)) {
     const paramEntries = Object.entries<any>(stateTicket).map(([ key, value ]) => {
       if(Array.isArray(value)) {
-        return [key, value.map(tag => tag.id)];
+        return [key, value.map(tag => {
+          return tag.hasOwnProperty("id")
+            ? tag.id
+            : { id: tag.entry.id, amountUsed: tag.amountUsed };
+        })];
       }
       return [key, value];
     });

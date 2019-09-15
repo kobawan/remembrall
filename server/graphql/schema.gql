@@ -18,14 +18,24 @@ type Category {
 	name: String!
 }
 
+type MaterialInProject {
+	entry: Material
+	amountUsed: Int!
+}
+
+type ToolInProject {
+	entry: Tool
+	amountUsed: Int!
+}
+
 type Project {
 	id: ID!
 	name: String!
 	instructions: String
 	notes: String
 	categories: [Category]
-	materials: [Material]
-	tools: [Tool]
+	materials: [MaterialInProject]
+	tools: [ToolInProject]
 }
 
 type User {
@@ -46,13 +56,18 @@ type Query {
 	materials: [Material]
 }
 
+input ProjectFieldWithAmountUsedInput {
+	id: ID!
+	amountUsed: Int!
+}
+
 input ProjectInput {
 	name: String!
 	instructions: String
 	notes: String
 	categories: [ID]
-	materials: [ID]
-	tools: [ID]
+	materials: [ProjectFieldWithAmountUsedInput]
+	tools: [ProjectFieldWithAmountUsedInput]
 }
 
 input MaterialInput {

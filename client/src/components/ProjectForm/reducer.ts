@@ -1,12 +1,12 @@
 import React from "react";
-import { ProjectFields } from "../../types";
+import { ProjectFieldsWritable } from "../../types";
 import { UpdateProjectFieldAction, ProjectActionType } from "./actions";
 
 type ProjectActions = (
   UpdateProjectFieldAction
 );
 
-export type ProjectState = Required<Omit<ProjectFields, "id">>;
+export type ProjectState = Required<ProjectFieldsWritable>;
 
 export const initialProjectState: ProjectState = {
   name: "",

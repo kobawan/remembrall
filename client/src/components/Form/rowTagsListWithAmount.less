@@ -1,0 +1,42 @@
+@import "../../styles/colours.less";
+
+@tagMargin: 0.35em;
+@tagSize: 2em;
+
+.container {
+	display: flex;
+	flex-wrap: wrap;
+	font-size: 1.4em;
+	align-items: center;
+	width: 100%;
+
+	.tag {
+		display: flex;
+		margin: @tagMargin;
+		padding: 0.21em 0 0.21em 0.35em;
+		background-color: fade(@colourBorder, 50%);
+		height: @tagSize;
+		box-sizing: border-box;
+		align-items: center;
+		cursor: default;
+
+		.closeTag {
+			cursor: pointer;
+			width: 1.42em;
+			height: 1.42em;
+
+			> svg {
+				stroke: none;
+				transform: rotate(45deg);
+			}
+
+			@media (hover: hover) {
+				&:hover {
+					> svg {
+						transform: scale(1.3) rotate(45deg);
+					}
+				}
+			}
+		}
+	}
+}

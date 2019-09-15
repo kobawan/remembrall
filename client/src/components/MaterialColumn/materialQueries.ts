@@ -9,6 +9,7 @@ const MaterialsFragment = gql`
     inProjects @client {
 			id
 		}
+		availableAmount @client
 	}
 `;
 

@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import cx from "classnames";
 import * as styles from "./form.less";
 import { Overlay } from "../Overlay/Overlay";
-import { OverlayZIndex, CommonFields, AllColumnFields } from "../../types";
+import { OverlayZIndex, CommonFields, AllColumnFields, InProjectField } from "../../types";
 import { filterSvg, trashSvg } from "../Svg/Svg";
 import { ReducerContext } from "../ColumnsManager/context";
 import { openFilterTooltipAction } from "../ColumnsManager/actions";
@@ -57,7 +57,7 @@ export const Form = ({
       top,
       left,
       ticketWidth: width,
-      ticket,
+      ticket: ticket as CommonFields & InProjectField,
       filters: [FilterType.linked],
       withRemoveAllButton: false,
     });

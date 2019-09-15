@@ -12,7 +12,7 @@ import { openFormAction } from "../ColumnsManager/actions";
 interface ColumnProps {
   type: ColumnType;
   tickets: AllColumnFields[];
-  displayFields: string[];
+  displayFields: (string | Record<string, string[]>)[];
   updateTicket: MutationFunction<any, { id: string, params: any }>;
   deleteTicket: (data: CommonFields) => void;
   displayDirection: DisplayDirection;

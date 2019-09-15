@@ -1,12 +1,12 @@
 import React from "react";
-import { MaterialFields } from "../../types";
+import { MaterialFieldsWritable } from "../../types";
 import { UpdateMaterialFieldAction, MaterialActionType } from "./actions";
 
 type MaterialActions = (
   UpdateMaterialFieldAction
 );
 
-export type MaterialState = Omit<MaterialFields, "id">;
+export type MaterialState = MaterialFieldsWritable;
 
 export const initialMaterialState: MaterialState = {
   name: "",

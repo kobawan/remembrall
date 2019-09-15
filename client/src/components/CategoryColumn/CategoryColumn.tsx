@@ -3,7 +3,7 @@ import { MutationFunction } from "react-apollo";
 import { DeleteCategoryData, useCategoryQueryAndMutations } from "./CategoryWrapper";
 import { logErrors } from "../../utils/errorHandling";
 import { Column } from "../Column/Column";
-import { ColumnType, CommonFields } from "../../types";
+import { ColumnType, CommonFields, CategoryFields } from "../../types";
 import { CategoryForm } from "../CategoryForm/CategoryForm";
 import { DisplayDirection } from "../TicketDisplay/TicketDisplay";
 import { ReducerContext } from "../ColumnsManager/context";
@@ -58,7 +58,7 @@ export const CategoryColumn: React.FC<CategoryColumnProps> = ({
       />
       {formOpened === ColumnType.Categories && (
         <CategoryForm
-          ticket={formProps}
+          ticket={formProps as CategoryFields}
           closeForm={closeForm}
           openInvalidPopup={openInvalidPopup}
           openChangesPopup={openChangesPopup}

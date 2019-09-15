@@ -12,7 +12,7 @@ export interface TicketProps {
   type: ColumnType;
   openForm: (props: FormManagerState) => void;
   data: AllColumnFields;
-  displayFields: string[];
+  displayFields: (string | Record<string, string[]>)[];
   focused: boolean;
   updateTicket: MutationFunction<any, { id: string, params: any }>;
   deleteTicket: (data: CommonFields) => void;

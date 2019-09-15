@@ -1,48 +1,45 @@
 import React, { useState } from "react";
 import cx from "classnames";
-import * as styles from "./rowList.less";
+import * as styles from "./rowTagsList.less";
 import { CommonFields } from "../../types";
 import { plusSvg } from "../Svg/Svg";
 import { FormRow, FormRowDirection } from "./FormRow";
 
 const DROPDOWN_TEXT = "Please choose from the dropdown";
 
-interface RowListProps<F extends CommonFields> {
+interface RowTagsListProps<F extends CommonFields> {
   name: string;
   options: F[];
   displayedFields: (keyof F)[];
   tags: F[];
-  updateTags: (field: string, tags: F[]) => void;
+  updateTags: (tags: F[]) => void;
   isRequired?: boolean;
-  withAmount?: boolean;
 }
 
-export const RowList = <F extends CommonFields>({
+// @todo re-use RowTagsListWithAmount
+export const RowTagsList = <F extends CommonFields>({
   name,
-  options, // @todo only get available options
+  options,
   isRequired,
   tags,
   updateTags,
   displayedFields,
-  withAmount,
-}: RowListProps<F>): ReturnType<React.FC<F>> => {
+}: RowTagsListProps<F>): ReturnType<React.FC<F>> => {
   const [isEditing, setIsEditing] = useState(false);
   const [tagId, setTagId] = useState("");
-  const [amount, setAmount] = useState(1); // @todo amount should not go over limit of tag
 
   const addTag = () => {
     const tag = options.find((option) => option.id === tagId);
     const tagAlreadyAdded = tags.some(t => t.id === tagId);
     if(tag && !tagAlreadyAdded) {
-      updateTags(name, [tag].concat(tags));
+      updateTags([...tags, tag]);
     }
     setTagId("");
     setIsEditing(false);
   };
 
-  const removeTag = (e: React.MouseEvent<HTMLDivElement>) => {
-    const id = (e.currentTarget.previousSibling as HTMLSpanElement).innerText;
-    updateTags(name, tags.filter(t => t.id !== id));
+  const removeTag = (id: string) => {
+    updateTags(tags.filter(t => t.id !== id));
   };
 
   const addTagOnEnter = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -56,10 +53,10 @@ export const RowList = <F extends CommonFields>({
   };
 
   const renderTags = () => {
-    return tags.map(({ name }, key) => (
+    return tags.map(({ name, id }, key) => (
       <div className={styles.tag} key={key}>
         <span className={styles.tagName}>{name}</span>
-        <div className={styles.closeTag} onClick={removeTag}>
+        <div className={styles.closeTag} onClick={() => removeTag(id)}>
           {plusSvg}
         </div>
       </div>
@@ -86,7 +83,7 @@ export const RowList = <F extends CommonFields>({
     <FormRow name={name} isRequired={isRequired} direction={FormRowDirection.row}>
       <div className={styles.container} onKeyUp={addTagOnEnter}>
         <div className={cx(styles.tagEditor, isEditing && styles.isEditing)}>
-          <div className={styles.addTag} onClick={handlePlus}>
+          <div className={styles.addTag} onClick={handlePlus} tabIndex={0}>
             {plusSvg}
           </div>
           {isEditing && <>
@@ -100,18 +97,6 @@ export const RowList = <F extends CommonFields>({
                 {renderOptions()}
               </select>
             </div>
-            {withAmount && (
-              <div className={styles.amountWrapper}>
-                <input
-                  type="number"
-                  name="amount"
-                  onChange={(e) => setAmount(+e.currentTarget.value)}
-                  value={amount}
-                  className={styles.amount}
-                  min={1}
-                />
-              </div>
-            )}
           </>}
         </div>
         {renderTags()}

@@ -27,19 +27,22 @@ const resolverMap = {
 	// QUERY HELPERS
 	Project: {
 		categories: async function(parent, args, { currentUser }) {
-			return parent.categories
-				.map(id => currentUser.categories.id(id))
-				.filter(res => res !== null)
+			return parent.categories.reduce((res, id) => {
+				const entry = currentUser.categories.id(id)
+				return entry ? res.concat([entry]) : res;
+			}, [])
 		},
 		tools: async function(parent, args, { currentUser }) {
-			return parent.tools
-				.map(id => currentUser.tools.id(id))
-				.filter(res => res !== null)
+			return parent.tools.reduce((res, { id, amountUsed }) => {
+				const entry = currentUser.tools.id(id)
+				return entry ? res.concat([{ entry, amountUsed }]) : res;
+			}, [])
 		},
 		materials: async function(parent, args, { currentUser }) {
-			return parent.materials
-				.map(id => currentUser.materials.id(id))
-				.filter(res => res !== null)
+			return parent.materials.reduce((res, { id, amountUsed }) => {
+				const entry = currentUser.materials.id(id)
+				return entry ? res.concat([{ entry, amountUsed }]) : res;
+			}, [])
 		},
 	},
 	// MUTATIONS

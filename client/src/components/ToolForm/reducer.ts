@@ -1,5 +1,5 @@
 import React from "react";
-import { ToolFields } from "../../types";
+import { ToolFieldsWritable } from "../../types";
 import { UpdateToolFieldAction, ToolActionType } from "./actions";
 
 export enum Measurements {
@@ -12,14 +12,14 @@ type ToolActions = (
   UpdateToolFieldAction
 );
 
-export type ToolState = Omit<ToolFields, "id"> & { measurement: Measurements | null };
+export type ToolState = ToolFieldsWritable & { measurement: Measurements };
 
 export const initialToolState: ToolState = {
   name: "",
   amount: 1,
   type: null,
   size: null,
-  measurement: null,
+  measurement: Measurements.mm,
 };
 
 export type ToolReducerType = React.Reducer<ToolState, ToolActions>;

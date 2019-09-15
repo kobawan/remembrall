@@ -20,8 +20,8 @@ export interface ProjectInput {
   params: {
     name: string;
     categories: string[];
-    materials: string[];
-    tools: string[];
+    materials: { id: string, amountUsed: number }[];
+    tools: { id: string, amountUsed: number }[];
     instructions?: string;
     notes?: string;
   };
@@ -86,6 +86,7 @@ initHandleCache<UpdateProjectData, GetProjectData>(GET_PROJECTS, (res, data) => 
 });
 
 export const useProjectQueryAndMutations = (): UseProjectQueryAndMutationsRes => {
+  // @todo check if refetching is needed
   return [
     useQuery(GET_PROJECTS),
     useMutation(ADD_PROJECT, {

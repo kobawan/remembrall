@@ -34,16 +34,13 @@ const requiredFields = [Fields.name];
 const parseValueAndUnit = (value: string | null) => {
   const [size, measurement] = (value || "").split(";");
   return {
-    size: size && size.length ? size : null,
-    measurement: measurement && measurement.length ? measurement as Measurements : null,
+    size: size.length ? size : null,
+    measurement: measurement.length ? measurement as Measurements : Measurements.mm,
   };
 };
 
 const joinValueAndUnit = (value: string | null, unit: Measurements | null) => {
-  if (value === null && unit === null) {
-    return null;
-  }
-  return `${value || ""};${unit || ""}`;
+  return value ? `${value};${unit}` : null;
 };
 
 const convertToDbTicket = (state: ToolState) => ({
