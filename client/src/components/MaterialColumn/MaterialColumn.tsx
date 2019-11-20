@@ -52,7 +52,7 @@ export const MaterialColumn: React.FC<MaterialColumnProps> = ({
         type={ColumnType.Materials}
         updateTicket={updateMaterial}
         deleteTicket={deleteTicket}
-        displayFields={["name", "color", "amount"]}
+        displayFields={["name", "color", "amount", "availableAmount"]}
         displayDirection={DisplayDirection.row}
         isLoading={isLoading}
       />

@@ -1,12 +1,19 @@
 import React from "react";
+import { useMutation, MutationTuple } from "@apollo/react-hooks";
 import * as styles from "./rowTagsListWithAmount.less";
-import { CommonFields, ProjectFieldWithAmountUsed } from "../../types";
+import { CommonFields, ProjectFieldWithAmountUsed, AvailableAmountField, TempAnyObject } from "../../types";
 import { plusSvg } from "../Svg/Svg";
 import { FormRow, FormRowDirection } from "./FormRow";
 import { TagEditor } from "../TagEditor/TagEditor";
 import { getTagDisplayValue } from "../../utils/getTagDisplayValue";
+import { UPDATE_MATERIAL_AVAILABLE_AMOUNT } from "../MaterialColumn/materialQueries";
+import { UPDATE_TOOL_AVAILABLE_AMOUNT } from "../ToolColumn/toolQueries";
+import { logErrors } from "../../utils/errorHandling";
+import { UpdateAvailableAmountInput } from "../../graphql/client";
 
-interface RowListProps<F extends CommonFields> {
+type CommonFieldsWithAvailableAmount = CommonFields & AvailableAmountField;
+
+interface RowListProps<F extends CommonFieldsWithAvailableAmount> {
   name: string;
   options: F[];
   displayedFields: (keyof F)[];
@@ -15,7 +22,18 @@ interface RowListProps<F extends CommonFields> {
   isRequired?: boolean;
 }
 
-export const RowTagsListWithAmount = <F extends CommonFields>({
+const useUpdateAvailableAmountMutation = (name: string): MutationTuple<TempAnyObject, UpdateAvailableAmountInput> => {
+  switch(name) {
+    case "materials":
+      return useMutation(UPDATE_MATERIAL_AVAILABLE_AMOUNT);
+    case "tools":
+      return useMutation(UPDATE_TOOL_AVAILABLE_AMOUNT);
+    default:
+      throw new Error(`Type '${name}' has no field: available amount`);
+  }
+};
+
+export const RowTagsListWithAmount = <F extends CommonFieldsWithAvailableAmount>({
   name,
   options,
   isRequired,
@@ -23,8 +41,27 @@ export const RowTagsListWithAmount = <F extends CommonFields>({
   updateTags,
   displayedFields,
 }: RowListProps<F>): ReturnType<React.FC<F>> => {
-  const removeTag = (id: string) => {
-    updateTags(tags.filter(t => t.entry.id !== id));
+  // @todo updateAvailableAmount on cancel/delete as well
+  const [updateAvailableAmount, mutationRes] = useUpdateAvailableAmountMutation(name);
+
+  logErrors(mutationRes.error);
+
+  const removeTag = async (tag: CommonFieldsWithAvailableAmount, amountUsed: number) => {
+    // DOESNT WORK ON ALREADY CREATED PROJECT
+    await updateAvailableAmount({ variables: {
+      id: tag.id,
+      availableAmount: tag.availableAmount + amountUsed
+    } });
+    updateTags(tags.filter(t => t.entry.id !== tag.id));
+  };
+
+  const addTag = async (tag: CommonFieldsWithAvailableAmount, amountUsed: number) => {
+    // DOESNT WORK ON ALREADY CREATED PROJECT
+    await updateAvailableAmount({ variables: {
+      id: tag.id,
+      availableAmount: tag.availableAmount - amountUsed
+    } });
+    updateTags(tags.concat([{ entry: tag as any, amountUsed }]));
   };
 
   const renderTags = () => {
@@ -35,7 +72,7 @@ export const RowTagsListWithAmount = <F extends CommonFields>({
           {getTagDisplayValue(displayedFields, entry)}
           <span style={{ color: "gray", fontWeight: 600 }}>&nbsp;&nbsp;x {amountUsed}</span>
         </span>
-        <div className={styles.closeTag} onClick={() => removeTag(entry.id)}>
+        <div className={styles.closeTag} onClick={() => removeTag(entry, amountUsed)}>
           {plusSvg}
         </div>
       </div>
@@ -48,7 +85,7 @@ export const RowTagsListWithAmount = <F extends CommonFields>({
         <TagEditor
           options={options}
           tags={tags}
-          updateTags={updateTags}
+          addTag={addTag}
           displayedFields={displayedFields}
         />
         {renderTags()}

@@ -2,6 +2,7 @@ import { gql } from "apollo-boost";
 
 const ProjectsFragment = gql`
 	fragment ProjectsFragment on Project {
+		__typename
 		name
 		id
 		instructions

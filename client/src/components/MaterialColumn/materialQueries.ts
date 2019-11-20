@@ -2,6 +2,7 @@ import { gql } from "apollo-boost";
 
 const MaterialsFragment = gql`
 	fragment MaterialsFragment on Material {
+		__typename
 		name
 		id
 		color
@@ -42,6 +43,16 @@ export const DELETE_MATERIAL = gql`
 export const UPDATE_MATERIAL = gql`
 	mutation UpdateMaterial($id: ID!, $params: MaterialInput) {
 		updateMaterial(id: $id, params: $params) {
+			...MaterialsFragment
+		}
+	}
+	${MaterialsFragment}
+`;
+
+// Client-side-only
+export const UPDATE_MATERIAL_AVAILABLE_AMOUNT = gql`
+	mutation UpdateMaterialAvailableAmount($id: ID!, $availableAmount: Int!) {
+		updateMaterialAvailableAmount(id: $id, availableAmount: $availableAmount) @client {
 			...MaterialsFragment
 		}
 	}

@@ -16,6 +16,10 @@ import {
 import { DataProxy } from "apollo-cache";
 import { GET_PROJECTS } from "../components/ProjectColumn/projectQueries";
 import { GetProjectData } from "../components/ProjectColumn/ProjectWrapper";
+import { GetMaterialData } from "../components/MaterialColumn/MaterialWrapper";
+import { GET_MATERIALS } from "../components/MaterialColumn/materialQueries";
+import { GetToolData } from "../components/ToolColumn/ToolWrapper";
+import { GET_TOOLS } from "../components/ToolColumn/toolQueries";
 
 const typeDefs = gql`
   extend type Category {
@@ -29,10 +33,19 @@ const typeDefs = gql`
     inProjects: [Project]
     availableAmount: Int
   }
+
+  extend type Mutation {
+    updateMaterialAvailableAmount(id: ID!, availableAmount: Int!): Material
+    updateToolAvailableAmount(id: ID!, availableAmount: Int!): Tool
+  }
 `;
 
 type ProjectFieldKeysWithInProjects = Extract<keyof ProjectFields, "categories" | "tools" | "materials">;
 type ProjectFieldsKeysWithAmount = Exclude<ProjectFieldKeysWithInProjects, "categories">;
+export interface UpdateAvailableAmountInput {
+  id: string;
+  availableAmount: number;
+}
 
 const getInProjects = (
   parent: { id: string },
@@ -91,6 +104,56 @@ const resolvers = {
     },
     availableAmount: (parent: MaterialFields, _: any, { cache }: { cache: DataProxy }) => {
       return getAvailableAmount(parent, cache, "materials");
+    }
+  },
+  Mutation: {
+    updateMaterialAvailableAmount: (
+      _: MaterialFields,
+      { id, availableAmount }: UpdateAvailableAmountInput,
+      { cache }: { cache: DataProxy }
+    ) => {
+      try {
+        const res = cache.readQuery<GetMaterialData>({ query: GET_MATERIALS });
+
+        if(!res || !res.materials) {
+          return null;
+        }
+        const index = res.materials.map(entry => entry.id).indexOf(id);
+        if(!index) {
+          return null;
+        }
+        const entry = res.materials[index];
+        entry.availableAmount = availableAmount;
+        cache.writeData({ data: res.materials });
+
+        return entry;
+      } catch(e) {
+        return null;
+      }
+    },
+    updateToolAvailableAmount: (
+      _: ToolFields,
+      { id, availableAmount }: UpdateAvailableAmountInput,
+      { cache }: { cache: DataProxy }
+    ) => {
+      try {
+        const res = cache.readQuery<GetToolData>({ query: GET_TOOLS });
+
+        if(!res || !res.tools) {
+          return null;
+        }
+        const index = res.tools.map(entry => entry.id).indexOf(id);
+        if(!index) {
+          return null;
+        }
+        const entry = res.tools[index];
+        entry.availableAmount = availableAmount;
+        cache.writeData({ data: res.tools });
+
+        return entry;
+      } catch(e) {
+        return null;
+      }
     }
   }
 };

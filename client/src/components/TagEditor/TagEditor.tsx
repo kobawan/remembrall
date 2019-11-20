@@ -1,34 +1,36 @@
 import React, { useState } from "react";
 import cx from "classnames";
 import * as styles from "./tagEditor.less";
-import { CommonFields, ProjectFieldWithAmountUsed } from "../../types";
+import { CommonFields, ProjectFieldWithAmountUsed, AvailableAmountField } from "../../types";
 import { plusSvg } from "../Svg/Svg";
 import { getTagDisplayValue } from "../../utils/getTagDisplayValue";
 
 const DROPDOWN_TEXT = "Please choose from the dropdown";
 
-interface TagEditorProps<F extends CommonFields> {
+type CommonFieldsWithAvailableAmount = CommonFields & AvailableAmountField;
+
+interface TagEditorProps<F extends CommonFieldsWithAvailableAmount> {
   options: F[];
   displayedFields: (keyof F)[];
   tags: ProjectFieldWithAmountUsed<F>[];
-  updateTags: (tags: ProjectFieldWithAmountUsed<F>[]) => void;
+  addTag: (tags: CommonFieldsWithAvailableAmount, amountUsed: number) => Promise<void>;
 }
 
-export const TagEditor = <F extends CommonFields>({
+export const TagEditor = <F extends CommonFieldsWithAvailableAmount>({
   options,
   tags,
-  updateTags,
+  addTag,
   displayedFields,
 }: TagEditorProps<F>): ReturnType<React.FC<F>> => {
   const [isEditing, setIsEditing] = useState(false);
   const [tagId, setTagId] = useState("");
   const [amount, setAmount] = useState(1); // @todo amount should not go over limit of tag
 
-  const addTag = () => {
+  const handleAddTag = () => {
     const tag = options.find((option) => option.id === tagId);
     const tagAlreadyAdded = tags.some(t => t.entry.id === tagId);
     if(tag && !tagAlreadyAdded) {
-      updateTags([...tags, { entry: tag, amountUsed: amount }]);
+      addTag(tag, amount);
     }
     setTagId("");
     setAmount(1);
@@ -37,12 +39,12 @@ export const TagEditor = <F extends CommonFields>({
 
   const addTagOnEnter = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if(e.keyCode === 13) {
-      addTag();
+      handleAddTag();
     }
   };
 
   const handlePlus = () => {
-    isEditing ? addTag() : setIsEditing(true);
+    isEditing ? handleAddTag() : setIsEditing(true);
   };
 
   const renderOptions = () => {

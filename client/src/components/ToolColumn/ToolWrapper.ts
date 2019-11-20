@@ -6,7 +6,7 @@ import { initHandleCache } from "../../utils/cacheHandling";
 import { GET_TOOLS, ADD_TOOL, DELETE_TOOL, UPDATE_TOOL } from "./toolQueries";
 import { GET_PROJECTS } from "../ProjectColumn/projectQueries";
 
-interface GetToolData {
+export interface GetToolData {
   tools?: ToolFields[];
 }
 

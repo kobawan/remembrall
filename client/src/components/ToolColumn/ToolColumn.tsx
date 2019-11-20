@@ -52,7 +52,7 @@ export const ToolColumn: React.FC<ToolColumnProps> = ({
         type={ColumnType.Tools}
         updateTicket={updateTool}
         deleteTicket={deleteTicket}
-        displayFields={["name", "type", "size", "amount"]}
+        displayFields={["name", "type", "size", "amount", "availableAmount"]}
         displayDirection={DisplayDirection.row}
         isLoading={isLoading}
       />

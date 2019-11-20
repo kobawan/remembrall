@@ -2,6 +2,7 @@ import { gql } from "apollo-boost";
 
 const CategoriesFragment = gql`
 	fragment CategoriesFragment on Category {
+		__typename
 		name
 		id
     inProjects @client {

@@ -6,7 +6,7 @@ import { initHandleCache } from "../../utils/cacheHandling";
 import { GET_MATERIALS, ADD_MATERIAL, DELETE_MATERIAL, UPDATE_MATERIAL } from "./materialQueries";
 import { GET_PROJECTS } from "../ProjectColumn/projectQueries";
 
-interface GetMaterialData {
+export interface GetMaterialData {
   materials?: MaterialFields[];
 }
 

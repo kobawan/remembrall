@@ -86,7 +86,18 @@ export const ProjectForm: React.FC<FormProps> = ({
   const tools = toolRes.data && toolRes.data.tools ? toolRes.data.tools : [];
 
   // @todo take current form tags into consideration
-  const availableMaterials = materials.filter(({ availableAmount }) => availableAmount > 0);
+  const availableMaterials = materials.reduce((res: MaterialFields[], material) => {
+    if(material.availableAmount < 1) {
+      return res;
+    }
+    const stateMaterial = state.materials.find(({ entry }) => entry.id === material.id);
+    if(stateMaterial) {
+      return stateMaterial.entry.availableAmount - stateMaterial.amountUsed < 1
+        ? res
+        : res.concat([stateMaterial.entry]);
+    }
+    return res.concat([material]);
+  }, []);
   const availableTools = tools.filter(({ availableAmount }) => availableAmount > 0);
 
   logErrors(
